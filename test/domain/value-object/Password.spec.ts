@@ -37,7 +37,6 @@ describe('Password', () => {
         })
     })
 
-
     test('should return failure is true when password is less then 8 characters', () => {
         const result = Password.create('error')
         expect(result.isFailure()).toBe(true)
