@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:mutation": "stryker run",
+    "test:report":"npm run test:ci && npm run test:mutation",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles",
     "test:verbose": "jest --passWithNoTests",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
