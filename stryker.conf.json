@@ -1,0 +1,10 @@
+{
+    "jest": {
+        "projectType": "custom",
+        "configFile": "jest.config.ts",
+        "config": {
+            "testEnvironment": "jest-environment-jsdom-sixteen"
+        },
+        "enableFindRelatedTests": true
+    }
+}
