@@ -75,10 +75,9 @@ describe('DbCreateUserAccount', () => {
 
   test('should return error when found user by email', async () => {
     const { sut, findUserByEmailStub } = makeSutFactory()
-    jest.spyOn(findUserByEmailStub, 'execute')
-      .mockReturnValueOnce(Promise.resolve(success({
-        name: 'Any Name'
-      })))
+    jest.spyOn(findUserByEmailStub, 'execute').mockReturnValueOnce(Promise.resolve(success({
+      name: 'Any Name'
+    })))
 
     const response = await sut.execute({
       name: 'Valid Name',
@@ -91,5 +90,18 @@ describe('DbCreateUserAccount', () => {
     expect(response.value).toMatchObject({
       message: "Email 'valid@email.com.br' is already being used by another account!"
     })
+  })
+
+  test('should ensure that encrypt password receive correct params', async () => {
+    const { sut, encryptsPasswordStub } = makeSutFactory()
+    const encryptPasswordSpy = jest.spyOn(encryptsPasswordStub, 'execute')
+
+    await sut.execute({
+      name: 'Valid Name',
+      email: 'valid@email.com.br',
+      password: 'V4l1d@Password'
+    })
+
+    expect(encryptPasswordSpy).toBeCalledWith('V4l1d@Password')
   })
 })
