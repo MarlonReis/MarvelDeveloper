@@ -52,16 +52,16 @@ const makeSutFactory = (): TypeSut => {
   return { repositoryStub, encryptsPasswordStub, findUserByEmailStub, sut }
 }
 
+const dataUserParams: CreateUserData = {
+  name: 'Valid Name',
+  email: 'valid@email.com.br',
+  password: 'V4l1d@Password'
+}
+
 describe('DbCreateUserAccount', () => {
   test('should create user account', async () => {
     const { sut } = makeSutFactory()
-
-    const response = await sut.execute({
-      name: 'Valid Name',
-      email: 'valid@email.com.br',
-      password: 'V4l1d@Password'
-    })
-
+    const response = await sut.execute(dataUserParams)
     expect(response.isSuccess()).toBe(true)
   })
 
@@ -69,7 +69,7 @@ describe('DbCreateUserAccount', () => {
     const { sut, findUserByEmailStub } = makeSutFactory()
     const findUserAccountByEmailSpy = jest.spyOn(findUserByEmailStub, 'execute')
 
-    await sut.execute({ name: 'Valid Name', email: 'valid@email.com.br', password: 'V4l1d@Password' })
+    await sut.execute({ ...dataUserParams, password: 'V4l1d@Password' })
     expect(findUserAccountByEmailSpy).toBeCalledWith('valid@email.com.br')
   })
 
@@ -79,11 +79,7 @@ describe('DbCreateUserAccount', () => {
       name: 'Any Name'
     })))
 
-    const response = await sut.execute({
-      name: 'Valid Name',
-      email: 'valid@email.com.br',
-      password: 'V4l1d@Password'
-    })
+    const response = await sut.execute(dataUserParams)
 
     expect(response.isFailure()).toBe(true)
     expect(response.value).toBeInstanceOf(DuplicatePropertyError)
@@ -95,13 +91,7 @@ describe('DbCreateUserAccount', () => {
   test('should ensure that encrypt password receive correct params', async () => {
     const { sut, encryptsPasswordStub } = makeSutFactory()
     const encryptPasswordSpy = jest.spyOn(encryptsPasswordStub, 'execute')
-
-    await sut.execute({
-      name: 'Valid Name',
-      email: 'valid@email.com.br',
-      password: 'V4l1d@Password'
-    })
-
+    await sut.execute(dataUserParams)
     expect(encryptPasswordSpy).toBeCalledWith('V4l1d@Password')
   })
 
@@ -109,11 +99,7 @@ describe('DbCreateUserAccount', () => {
     const { sut, repositoryStub } = makeSutFactory()
     const createUserAccountSpy = jest.spyOn(repositoryStub, 'execute')
 
-    await sut.execute({
-      name: 'Valid Name',
-      email: 'valid@email.com.br',
-      password: 'V4l1d@Password'
-    })
+    await sut.execute(dataUserParams)
 
     expect(createUserAccountSpy).toBeCalledWith({
       name: 'Valid Name',
