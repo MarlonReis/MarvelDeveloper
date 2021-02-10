@@ -45,5 +45,5 @@ export class Success<F, S> implements SharedResponse<F, S> {
     }
 }
 
-export const success = <F, S>(s: S): Either<F, S> => new Success<F, S>(s)
+export const success = <F, S>(s: S = {} as any): Either<F, S> => new Success<F, S>(s)
 export const failure = <F, S>(f: F): Either<F, S> => new Failures<F, S>(f)
