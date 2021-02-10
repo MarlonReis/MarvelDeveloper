@@ -3,10 +3,7 @@ import { Either, failure, success } from '@/shared/Either'
 import { Email, Name, Password } from '@/domain/value-object'
 import { IdEntity } from '@/domain/value-object/IdEntity'
 import { CreateUserData } from './UserData'
-
-export enum StatusUser {
-  CREATED
-}
+import { StatusUser } from './StatusUser'
 
 export class User {
   public readonly id: IdEntity

@@ -1,4 +1,5 @@
-import { StatusUser, User } from '@/domain/model/user/User'
+import { User } from '@/domain/model/user/User'
+import { StatusUser } from '@/domain/model/user/StatusUser'
 
 describe('User', () => {
   test('should create user instance with success', () => {
