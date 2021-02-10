@@ -104,4 +104,21 @@ describe('DbCreateUserAccount', () => {
 
     expect(encryptPasswordSpy).toBeCalledWith('V4l1d@Password')
   })
+
+  test('should ensure that create user account repository received correct params', async () => {
+    const { sut, repositoryStub } = makeSutFactory()
+    const createUserAccountSpy = jest.spyOn(repositoryStub, 'execute')
+
+    await sut.execute({
+      name: 'Valid Name',
+      email: 'valid@email.com.br',
+      password: 'V4l1d@Password'
+    })
+
+    expect(createUserAccountSpy).toBeCalledWith({
+      name: 'Valid Name',
+      email: 'valid@email.com.br',
+      password: 'ValidDataEncrypt'
+    })
+  })
 })
