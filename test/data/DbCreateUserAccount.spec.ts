@@ -1,10 +1,14 @@
 import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
 import { CreateUserData } from '@/domain/model/user/UserData'
 import { Either, failure, success } from '@/shared/Either'
-import { NotFoundError, RepositoryInternalError } from './error'
-import { EncryptsPassword } from './protocol/EncryptsPassword'
-import { CreateUserAccountRepository } from './repository/CreateUserAccountRepository'
-import { FindUserAccountByEmailRepository } from './repository/FindUserAccountByEmailRepository'
+import {
+  NotFoundError,
+  DuplicatePropertyError,
+  RepositoryInternalError
+} from '@/data/error'
+import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
+import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
+import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 
 const createUserAccountRepositoryStubFactory = (): CreateUserAccountRepository => {
   class CreateUserAccountRepositoryStub implements CreateUserAccountRepository {
@@ -59,5 +63,33 @@ describe('DbCreateUserAccount', () => {
     })
 
     expect(response.isSuccess()).toBe(true)
+  })
+
+  test('should find user account with correct email', async () => {
+    const { sut, findUserByEmailStub } = makeSutFactory()
+    const findUserAccountByEmailSpy = jest.spyOn(findUserByEmailStub, 'execute')
+
+    await sut.execute({ name: 'Valid Name', email: 'valid@email.com.br', password: 'V4l1d@Password' })
+    expect(findUserAccountByEmailSpy).toBeCalledWith('valid@email.com.br')
+  })
+
+  test('should return error when found user by email', async () => {
+    const { sut, findUserByEmailStub } = makeSutFactory()
+    jest.spyOn(findUserByEmailStub, 'execute')
+      .mockReturnValueOnce(Promise.resolve(success({
+        name: 'Any Name'
+      })))
+
+    const response = await sut.execute({
+      name: 'Valid Name',
+      email: 'valid@email.com.br',
+      password: 'V4l1d@Password'
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toBeInstanceOf(DuplicatePropertyError)
+    expect(response.value).toMatchObject({
+      message: "Email 'valid@email.com.br' is already being used by another account!"
+    })
   })
 })
