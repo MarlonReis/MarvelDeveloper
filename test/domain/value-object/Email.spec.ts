@@ -1,5 +1,5 @@
 import { InvalidParamError } from '@/domain/errors'
-import Email from '@/domain/value-object/Email'
+import { Email } from '@/domain/value-object/Email'
 import { Either } from '@/shared/Either'
 
 describe('Email', () => {

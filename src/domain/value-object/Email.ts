@@ -3,7 +3,7 @@ import { InvalidParamError } from '@/domain/errors'
 
 const emailValid = /^[a-z0-9_-]{3,20}@[a-z0-9_-]{3,20}\.\S{2,6}/
 
-export default class Email {
+export class Email {
     public readonly value: string
 
     private constructor (email: string) {
