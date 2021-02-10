@@ -16,7 +16,6 @@ describe('Email', () => {
         expect(email).toMatchObject({ message: "Attribute 'email' equals 'valid-email.com.br' is invalid!" })
     })
 
-
     test('should return error message when params is empty', () => {
         const result: Either<InvalidParamError, Email> = Email.create('')
         expect(result.isSuccess()).toBe(false)
@@ -65,7 +64,7 @@ describe('Email', () => {
         expect(result.isFailure()).toBe(true)
         expect(result.value).toBeInstanceOf(InvalidParamError)
     })
-    
+
     test('should failure is true when email ends with less than 2 letters after the period', () => {
         const result = Email.create('invalid@email.b')
         expect(result.isSuccess()).toBe(false)
