@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:mutation":"stryker run"
+    "test:mutation": "stryker run",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles",
+    "test:verbose": "jest --passWithNoTests",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
+    "test:e2e": "npm test -- --watch -c jest-e2e-config.js",
+    "test:staged": "npm test --findRelatedTests",
+    "test:ci": "npm test -- --coverage -c"
   },
   "keywords": [],
   "author": "",
