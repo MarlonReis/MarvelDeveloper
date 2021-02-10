@@ -1,4 +1,5 @@
 {
+    "tsconfigFile": "tsconfig.json",
     "jest": {
         "projectType": "custom",
         "configFile": "jest.config.ts",

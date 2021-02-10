@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "setaged":"lint-staged",
     "test:mutation": "stryker run",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles",
     "test:verbose": "jest --passWithNoTests",
@@ -38,5 +37,8 @@
   },
   "_moduleAliases": {
     "@": "src"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2"
   }
 }

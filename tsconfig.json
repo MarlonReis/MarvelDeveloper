@@ -14,10 +14,13 @@
         "sourceMap": true,
         "baseUrl": "src",
         "rootDirs": [
-            "src","test"
+            "src",
+            "test"
         ],
         "paths": {
-            "@/*": ["*"]
+            "@/*": [
+                "*"
+            ]
         },
     },
     "include": [
