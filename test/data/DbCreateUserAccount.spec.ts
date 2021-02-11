@@ -107,4 +107,16 @@ describe('DbCreateUserAccount', () => {
       password: 'ValidDataEncrypt'
     })
   })
+
+  test('should return failure when create user account return failure', async () => {
+    const { sut, repositoryStub } = makeSutFactory()
+    jest.spyOn(repositoryStub, 'execute')
+    .mockReturnValueOnce(Promise.resolve(failure<any, any>(new Error('Any error'))))
+
+    const response = await sut.execute(dataUserParams)
+    expect(response.value).toBeInstanceOf(RepositoryInternalError)
+    expect(response.value).toMatchObject({
+      message: 'Any error'
+    })
+  })
 })
