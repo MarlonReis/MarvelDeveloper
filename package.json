@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint 'src/**' --fix",
     "test:mutation": "stryker run",
     "test:report": "npm run test:ci && npm run test:mutation",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --detectOpenHandles",
