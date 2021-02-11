@@ -71,4 +71,26 @@ describe('MySQLTypeOrmConnection', () => {
     expect(response.isSuccess()).toBe(true)
     expect(MySQLTypeOrmConnection.connection).toBeFalsy()
   })
+
+  test('should ensure that connection received correct params', async () => {
+    const createConnectionSpy = jest.spyOn(typeorm, 'createConnection')
+
+    await MySQLTypeOrmConnection.open({
+      host: 'any-host',
+      port: 3306,
+      username: 'AnyValidUser',
+      password: 'AnyValid'
+    })
+
+    expect(createConnectionSpy).toBeCalledWith({
+      type: 'mysql',
+      database: 'marvel_database',
+      synchronize: true,
+      logging: true,
+      host: 'any-host',
+      port: 3306,
+      username: 'AnyValidUser',
+      password: 'AnyValid'
+    })
+  })
 })
