@@ -3,4 +3,4 @@ dist
 reports
 .stryker-tmp
 coverage
-database
+docker-database

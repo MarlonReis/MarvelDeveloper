@@ -4,7 +4,7 @@ services:
     image: mysql:5.7
     container_name: database_marvel_dev
     volumes:
-      - ./database/dev:/var/lib/mysql
+      - ./docker-database/dev:/var/lib/mysql
     ports:
       - 3306:3306
     restart: on-failure
