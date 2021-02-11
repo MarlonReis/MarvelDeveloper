@@ -4,11 +4,13 @@ import { Either, failure, success } from '@/shared/Either'
 import {
   NotFoundError,
   DuplicatePropertyError,
-  RepositoryInternalError
+  RepositoryInternalError,
+  InvalidPasswordParameterError
 } from '@/data/error'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
 import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
+import { InvalidParamError } from '@/domain/errors'
 
 const createUserAccountRepositoryStubFactory = (): CreateUserAccountRepository => {
   class CreateUserAccountRepositoryStub implements CreateUserAccountRepository {
@@ -30,8 +32,8 @@ const findUserAccountByEmailRepositoryStubFactory = (): FindUserAccountByEmailRe
 
 const encryptsPasswordStubFactory = (): EncryptsPassword => {
   class EncryptsPasswordStub implements EncryptsPassword {
-    async execute (data: string): Promise<string> {
-      return await Promise.resolve('ValidDataEncrypt')
+    async execute (data: string): Promise<Either<InvalidPasswordParameterError, string>> {
+      return success('ValidDataEncrypt')
     }
   }
   return new EncryptsPasswordStub()
@@ -108,10 +110,23 @@ describe('DbCreateUserAccount', () => {
     })
   })
 
+  test('should return invalid params error when password is invalid', async () => {
+    const { sut, encryptsPasswordStub } = makeSutFactory()
+    jest.spyOn(encryptsPasswordStub, 'execute')
+      .mockReturnValueOnce(Promise.resolve(failure(new Error('Any error'))))
+
+    const response = await sut.execute(dataUserParams)
+    expect(response.value).toBeInstanceOf(InvalidParamError)
+    expect(response.value).toMatchObject({
+      message: "Attribute 'password' equals 'V4l1d@Password' is invalid!"
+    })
+    expect(response.isFailure()).toBe(true)
+  })
+
   test('should return failure when create user account return failure', async () => {
     const { sut, repositoryStub } = makeSutFactory()
     jest.spyOn(repositoryStub, 'execute')
-    .mockReturnValueOnce(Promise.resolve(failure<any, any>(new Error('Any error'))))
+      .mockReturnValueOnce(Promise.resolve(failure<any, any>(new Error('Any error'))))
 
     const response = await sut.execute(dataUserParams)
     expect(response.value).toBeInstanceOf(RepositoryInternalError)
