@@ -1,0 +1,74 @@
+import { MySQLTypeOrmConnection } from '@/infrastructure/database/orm/connection/MySQLTypeOrmConnection'
+import { DatabaseConnectionError } from '@/infrastructure/error/DatabaseConnectionError'
+import { Either } from '@/shared/Either'
+
+import * as typeorm from 'typeorm'
+
+describe('MySQLTypeOrmConnection', () => {
+  let responseOpenConnection: Either<DatabaseConnectionError, void>
+
+  beforeEach(async () => {
+    responseOpenConnection = await MySQLTypeOrmConnection.open({
+      host: 'localhost',
+      port: 3306,
+      username: 'admin',
+      password: 'M4rv3lD4t4BaS3'
+    })
+  })
+
+  afterEach(async () =>
+    await MySQLTypeOrmConnection.close()
+  )
+
+  test('should connect with database', () => {
+    expect(responseOpenConnection.isSuccess()).toBe(true)
+    expect(MySQLTypeOrmConnection.connection).toBeTruthy()
+  })
+
+  test('should return failure when cannot cannot connect with database', async () => {
+    const response = await MySQLTypeOrmConnection.open({
+      host: 'localhost',
+      port: 3306,
+      username: 'InvalidUsername',
+      password: 'InvalidPassword'
+
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
+    expect(response.value).toBeInstanceOf(DatabaseConnectionError)
+    expect(response.value).toMatchObject({
+      message: 'Internal application error!',
+      cause: expect.any(Error)
+    })
+  })
+
+  test('should return same error throws by orm', async () => {
+    jest.spyOn(typeorm, 'createConnection')
+      .mockImplementationOnce(() => {
+        throw new Error('Any error')
+      })
+
+    const response = await MySQLTypeOrmConnection.open({
+      host: 'localhost',
+      port: 3306,
+      username: 'InvalidUsername',
+      password: 'InvalidPassword'
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
+    expect(response.value).toMatchObject({
+      cause: new Error('Any error')
+    })
+    expect(response.value).toEqual(new DatabaseConnectionError(
+      new Error('Any error'),
+      'Internal application error!'))
+  })
+
+  test('should close connection', async () => {
+    const response = await MySQLTypeOrmConnection.close()
+    expect(response.isSuccess()).toBe(true)
+    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
+  })
+})
