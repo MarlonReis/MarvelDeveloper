@@ -27,8 +27,17 @@ export class DbCreateUserAccount implements CreateUserAccount {
     const userFound = await this.findUserAccountByEmail.execute(data.email)
 
     if (userFound.isFailure()) {
-      const password = await this.encryptsPassword.execute(data.password)
-      const response = await this.createUserAccount.execute({ ...data, password })
+      const passwordEncrypted = await this.encryptsPassword.execute(data.password)
+
+      if (passwordEncrypted.isFailure()) {
+        return failure(new InvalidParamError('password', data.password))
+      }
+
+      const response = await this.createUserAccount.execute({
+        ...data,
+        password: passwordEncrypted.value
+      })
+
       if (response.isSuccess()) {
         return success()
       }
