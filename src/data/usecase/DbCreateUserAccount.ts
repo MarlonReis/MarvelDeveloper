@@ -5,7 +5,7 @@ import { Either, failure, success } from '@/shared/Either'
 import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
-import { DuplicatePropertyError } from '@/data/error'
+import { DuplicatePropertyError, RepositoryInternalError } from '@/data/error'
 
 export class DbCreateUserAccount implements CreateUserAccount {
   private readonly createUserAccount: CreateUserAccountRepository
@@ -22,18 +22,20 @@ export class DbCreateUserAccount implements CreateUserAccount {
     this.encryptsPassword = encryptsPassword
   }
 
-  async execute (data: CreateUserData): Promise<Either<InvalidParamError | DuplicatePropertyError, void>> {
+  async execute (data: CreateUserData):
+    Promise<Either<InvalidParamError | DuplicatePropertyError | RepositoryInternalError, void>> {
     const userFound = await this.findUserAccountByEmail.execute(data.email)
 
     if (userFound.isFailure()) {
       const password = await this.encryptsPassword.execute(data.password)
       const response = await this.createUserAccount.execute({ ...data, password })
       if (response.isSuccess()) {
-        return await Promise.resolve(success())
+        return success()
       }
+      return failure(new RepositoryInternalError(response.value))
     }
 
-    return await Promise.resolve(failure(new DuplicatePropertyError(
-      `Email '${data.email}' is already being used by another account!`)))
+    return failure(new DuplicatePropertyError(
+      `Email '${data.email}' is already being used by another account!`))
   }
 }
