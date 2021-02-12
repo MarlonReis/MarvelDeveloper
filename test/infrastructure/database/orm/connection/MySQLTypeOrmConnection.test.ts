@@ -4,11 +4,13 @@ import { Either } from '@/shared/Either'
 
 import * as typeorm from 'typeorm'
 
+const connectionDatabase = new MySQLTypeOrmConnection()
+
 describe('MySQLTypeOrmConnection', () => {
   let responseOpenConnection: Either<DatabaseConnectionError, void>
 
   beforeEach(async () => {
-    responseOpenConnection = await MySQLTypeOrmConnection.open({
+    responseOpenConnection = await connectionDatabase.open({
       host: 'localhost',
       port: 3306,
       username: 'admin',
@@ -16,17 +18,15 @@ describe('MySQLTypeOrmConnection', () => {
     })
   })
 
-  afterEach(async () =>
-    await MySQLTypeOrmConnection.close()
-  )
+  afterEach(async () => await connectionDatabase.close())
 
   test('should connect with database', () => {
     expect(responseOpenConnection.isSuccess()).toBe(true)
-    expect(MySQLTypeOrmConnection.connection).toBeTruthy()
+    expect(connectionDatabase.connection()).toBeTruthy()
   })
 
   test('should return failure when cannot cannot connect with database', async () => {
-    const response = await MySQLTypeOrmConnection.open({
+    const response = await connectionDatabase.open({
       host: 'localhost',
       port: 3306,
       username: 'InvalidUsername',
@@ -35,7 +35,6 @@ describe('MySQLTypeOrmConnection', () => {
     })
 
     expect(response.isFailure()).toBe(true)
-    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
     expect(response.value).toBeInstanceOf(DatabaseConnectionError)
     expect(response.value).toMatchObject({
       message: 'Internal application error!',
@@ -49,7 +48,7 @@ describe('MySQLTypeOrmConnection', () => {
         throw new Error('Any error')
       })
 
-    const response = await MySQLTypeOrmConnection.open({
+    const response = await connectionDatabase.open({
       host: 'localhost',
       port: 3306,
       username: 'InvalidUsername',
@@ -57,7 +56,7 @@ describe('MySQLTypeOrmConnection', () => {
     })
 
     expect(response.isFailure()).toBe(true)
-    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
+    expect(connectionDatabase.connection()).toBeFalsy()
     expect(response.value).toMatchObject({
       cause: new Error('Any error')
     })
@@ -67,15 +66,15 @@ describe('MySQLTypeOrmConnection', () => {
   })
 
   test('should close connection', async () => {
-    const response = await MySQLTypeOrmConnection.close()
+    const response = await connectionDatabase.close()
     expect(response.isSuccess()).toBe(true)
-    expect(MySQLTypeOrmConnection.connection).toBeFalsy()
+    expect(connectionDatabase.connection()).toBeFalsy()
   })
 
   test('should ensure that connection received correct params', async () => {
     const createConnectionSpy = jest.spyOn(typeorm, 'createConnection')
 
-    await MySQLTypeOrmConnection.open({
+    await connectionDatabase.open({
       host: 'any-host',
       port: 3306,
       username: 'AnyValidUser',
@@ -86,11 +85,12 @@ describe('MySQLTypeOrmConnection', () => {
       type: 'mysql',
       database: 'marvel_database',
       synchronize: true,
-      logging: true,
+      logging: false,
       host: 'any-host',
       port: 3306,
       username: 'AnyValidUser',
-      password: 'AnyValid'
+      password: 'AnyValid',
+      entities: expect.any(Array)
     })
   })
 })
