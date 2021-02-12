@@ -11,6 +11,7 @@ import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
 import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 import { InvalidParamError } from '@/domain/errors'
+import { StatusUser } from '@/domain/model/user/StatusUser'
 
 const createUserAccountRepositoryStubFactory = (): CreateUserAccountRepository => {
   class CreateUserAccountRepositoryStub implements CreateUserAccountRepository {
@@ -77,8 +78,11 @@ describe('DbCreateUserAccount', () => {
 
   test('should return error when found user by email', async () => {
     const { sut, findUserByEmailStub } = makeSutFactory()
-    jest.spyOn(findUserByEmailStub, 'execute').mockReturnValueOnce(Promise.resolve(success({
-      name: 'Any Name'
+    jest.spyOn(findUserByEmailStub, 'execute')
+      .mockReturnValueOnce(Promise.resolve(success({
+        name: 'Any Name',
+        email: 'any@example.com',
+        status: StatusUser.CREATED
     })))
 
     const response = await sut.execute(dataUserParams)
