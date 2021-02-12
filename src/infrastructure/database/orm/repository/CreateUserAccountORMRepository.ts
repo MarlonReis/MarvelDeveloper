@@ -16,9 +16,11 @@ export class CreateUserAccountORMRepository implements CreateUserAccountReposito
 
   async execute (data: CreateUserData): Promise<Either<RepositoryInternalError, void>> {
     try {
-      const user = UserOrm.create(data)
-      const repository = this.connectionDatabase.connection().getRepository(UserOrm)
-      await repository.save(user.value)
+      const user = UserOrm.create(data).value
+      await this.connectionDatabase.connection()
+        .createQueryBuilder()
+        .insert().into(UserOrm)
+        .values(user).execute()
       return success()
     } catch (error) {
       return failure(new RepositoryInternalError(error))
