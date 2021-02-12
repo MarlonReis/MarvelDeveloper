@@ -8,8 +8,8 @@ export interface Config {
   password: string
 }
 
-export interface ConnectionDatabase {
-  connection: unknown
+export interface ConnectionDatabase<T> {
   open: (config: Config) => Promise<Either<DatabaseConnectionError, void>>
   close: () => Promise<Either<DatabaseConnectionError, void>>
+  connection: () => T
 }
