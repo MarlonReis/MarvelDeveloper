@@ -4,18 +4,18 @@ import { Either } from '@/shared/Either'
 
 import * as typeorm from 'typeorm'
 
-const connectionDatabase = new MySQLTypeOrmConnection()
+const connectionDatabase = new MySQLTypeOrmConnection({
+  host: 'localhost',
+  port: 3306,
+  username: 'admin',
+  password: 'M4rv3lD4t4BaS3'
+})
 
 describe('MySQLTypeOrmConnection', () => {
   let responseOpenConnection: Either<DatabaseConnectionError, void>
 
   beforeEach(async () => {
-    responseOpenConnection = await connectionDatabase.open({
-      host: 'localhost',
-      port: 3306,
-      username: 'admin',
-      password: 'M4rv3lD4t4BaS3'
-    })
+    responseOpenConnection = await connectionDatabase.open()
   })
 
   afterEach(async () => await connectionDatabase.close())
@@ -26,13 +26,14 @@ describe('MySQLTypeOrmConnection', () => {
   })
 
   test('should return failure when cannot cannot connect with database', async () => {
-    const response = await connectionDatabase.open({
+    const connectionDatabase = new MySQLTypeOrmConnection({
       host: 'localhost',
       port: 3306,
       username: 'InvalidUsername',
       password: 'InvalidPassword'
 
     })
+    const response = await connectionDatabase.open()
 
     expect(response.isFailure()).toBe(true)
     expect(response.value).toBeInstanceOf(DatabaseConnectionError)
@@ -48,13 +49,7 @@ describe('MySQLTypeOrmConnection', () => {
         throw new Error('Any error')
       })
 
-    const response = await connectionDatabase.open({
-      host: 'localhost',
-      port: 3306,
-      username: 'InvalidUsername',
-      password: 'InvalidPassword'
-    })
-
+    const response = await connectionDatabase.open()
     expect(response.isFailure()).toBe(true)
     expect(connectionDatabase.connection()).toBeFalsy()
     expect(response.value).toMatchObject({
@@ -74,12 +69,14 @@ describe('MySQLTypeOrmConnection', () => {
   test('should ensure that connection received correct params', async () => {
     const createConnectionSpy = jest.spyOn(typeorm, 'createConnection')
 
-    await connectionDatabase.open({
+    const connectionDatabase = new MySQLTypeOrmConnection({
       host: 'any-host',
       port: 3306,
       username: 'AnyValidUser',
       password: 'AnyValid'
     })
+
+    await connectionDatabase.open()
 
     expect(createConnectionSpy).toBeCalledWith({
       type: 'mysql',

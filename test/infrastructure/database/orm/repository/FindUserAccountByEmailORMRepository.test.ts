@@ -18,13 +18,13 @@ describe('FindUserAccountByEmailORMRepository', () => {
   let sut: FindUserAccountByEmailORMRepository
 
   beforeAll(async () => {
-    connectionDatabase = new MySQLTypeOrmConnection()
-    await connectionDatabase.open({
+    connectionDatabase = new MySQLTypeOrmConnection({
       host: 'localhost',
       port: 3306,
       username: 'admin',
       password: 'M4rv3lD4t4BaS3'
     })
+    await connectionDatabase.open()
   })
 
   beforeEach(async () => {

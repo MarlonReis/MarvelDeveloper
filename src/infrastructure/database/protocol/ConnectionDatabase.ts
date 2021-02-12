@@ -1,7 +1,7 @@
 import { DatabaseConnectionError } from '@/infrastructure/error/DatabaseConnectionError'
 import { Either } from '@/shared/Either'
 
-export interface Config {
+export interface ConfigConnection {
   host: string
   port: number
   username: string
@@ -9,7 +9,7 @@ export interface Config {
 }
 
 export interface ConnectionDatabase<T> {
-  open: (config: Config) => Promise<Either<DatabaseConnectionError, void>>
+  open: () => Promise<Either<DatabaseConnectionError, void>>
   close: () => Promise<Either<DatabaseConnectionError, void>>
   connection: () => T
 }
