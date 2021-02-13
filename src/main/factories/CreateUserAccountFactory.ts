@@ -7,6 +7,11 @@ import {
 import { ConnectionDatabaseFactory } from './ConnectionDatabaseFactory'
 import { BCryptEncryptsPasswordAdapter } from '@/infrastructure/adapter'
 import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
+import { Controller } from '@/presentation/protocols'
+import {
+  CreateUserAccountController
+} from '@/presentation/controller/CreateUserAccountController'
+import { LogControllerDecorator } from './LogControllerDecorator'
 
 export class CreateUserAccountFactory {
   makeCreateUserAccountFactory (): DbCreateUserAccount {
@@ -23,5 +28,13 @@ export class CreateUserAccountFactory {
       findUserAccountByEmailRepo,
       encryptsPassword
     )
+  }
+
+  makeControllerFactory = (): Controller => {
+    const createUserAccount = this.makeCreateUserAccountFactory()
+    const controller = new CreateUserAccountController(createUserAccount)
+    return new LogControllerDecorator(
+      CreateUserAccountController.name,
+      controller)
   }
 }
