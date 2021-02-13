@@ -6,15 +6,29 @@ import {
 } from '@/presentation/controller/create-user-account/CreateUserAccountController'
 import { Either, success } from '@/shared/Either'
 
+const createUserAccountStubFactory = (): CreateUserAccount => {
+  class CreateUserAccountStub implements CreateUserAccount {
+    async execute (data: CreateUserData): Promise<Either<InvalidParamError, void>> {
+      return success()
+    }
+  }
+  return new CreateUserAccountStub()
+}
+
+interface TypeSut {
+  createUserAccountStub: CreateUserAccount
+  sut: CreateUserAccountController
+}
+
+const makeSutFactory = (): TypeSut => {
+  const createUserAccountStub = createUserAccountStubFactory()
+  const sut = new CreateUserAccountController(createUserAccountStub)
+  return { createUserAccountStub, sut }
+}
+
 describe('CreateUserAccountController', () => {
   test('should return statusCode 201 when create with success', async () => {
-    class CreateUserAccountStub implements CreateUserAccount {
-      async execute (data: CreateUserData): Promise<Either<InvalidParamError, void>> {
-        return success()
-      }
-    }
-    const createUserAccountStub = new CreateUserAccountStub()
-    const sut = new CreateUserAccountController(createUserAccountStub)
+    const { sut } = makeSutFactory()
     const response = await sut.handle({
       body: {
         name: 'Any Name',
