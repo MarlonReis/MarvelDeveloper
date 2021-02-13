@@ -15,7 +15,7 @@ export const expressAdapter = (controller: Controller) => {
       res.status(response.statusCode).json(response.body)
     } else {
       res.status(response.statusCode).json({
-        error: response.body.name,
+        error: response.body.constructor.name,
         message: response.body.message
       })
     }
