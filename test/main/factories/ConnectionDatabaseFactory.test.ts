@@ -8,7 +8,8 @@ import {
 
 describe('ConnectionDatabaseFactory', () => {
   test('should create connection factory', () => {
-    const sut = ConnectionDatabaseFactory.makeConnectionFactory()
-    expect(sut).toBeInstanceOf(MySQLTypeOrmConnection)
+    const sut = new ConnectionDatabaseFactory()
+    const response = sut.makeConnectionFactory()
+    expect(response).toBeInstanceOf(MySQLTypeOrmConnection)
   })
 })
