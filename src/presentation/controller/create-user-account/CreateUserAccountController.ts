@@ -1,28 +1,22 @@
 import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
+import { Email, Name, Password } from '@/domain/value-object'
 import { MissingParamError } from '@/presentation/error'
 import { createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
-const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 const fieldInvalid = {
-    name: (value: string): boolean => {
-        if (value && /.{3,}/.test(value)) {
-            return false
-        }
-        return true
-    },
-    email: (value: string): boolean => {
-        if (value && emailRegex.test(value)) {
-            return false
-        }
-        return true
-    },
-    password: (value: string): boolean => {
-        if (value && /.{8,}/.test(value)) {
-            return false
-        }
-        return true
-    }
+  name: (value: string): boolean => {
+    const nameOrError = Name.create(value)
+    return nameOrError.isFailure()
+  },
+  email: (value: string): boolean => {
+    const emailOrError = Email.create(value)
+    return emailOrError.isFailure()
+  },
+  password: (value: string): boolean => {
+    const passwordOrError = Password.create(value)
+    return passwordOrError.isFailure()
+  }
 }
 
 export class CreateUserAccountController implements Controller {
