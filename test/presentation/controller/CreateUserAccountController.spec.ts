@@ -26,16 +26,16 @@ const makeSutFactory = (): TypeSut => {
   return { createUserAccountStub, sut }
 }
 
+const defaultRequestBody = {
+  name: 'Any Name',
+  email: 'valid@email.com',
+  password: 'ValidPassword'
+}
+
 describe('CreateUserAccountController', () => {
   test('should return statusCode 201 when create with success', async () => {
     const { sut } = makeSutFactory()
-    const response = await sut.handle({
-      body: {
-        name: 'Any Name',
-        email: 'valid@email.com',
-        password: 'ValidPassword'
-      }
-    })
+    const response = await sut.handle({ body: defaultRequestBody })
 
     expect(response).toMatchObject({
       statusCode: 201
@@ -45,11 +45,7 @@ describe('CreateUserAccountController', () => {
   test('should return statusCode 422 when name is invalid', async () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({
-      body: {
-        name: 'An',
-        email: 'valid@email.com',
-        password: 'ValidPassword'
-      }
+      body: { ...defaultRequestBody, name: 'An' }
     })
 
     expect(response).toMatchObject({
@@ -63,11 +59,7 @@ describe('CreateUserAccountController', () => {
   test('should return statusCode 422 when email is invalid', async () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({
-      body: {
-        name: 'Any Name',
-        email: 'invalid-email.com',
-        password: 'ValidPassword'
-      }
+      body: { ...defaultRequestBody, email: 'invalid-email.com' }
     })
 
     expect(response).toMatchObject({
@@ -81,11 +73,7 @@ describe('CreateUserAccountController', () => {
   test('should return statusCode 422 when password is invalid', async () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({
-      body: {
-        name: 'Any Name',
-        email: 'invalid@email.com',
-        password: 'inv'
-      }
+      body: { ...defaultRequestBody, password: 'inv' }
     })
 
     expect(response).toMatchObject({
