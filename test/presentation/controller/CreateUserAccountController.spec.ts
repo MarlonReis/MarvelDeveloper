@@ -57,7 +57,8 @@ describe('CreateUserAccountController', () => {
     expect(response).toMatchObject({
       statusCode: 500,
       body: {
-        message: 'Internal server error'
+        message: 'Internal server error',
+        cause: new Error('Any Error')
       }
     })
   })
