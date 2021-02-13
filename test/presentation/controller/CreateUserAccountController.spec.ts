@@ -41,4 +41,58 @@ describe('CreateUserAccountController', () => {
       statusCode: 201
     })
   })
+
+  test('should return statusCode 422 when name is invalid', async () => {
+    const { sut } = makeSutFactory()
+    const response = await sut.handle({
+      body: {
+        name: 'An',
+        email: 'valid@email.com',
+        password: 'ValidPassword'
+      }
+    })
+
+    expect(response).toMatchObject({
+      statusCode: 422,
+      body: {
+        message: "Attribute 'name' is invalid!"
+      }
+    })
+  })
+
+  test('should return statusCode 422 when email is invalid', async () => {
+    const { sut } = makeSutFactory()
+    const response = await sut.handle({
+      body: {
+        name: 'Any Name',
+        email: 'invalid-email.com',
+        password: 'ValidPassword'
+      }
+    })
+
+    expect(response).toMatchObject({
+      statusCode: 422,
+      body: {
+        message: "Attribute 'email' is invalid!"
+      }
+    })
+  })
+
+  test('should return statusCode 422 when password is invalid', async () => {
+    const { sut } = makeSutFactory()
+    const response = await sut.handle({
+      body: {
+        name: 'Any Name',
+        email: 'invalid@email.com',
+        password: 'inv'
+      }
+    })
+
+    expect(response).toMatchObject({
+      statusCode: 422,
+      body: {
+        message: "Attribute 'password' is invalid!"
+      }
+    })
+  })
 })
