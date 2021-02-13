@@ -4,7 +4,9 @@ import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
 import {
   CreateUserAccountController
 } from '@/presentation/controller/create-user-account/CreateUserAccountController'
-import { Either, success } from '@/shared/Either'
+import { Either, failure, success } from '@/shared/Either'
+import { createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
+import { MissingParamError } from '@/presentation/error'
 
 const createUserAccountStubFactory = (): CreateUserAccount => {
   class CreateUserAccountStub implements CreateUserAccount {
@@ -37,8 +39,26 @@ describe('CreateUserAccountController', () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({ body: defaultRequestBody })
 
+    expect(response).toEqual(createSuccess())
     expect(response).toMatchObject({
       statusCode: 201
+    })
+  })
+
+  test('should return statusCode 500 when CreateUserAccount return error', async () => {
+    const { sut, createUserAccountStub } = makeSutFactory()
+
+    jest.spyOn(createUserAccountStub, 'execute')
+      .mockImplementationOnce(async () => await Promise.resolve(failure(new Error('Any Error'))))
+
+    const response = await sut.handle({ body: defaultRequestBody })
+
+    expect(response).toEqual(internalServerError(new Error('Any Error')))
+    expect(response).toMatchObject({
+      statusCode: 500,
+      body: {
+        message: 'Internal server error'
+      }
     })
   })
 
@@ -48,6 +68,7 @@ describe('CreateUserAccountController', () => {
       body: { ...defaultRequestBody, name: 'An' }
     })
 
+    expect(response).toEqual(unProcessableEntity(new MissingParamError('name')))
     expect(response).toMatchObject({
       statusCode: 422,
       body: {
@@ -62,6 +83,7 @@ describe('CreateUserAccountController', () => {
       body: { ...defaultRequestBody, email: 'invalid-email.com' }
     })
 
+    expect(response).toEqual(unProcessableEntity(new MissingParamError('email')))
     expect(response).toMatchObject({
       statusCode: 422,
       body: {
@@ -76,6 +98,7 @@ describe('CreateUserAccountController', () => {
       body: { ...defaultRequestBody, password: 'inv' }
     })
 
+    expect(response).toEqual(unProcessableEntity(new MissingParamError('password')))
     expect(response).toMatchObject({
       statusCode: 422,
       body: {
