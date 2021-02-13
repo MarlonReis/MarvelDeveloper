@@ -9,11 +9,12 @@ import { BCryptEncryptsPasswordAdapter } from '@/infrastructure/adapter'
 import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
 
 export class CreateUserAccountFactory {
-   makeCreateUserAccountFactory (): DbCreateUserAccount {
+  makeCreateUserAccountFactory (): DbCreateUserAccount {
     const salt = 12
 
     const encryptsPassword = new BCryptEncryptsPasswordAdapter(salt)
-    const connection = ConnectionDatabaseFactory.makeConnectionFactory()
+    const connection = new ConnectionDatabaseFactory()
+      .makeConnectionFactory()
     const createUserAccountRepo = new CreateUserAccountORMRepository(connection)
     const findUserAccountByEmailRepo = new FindUserAccountByEmailORMRepository(connection)
 
