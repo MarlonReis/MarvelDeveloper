@@ -1,6 +1,6 @@
 import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
 import { MissingParamError } from '@/presentation/error'
-import { unProcessableEntity } from '@/presentation/helper'
+import { createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -34,7 +34,6 @@ export class CreateUserAccountController implements Controller {
 
   async handle (request: HttpRequest): Promise<HttpResponse> {
     const requiredFields = ['name', 'email', 'password']
-
     for (const field of requiredFields) {
       const value = request.body[field]
       if (fieldInvalid[field](value)) {
@@ -44,9 +43,9 @@ export class CreateUserAccountController implements Controller {
 
     const response = await this.createUserAccount.execute(request.body)
     if (response.isSuccess()) {
-      return await Promise.resolve({
-        statusCode: 201
-      })
+      return await Promise.resolve(createSuccess())
     }
+
+    return internalServerError(response.value)
   }
 }
