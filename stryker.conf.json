@@ -1,12 +1,14 @@
 {
-    "tsconfigFile": "tsconfig.json",
-   
+    "tsconfigFile": "tsconfig.json",    
     "jest": {
         "projectType": "custom",
         "configFile": "jest.config.ts",
         "config": {
-            "files": ["!**/main/**"],
-            "testEnvironment": "all"
+            "files": [
+                "!src/main/**/*.ts",
+                "!test/main/*.ts"
+            ],
+            "testEnvironment": "jest-environment-jsdom-sixteen"
         },
         "enableFindRelatedTests": true
     }
