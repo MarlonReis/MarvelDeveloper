@@ -1,4 +1,4 @@
-import { InternalServerError } from '@/presentation/error'
+import { BadRequestError, InternalServerError } from '@/presentation/error'
 import { HttpResponse } from '@/presentation/protocols/Http'
 
 export const createSuccess = (): HttpResponse => ({
@@ -9,6 +9,11 @@ export const createSuccess = (): HttpResponse => ({
 //     statusCode: 200,
 //     body
 // })
+
+export const badRequest = (message: string): HttpResponse => ({
+    statusCode: 400,
+    body: new BadRequestError(message)
+})
 
 export const unProcessableEntity = (error: Error): HttpResponse => ({
     statusCode: 422,
