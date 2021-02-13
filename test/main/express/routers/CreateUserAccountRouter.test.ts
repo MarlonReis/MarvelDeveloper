@@ -9,6 +9,14 @@ import { CreateUserAccountORMRepository } from '@/infrastructure/database/orm'
 const connectionDatabase = new ConnectionDatabaseFactory()
   .makeConnectionFactory()
 
+const postRequest = request(app).post('/api/account/create-users-accounts')
+
+const defaultRequestBody = {
+  name: 'Any Name',
+  email: 'any@email.com.br',
+  password: 'Any@Password'
+}
+
 describe('CreateUserAccountRouter', () => {
   beforeAll(async () => {
     await connectionDatabase.open()
@@ -25,25 +33,18 @@ describe('CreateUserAccountRouter', () => {
   })
 
   test('should create user account with success and return statusCode 200', async () => {
-    await request(app).post('/api/account/create-users-accounts').send({
-      name: 'Any Name',
-      email: 'any@email.com.br',
-      password: 'Any@Password'
-    }).expect(201)
+    await postRequest.send(defaultRequestBody).expect(201)
   })
 
   test('should return statusCode 400 when email is duplicate', async () => {
     const repository = new CreateUserAccountORMRepository(connectionDatabase)
     await repository.execute({
-      name: 'Any Name',
-      email: 'duplicate-email@email.com.br',
-      password: 'Any@Password'
+      ...defaultRequestBody, email: 'duplicate-email@email.com.br'
     })
 
-    await request(app).post('/api/account/create-users-accounts').send({
-      name: 'Any Name',
-      email: 'duplicate-email@email.com.br',
-      password: 'Any@Password'
+    await postRequest.send({
+      ...defaultRequestBody,
+      email: 'duplicate-email@email.com.br'
     }).expect(400, {
       error: 'BadRequestError',
       message: "Email 'duplicate-email@email.com.br' is already being used by another account!"
@@ -51,10 +52,8 @@ describe('CreateUserAccountRouter', () => {
   })
 
   test('should return statusCode 422 when name is invalid', async () => {
-    await request(app).post('/api/account/create-users-accounts').send({
-      name: 'An',
-      email: 'any@email.com.br',
-      password: 'Any@Password'
+    await postRequest.send({
+      ...defaultRequestBody, name: 'An'
     }).expect(422, {
       message: "Attribute 'name' is invalid!",
       error: 'MissingParamError'
