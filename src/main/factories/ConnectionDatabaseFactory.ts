@@ -5,8 +5,7 @@ import { ConnectionDatabase } from '@/infrastructure/database/protocol/Connectio
 import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 
 export class ConnectionDatabaseFactory {
-  private ConnectionDatabaseFactory () { }
-  static makeConnectionFactory (): ConnectionDatabase<Connection> {
+  makeConnectionFactory (): ConnectionDatabase<Connection> {
     const config = EnvironmentConfiguration.database()
     const connection = new MySQLTypeOrmConnection(config)
     return connection
