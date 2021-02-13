@@ -1,6 +1,6 @@
 import {
   ConnectionDatabaseFactory
-} from '@/infrastructure/database/orm/connection/ConnectionDatabaseFactory'
+} from '@/main/factories/ConnectionDatabaseFactory'
 
 import {
   MySQLTypeOrmConnection
