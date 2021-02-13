@@ -1,4 +1,4 @@
-import { InternalServerError } from '@/domain/errors'
+import { InternalServerError } from '@/presentation/error'
 import { HttpResponse } from '@/presentation/protocols/Http'
 
 export const createSuccess = (): HttpResponse => ({
