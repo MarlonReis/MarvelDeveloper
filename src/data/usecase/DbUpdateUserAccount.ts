@@ -63,11 +63,11 @@ export class DbUpdateUserAccount implements UpdateUserAccount {
       }
     }
 
-    if (data.profileImage) {
-      userAccount.profileImage = data.profileImage
-    }
+    userAccount.profileImage = data.profileImage ? data.profileImage : userAccount.profileImage
+    userAccount.name = data.name ? data.name : userAccount.name
+    userAccount.status = data.status ? data.status : userAccount.status
 
-    await this.updateUserAccountRepo.execute({
+    const response = await this.updateUserAccountRepo.execute({
       id: userAccount.id,
       name: userAccount.name,
       email: userAccount.email,
@@ -76,6 +76,10 @@ export class DbUpdateUserAccount implements UpdateUserAccount {
       profileImage: userAccount.profileImage
     })
 
-    return success()
+    if (response.isSuccess()) {
+      return success()
+    }
+
+    return failure(new RepositoryInternalError(response.value))
   }
 }
