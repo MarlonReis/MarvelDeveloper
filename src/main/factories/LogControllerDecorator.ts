@@ -1,12 +1,13 @@
+import { LoggerSystem } from '@/infrastructure/util/LoggerSystem'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 export class LogControllerDecorator implements Controller {
   private readonly controller: Controller
-  private readonly controllerName: string
+  private readonly logger: LoggerSystem
 
-  constructor (name: string, controller: Controller) {
+  constructor (logger: LoggerSystem, controller: Controller) {
     this.controller = controller
-    this.controllerName = name
+    this.logger = logger
   }
 
   handle = async (httpRequest: HttpRequest): Promise<HttpResponse> => {
@@ -23,7 +24,8 @@ export class LogControllerDecorator implements Controller {
           stack
         }
       }
-      console.log(this.controllerName, responseDataError)
+
+      this.logger.info(this.constructor.name, JSON.stringify(responseDataError))
     }
     return response
   }
