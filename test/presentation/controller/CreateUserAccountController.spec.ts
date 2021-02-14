@@ -3,10 +3,11 @@ import { CreateUserData } from '@/domain/model/user/UserData'
 import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
 import {
   CreateUserAccountController
-} from '@/presentation/controller/create-user-account/CreateUserAccountController'
+} from '@/presentation/controller/CreateUserAccountController'
 import { Either, failure, success } from '@/shared/Either'
-import { createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
-import { MissingParamError } from '@/presentation/error'
+import { badRequest, createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
+import { BadRequestError, MissingParamError } from '@/presentation/error'
+import { DuplicatePropertyError } from '@/data/error'
 
 const createUserAccountStubFactory = (): CreateUserAccount => {
   class CreateUserAccountStub implements CreateUserAccount {
@@ -59,6 +60,26 @@ describe('CreateUserAccountController', () => {
       body: {
         message: 'Internal server error',
         cause: new Error('Any Error')
+      }
+    })
+  })
+
+  test('should return statusCode 400 when email is duplicate', async () => {
+    const { sut, createUserAccountStub } = makeSutFactory()
+
+    const duplicatePropertyError = new DuplicatePropertyError('Any Error')
+
+    jest.spyOn(createUserAccountStub, 'execute')
+      .mockImplementationOnce(async () => failure(duplicatePropertyError))
+
+    const response = await sut.handle({ body: defaultRequestBody })
+
+    expect(response).toEqual(badRequest('Any Error'))
+    expect(response.body).toEqual(new BadRequestError('Any Error'))
+    expect(response).toMatchObject({
+      statusCode: 400,
+      body: {
+        message: 'Any Error'
       }
     })
   })
