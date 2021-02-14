@@ -5,7 +5,7 @@ import {
 } from '@/infrastructure/database/orm'
 
 import { ConnectionDatabaseFactory } from './ConnectionDatabaseFactory'
-import { BCryptEncryptsPasswordAdapter } from '@/infrastructure/adapter'
+import { BCryptEncryptsPasswordAdapter, PinoLoggerAdapter } from '@/infrastructure/adapter'
 import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
 import { Controller } from '@/presentation/protocols'
 import {
@@ -31,10 +31,9 @@ export class CreateUserAccountFactory {
   }
 
   makeControllerFactory = (): Controller => {
+    const logger = new PinoLoggerAdapter()
     const createUserAccount = this.makeCreateUserAccountFactory()
     const controller = new CreateUserAccountController(createUserAccount)
-    return new LogControllerDecorator(
-      CreateUserAccountController.name,
-      controller)
+    return new LogControllerDecorator(logger, controller)
   }
 }
