@@ -20,24 +20,6 @@ const fieldInvalid = {
   }
 }
 
-interface ValidationResponse {
-  containsError: boolean
-  field?: string
-}
-
-const validateRequest = (request: HttpRequest): ValidationResponse => {
-  const requiredFields = ['name', 'email', 'password']
-
-  for (const field of requiredFields) {
-    const value = request.body[field]
-    if (fieldInvalid[field](value)) {
-      return { containsError: true, field }
-    }
-  }
-
-  return { containsError: false }
-}
-
 export class CreateUserAccountController implements Controller {
   private readonly createUserAccount: CreateUserAccount
 
@@ -46,9 +28,13 @@ export class CreateUserAccountController implements Controller {
   }
 
   async handle (request: HttpRequest): Promise<HttpResponse> {
-    const validation = validateRequest(request)
-    if (validation.containsError) {
-      return unProcessableEntity(new MissingParamError(validation.field))
+    const requiredFields = ['name', 'email', 'password']
+
+    for (const field of requiredFields) {
+      const value = request.body[field]
+      if (fieldInvalid[field](value)) {
+        return unProcessableEntity(new MissingParamError(field))
+      }
     }
 
     const response = await this.createUserAccount.execute(request.body)
