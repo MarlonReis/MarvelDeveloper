@@ -56,10 +56,8 @@ export class CreateUserAccountController implements Controller {
       return await Promise.resolve(createSuccess())
     }
 
-    if (response.isFailure()) {
-      if (response.value instanceof DuplicatePropertyError) {
-        return badRequest(response.value.message)
-      }
+    if (response.value instanceof DuplicatePropertyError) {
+      return badRequest(response.value.message)
     }
 
     return internalServerError(response.value)
