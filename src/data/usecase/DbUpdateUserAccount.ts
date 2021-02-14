@@ -1,7 +1,6 @@
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 import { FindUserAccountByIdRepository } from '@/data/repository/FindUserAccountByIdRepository'
 import { UpdateUserAccountRepository } from '@/data/repository/UpdateUserAccountRepository'
-import { DuplicatePropertyError, InvalidPasswordParameterError, RepositoryInternalError } from '@/data/error'
 import { UpdateUserAccount } from '@/domain/usecase/UpdateUserAccount'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
 import { UpdateUserData } from '@/domain/model/user/UserData'
@@ -9,6 +8,11 @@ import { InvalidParamError } from '@/domain/errors'
 import { Either, failure, success } from '@/shared/Either'
 import { User } from '@/domain/model/user/User'
 import { Email } from '@/domain/value-object'
+import {
+  DuplicatePropertyError,
+  InvalidPasswordParameterError,
+  RepositoryInternalError
+} from '@/data/error'
 
 export class DbUpdateUserAccount implements UpdateUserAccount {
   private readonly encryptsPassword: EncryptsPassword
@@ -27,13 +31,17 @@ export class DbUpdateUserAccount implements UpdateUserAccount {
     this.encryptsPassword = encrypt
   }
 
-  async execute (data: UpdateUserData): Promise<Either<
-    InvalidParamError | DuplicatePropertyError |
-    InvalidPasswordParameterError | RepositoryInternalError, void
-  >> {
+  async execute (data: UpdateUserData): Promise<
+    Either<InvalidParamError | DuplicatePropertyError | InvalidPasswordParameterError
+      | RepositoryInternalError, void>> {
     const userAccountOrError = await this.findUserAccountByIdRepo.execute(data.id)
 
+    if (userAccountOrError.isFailure()) {
+      return failure(userAccountOrError.value)
+    }
+
     const userAccount = userAccountOrError.value as User
+
     const emailData = Email.create(data.email)
 
     if (emailData.isSuccess() && !emailData.value.isEqual(userAccount.email)) {
