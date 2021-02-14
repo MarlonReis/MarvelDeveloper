@@ -14,6 +14,11 @@ import {
   RepositoryInternalError
 } from '@/data/error'
 
+const canChangePasswords = (paramEmail: string, accountEmail: string): boolean => {
+  const emailData = Email.create(paramEmail)
+  return emailData.isSuccess() && !emailData.value.isEqual(accountEmail)
+}
+
 export class DbUpdateUserAccount implements UpdateUserAccount {
   private readonly encryptsPassword: EncryptsPassword
   private readonly updateUserAccountRepo: UpdateUserAccountRepository
@@ -32,8 +37,7 @@ export class DbUpdateUserAccount implements UpdateUserAccount {
   }
 
   async execute (data: UpdateUserData): Promise<
-    Either<InvalidParamError | DuplicatePropertyError | InvalidPasswordParameterError
-      | RepositoryInternalError, void>> {
+    Either<InvalidParamError | DuplicatePropertyError | InvalidPasswordParameterError | RepositoryInternalError, void>> {
     const userAccountOrError = await this.findUserAccountByIdRepo.execute(data.id)
 
     if (userAccountOrError.isFailure()) {
@@ -42,9 +46,7 @@ export class DbUpdateUserAccount implements UpdateUserAccount {
 
     const userAccount = userAccountOrError.value as User
 
-    const emailData = Email.create(data.email)
-
-    if (emailData.isSuccess() && !emailData.value.isEqual(userAccount.email)) {
+    if (canChangePasswords(data.email, userAccount.email)) {
       const emailOrError = await this.findUserAccountByEmailRepo.execute(data.email)
       if (emailOrError.isSuccess()) {
         return failure(new DuplicatePropertyError(`Email '${data.email}' is already being used by another account!`))
