@@ -54,6 +54,8 @@ const findByIdRepoStubFactory = (): FindUserAccountByIdRepository => {
         id: 'valid-id',
         name: 'Any Name',
         email: 'any@valid.com.br',
+        password: 'OldPasswordEncrypted',
+        profileImage: 'OldImagePath',
         status: StatusUser.CREATED
       })
     }
@@ -107,6 +109,30 @@ describe('UpdateUserAccount', () => {
       password: 'AnyPasswordEncrypted',
       profileImage: 'imagePath',
       status: StatusUser.CREATED
+    })
+  })
+
+  test('should be not change property when is undefined', async () => {
+    const { sut, updateRepoStub } = makeSutFactory()
+    const executeSpy = jest.spyOn(updateRepoStub, 'execute')
+
+    const response = await sut.execute({
+      ...defaultUpdateParam,
+      password: undefined,
+      profileImage: undefined,
+      name: undefined,
+      status: StatusUser.DELETED
+    })
+
+
+    expect(response.isSuccess()).toBe(true)
+    expect(executeSpy).toBeCalledWith({
+      id: 'valid-id',
+      name: 'Any Name',
+      email: 'any@valid.com.br',
+      password: 'OldPasswordEncrypted',
+      profileImage: 'OldImagePath',
+      status: StatusUser.DELETED
     })
   })
 
@@ -214,5 +240,21 @@ describe('UpdateUserAccount', () => {
     }))
   })
 
+
+  test('should return failure when update repository return failure ', async () => {
+    const { sut, updateRepoStub } = makeSutFactory()
+    jest.spyOn(updateRepoStub, 'execute').mockImplementationOnce(
+      () => Promise.resolve(failure(new RepositoryInternalError(new Error('Any error'))))
+    )
+
+    const response = await sut.execute(defaultUpdateParam)
+
+    expect(response.isSuccess()).toBe(false)
+    expect(response.value).toBeInstanceOf(RepositoryInternalError)
+    expect(response.value).toMatchObject({
+      message: 'Any error',
+      cause: new Error('Any error')
+    })
+  })
 
 })
