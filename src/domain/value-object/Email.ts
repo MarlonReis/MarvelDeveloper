@@ -12,10 +12,7 @@ export class Email {
     }
 
     isEqual (email: string): boolean {
-        if (email) {
-            return this.value === email
-        }
-        return false
+        return this.value === email
     }
 
     static create (email: string): Either<InvalidParamError, Email> {

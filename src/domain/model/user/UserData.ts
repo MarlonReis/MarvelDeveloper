@@ -20,4 +20,5 @@ export interface UserAccountResponse {
   name: string
   email: string
   status: StatusUser
+  profileImage?: string
 }
