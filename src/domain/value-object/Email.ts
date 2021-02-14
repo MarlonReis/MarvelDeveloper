@@ -11,6 +11,13 @@ export class Email {
         Object.freeze(this)
     }
 
+    isEqual (email: string): boolean {
+        if (email) {
+            return this.value === email
+        }
+        return false
+    }
+
     static create (email: string): Either<InvalidParamError, Email> {
         if (emailValid.test(email)) {
             return success(new Email(email))
