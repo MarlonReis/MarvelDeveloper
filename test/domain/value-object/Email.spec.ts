@@ -5,9 +5,13 @@ import { Either } from '@/shared/Either'
 describe('Email', () => {
     test('should create valid email when receive valid param', () => {
         const result = Email.create('valid@email.com.br')
+
         expect(result.isSuccess()).toBe(true)
         expect(result.value).toBeInstanceOf(Email)
         expect((result.value as any).getValue()).toBe('valid@email.com.br')
+        expect(result.value).toMatchObject({
+            value: 'valid@email.com.br'
+        })
     })
 
     test('should return error message when not contains @', () => {
@@ -70,5 +74,26 @@ describe('Email', () => {
         expect(result.isSuccess()).toBe(false)
         expect(result.isFailure()).toBe(true)
         expect(result.value).toBeInstanceOf(InvalidParamError)
+    })
+
+    test('should return true when emails is equals', () => {
+        const result = Email.create('valid@email.com')
+        const isEquals = (result.value as Email).isEqual('valid@email.com')
+        expect(result.isSuccess()).toBe(true)
+        expect(isEquals).toBe(true)
+    })
+
+    test('should return false when emails is not equals', () => {
+        const result = Email.create('valid@email.com')
+        const isEquals = (result.value as Email).isEqual('is-not-equals@email.com')
+        expect(result.isSuccess()).toBe(true)
+        expect(isEquals).toBe(false)
+    })
+
+    test('should return false when emails is not undefined', () => {
+        const result = Email.create('valid@email.com')
+        const isEquals = (result.value as Email).isEqual(undefined)
+        expect(result.isSuccess()).toBe(true)
+        expect(isEquals).toBe(false)
     })
 })
