@@ -1,3 +1,4 @@
 export enum StatusUser {
-  CREATED
+  CREATED,
+  DELETED
 }
