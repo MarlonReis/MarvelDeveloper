@@ -6,7 +6,17 @@ export interface CreateUserData {
   password: string
 }
 
+export interface UpdateUserData {
+  id: string
+  name?: string
+  email?: string
+  status?: StatusUser
+  password?: string
+  profileImage?: string
+}
+
 export interface UserAccountResponse {
+  id?: string
   name: string
   email: string
   status: StatusUser
