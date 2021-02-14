@@ -5,13 +5,21 @@ import {
   CreateUserAccountController
 } from '@/presentation/controller/CreateUserAccountController'
 import { Either, failure, success } from '@/shared/Either'
-import { badRequest, createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
-import { BadRequestError, MissingParamError } from '@/presentation/error'
+import {
+  badRequest,
+  createSuccess,
+  internalServerError,
+  unProcessableEntity
+} from '@/presentation/helper'
+import {
+  BadRequestError,
+  MissingParamError
+} from '@/presentation/error'
 import { DuplicatePropertyError } from '@/data/error'
 
 const createUserAccountStubFactory = (): CreateUserAccount => {
   class CreateUserAccountStub implements CreateUserAccount {
-    async execute (data: CreateUserData): Promise<Either<InvalidParamError, void>> {
+    async execute(data: CreateUserData): Promise<Either<InvalidParamError, void>> {
       return success()
     }
   }
