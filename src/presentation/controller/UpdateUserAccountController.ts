@@ -1,8 +1,8 @@
 import { ValidateUpdateData } from '@/domain/model/user/UserData'
 import { UpdateUserAccount } from '@/domain/usecase/UpdateUserAccount'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
-import { MissingParamError } from '../error'
-import { unProcessableEntity } from '../helper'
+import { MissingParamError } from '@/presentation/error'
+import { internalServerError, unProcessableEntity } from '@/presentation/helper'
 
 export class UpdateUserAccountController implements Controller {
   private readonly updateUserAccount: UpdateUserAccount
@@ -27,5 +27,7 @@ export class UpdateUserAccountController implements Controller {
     if (response.isSuccess()) {
       return await Promise.resolve({ statusCode: 200 })
     }
+
+    return internalServerError(response.value)
   }
 }
