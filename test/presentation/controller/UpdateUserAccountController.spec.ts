@@ -1,6 +1,6 @@
 import { InvalidParamError } from "@/domain/errors"
 import { UpdateUserData } from "@/domain/model/user/UserData"
-import { UpdateUserAccount } from "@/domain/usecase/UpdateUserAccount"
+import { UpdateUserAccount } from "@/domain/usecase/user/UpdateUserAccount"
 import {
   UpdateUserAccountController
 } from "@/presentation/controller/UpdateUserAccountController"

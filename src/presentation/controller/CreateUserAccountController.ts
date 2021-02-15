@@ -1,5 +1,5 @@
 import { DuplicatePropertyError } from '@/data/error'
-import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
+import { CreateUserAccount } from '@/domain/usecase/user/CreateUserAccount'
 import { Email, Name, Password } from '@/domain/value-object'
 import { MissingParamError } from '@/presentation/error'
 import { badRequest, createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'

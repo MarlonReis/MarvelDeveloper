@@ -1,7 +1,7 @@
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 import { FindUserAccountByIdRepository } from '@/data/repository/FindUserAccountByIdRepository'
 import { UpdateUserAccountRepository } from '@/data/repository/UpdateUserAccountRepository'
-import { UpdateUserAccount } from '@/domain/usecase/UpdateUserAccount'
+import { UpdateUserAccount } from '@/domain/usecase/user/UpdateUserAccount'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
 import { UpdateUserData } from '@/domain/model/user/UserData'
 import { InvalidParamError } from '@/domain/errors'

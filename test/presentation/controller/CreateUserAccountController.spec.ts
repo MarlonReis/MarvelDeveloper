@@ -1,6 +1,6 @@
 import { InvalidParamError } from '@/domain/errors'
 import { CreateUserData } from '@/domain/model/user/UserData'
-import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
+import { CreateUserAccount } from '@/domain/usecase/user/CreateUserAccount'
 import {
   CreateUserAccountController
 } from '@/presentation/controller/CreateUserAccountController'

@@ -1,6 +1,6 @@
 import { InvalidParamError } from '@/domain/errors'
 import { CreateUserData } from '@/domain/model/user/UserData'
-import { CreateUserAccount } from '@/domain/usecase/CreateUserAccount'
+import { CreateUserAccount } from '@/domain/usecase/user/CreateUserAccount'
 import { Either, failure, success } from '@/shared/Either'
 import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'

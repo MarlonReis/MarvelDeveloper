@@ -1,5 +1,5 @@
 import { ValidateUpdateData } from '@/domain/model/user/UserData'
-import { UpdateUserAccount } from '@/domain/usecase/UpdateUserAccount'
+import { UpdateUserAccount } from '@/domain/usecase/user/UpdateUserAccount'
 import {
   Controller,
   HttpRequest,
