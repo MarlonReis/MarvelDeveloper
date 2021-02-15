@@ -5,7 +5,7 @@ import {
   UpdateUserAccountController
 } from "@/presentation/controller/UpdateUserAccountController"
 import { Either, failure, success } from "@/shared/Either"
-import { MissingParamError } from '@/presentation/error'
+import { DuplicatePropertyError, NotFoundError } from "@/data/error"
 
 const updateUserAccountStubFactory = (): UpdateUserAccount => {
   class UpdateUserAccountStub implements UpdateUserAccount {
@@ -88,6 +88,36 @@ describe('UpdateUserAccountController', () => {
     expect(response).toMatchObject({
       statusCode: 500,
       body: { message: "Internal server error" }
+    })
+  })
+
+  test('should return statusCode 404 when not found register by id', async () => {
+    const { sut, updateUserAccountStub } = makeSutFactory()
+
+    jest.spyOn(updateUserAccountStub, 'execute').
+      mockImplementationOnce(() => Promise.
+        resolve(failure(new NotFoundError('Any Error'))))
+
+    const response = await sut.handle({ body: defaultUserDataParam })
+
+    expect(response).toMatchObject({
+      statusCode: 404,
+      body: { message: 'Any Error' }
+    })
+  })
+
+  test('should return statusCode 400 when email that is already in use', async () => {
+    const { sut, updateUserAccountStub } = makeSutFactory()
+
+    jest.spyOn(updateUserAccountStub, 'execute').
+      mockImplementationOnce(() => Promise.
+        resolve(failure(new DuplicatePropertyError('Any Error'))))
+
+    const response = await sut.handle({ body: defaultUserDataParam })
+
+    expect(response).toMatchObject({
+      statusCode: 400,
+      body: { message: 'Any Error' }
     })
   })
 
