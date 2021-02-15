@@ -59,4 +59,49 @@ describe('UserOrm', () => {
       message: "Attribute 'password' equals 'Err' is invalid!"
     })
   })
+
+  test('should validate only the information defined', () => {
+    const response = UserOrm.update({
+      id: 'valid-id',
+      name: 'Valid Name',
+      email: 'valid@password.com',
+      status: StatusUser.DELETED,
+      password: 'ValidPassword',
+      profileImage: 'path-image'
+    })
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toMatchObject({
+      id: 'valid-id',
+      name: 'Valid Name',
+      email: 'valid@password.com',
+      status: StatusUser.DELETED,
+      password: 'ValidPassword',
+      profileImage: 'path-image'
+    })
+  })
+
+  test('should not valid when not defined', () => {
+    const response = UserOrm.update({
+      id: 'valid-id'
+    })
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toMatchObject({
+      id: 'valid-id'
+    })
+  })
+
+  test('should return failure when email invalid', () => {
+    const response = UserOrm.update({
+      id: 'valid-id',
+      email: 'invalid-email',
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.isSuccess()).toBe(false)
+    expect(response.value).toMatchObject({
+      message: "Attribute 'email' equals 'invalid-email' is invalid!"
+    })    
+  })
 })
