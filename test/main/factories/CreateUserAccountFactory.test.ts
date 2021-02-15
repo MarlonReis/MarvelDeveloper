@@ -1,4 +1,4 @@
-import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
+import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { CreateUserAccountFactory } from '@/main/factories/CreateUserAccountFactory'
 import { LogControllerDecorator } from '@/main/factories/LogControllerDecorator'
 const sut = new CreateUserAccountFactory()

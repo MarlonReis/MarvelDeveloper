@@ -6,7 +6,7 @@ import {
 
 import { ConnectionDatabaseFactory } from './ConnectionDatabaseFactory'
 import { PinoLoggerAdapter } from '@/infrastructure/adapter'
-import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
+import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { Controller } from '@/presentation/protocols'
 import {
   CreateUserAccountController

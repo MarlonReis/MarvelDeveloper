@@ -1,4 +1,4 @@
-import { DbUpdateUserAccount } from '@/data/usecase/DbUpdateUserAccount'
+import { DbUpdateUserAccount } from '@/data/usecase/user/DbUpdateUserAccount'
 import { PinoLoggerAdapter } from '@/infrastructure/adapter'
 import {
   FindUserAccountByEmailORMRepository,

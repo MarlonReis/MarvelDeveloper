@@ -5,7 +5,10 @@ import { Either, failure, success } from '@/shared/Either'
 import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
-import { DuplicatePropertyError, RepositoryInternalError } from '@/data/error'
+import {
+  DuplicatePropertyError,
+  RepositoryInternalError
+} from '@/data/error'
 
 export class DbCreateUserAccount implements CreateUserAccount {
   private readonly createUserAccount: CreateUserAccountRepository

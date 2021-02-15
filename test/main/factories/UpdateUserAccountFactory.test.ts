@@ -1,4 +1,4 @@
-import { DbUpdateUserAccount } from "@/data/usecase/DbUpdateUserAccount"
+import { DbUpdateUserAccount } from "@/data/usecase/user/DbUpdateUserAccount"
 import { UpdateUserAccountFactory } from "@/main/factories/UpdateUserAccountFactory"
 import { LogControllerDecorator } from "@/main/factories/LogControllerDecorator"
 

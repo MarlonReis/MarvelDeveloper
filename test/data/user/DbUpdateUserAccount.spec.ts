@@ -13,7 +13,7 @@ import { StatusUser } from "@/domain/model/user/StatusUser";
 import { UpdateUserData, UserAccountResponse } from "@/domain/model/user/UserData";
 import { Either, failure, success } from "@/shared/Either";
 import { EncryptsPassword } from "@/data/protocol/EncryptsPassword";
-import { DbUpdateUserAccount } from "@/data/usecase/DbUpdateUserAccount";
+import { DbUpdateUserAccount } from "@/data/usecase/user/DbUpdateUserAccount";
 
 
 const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {

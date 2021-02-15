@@ -1,4 +1,4 @@
-import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
+import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { CreateUserData } from '@/domain/model/user/UserData'
 import { Either, failure, success } from '@/shared/Either'
 import {
