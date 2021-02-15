@@ -5,10 +5,15 @@ export const createSuccess = (): HttpResponse => ({
     statusCode: 201
 })
 
-// export const ok = (body?: any): HttpResponse => ({
-//     statusCode: 200,
-//     body
-// })
+export const ok = (body?: any): HttpResponse => ({
+    statusCode: 200,
+    body
+})
+
+export const customError = (code: number, body?: any): HttpResponse => ({
+    statusCode: code,
+    body
+})
 
 export const badRequest = (message: string): HttpResponse => ({
     statusCode: 400,
