@@ -1,3 +1,6 @@
+import { InvalidParamError } from '@/domain/errors'
+import { Email, IdEntity, Name, Password } from '@/domain/value-object'
+import { Either, success } from '@/shared/Either'
 import { StatusUser } from './StatusUser'
 
 export interface CreateUserData {
@@ -21,4 +24,25 @@ export interface UserAccountResponse {
   email: string
   status: StatusUser
   profileImage?: string
+}
+
+export const ValidateUpdateData = {
+  id (value: string): Either<InvalidParamError, IdEntity> {
+    return IdEntity.create(value)
+  },
+  name (value: string): Either<InvalidParamError, Name> {
+    return Name.create(value)
+  },
+  email (value: string): Either<InvalidParamError, Email> {
+    return Email.create(value)
+  },
+  status (value: number): Either<InvalidParamError, StatusUser> {
+    return success(value)
+  },
+  password (value: string): Either<InvalidParamError, Password> {
+    return Password.create(value)
+  },
+  profileImage (value: string): Either<InvalidParamError, string> {
+    return success(value)
+  }
 }
