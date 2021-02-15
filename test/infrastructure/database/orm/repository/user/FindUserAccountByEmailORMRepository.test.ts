@@ -1,6 +1,6 @@
 import {
   FindUserAccountByEmailORMRepository
-} from '@/infrastructure/database/orm/repository/FindUserAccountByEmailORMRepository'
+} from '@/infrastructure/database/orm/repository/user/FindUserAccountByEmailORMRepository'
 
 import {
   MySQLTypeOrmConnection
@@ -8,7 +8,7 @@ import {
 
 import {
   CreateUserAccountORMRepository
-} from '@/infrastructure/database/orm/repository/CreateUserAccountORMRepository'
+} from '@/infrastructure/database/orm/repository/user/CreateUserAccountORMRepository'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { NotFoundError, RepositoryInternalError } from '@/data/error'

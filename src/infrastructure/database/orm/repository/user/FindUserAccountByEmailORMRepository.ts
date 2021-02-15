@@ -1,7 +1,7 @@
 import { NotFoundError, RepositoryInternalError } from '@/data/error'
 import {
   FindUserAccountByEmailRepository
-} from '@/data/repository/FindUserAccountByEmailRepository'
+} from '@/data/repository/user/FindUserAccountByEmailRepository'
 import { UserAccountResponse } from '@/domain/model/user/UserData'
 import { Either, failure, success } from '@/shared/Either'
 import { ConnectionDatabase } from '@/infrastructure/database/protocol/ConnectionDatabase'

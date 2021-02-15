@@ -1,4 +1,4 @@
-import { UpdateUserAccountRepository } from '@/data/repository/UpdateUserAccountRepository'
+import { UpdateUserAccountRepository } from '@/data/repository/user/UpdateUserAccountRepository'
 import { UpdateUserData } from '@/domain/model/user/UserData'
 import { RepositoryInternalError } from '@/data/error'
 import { Either, failure, success } from '@/shared/Either'

@@ -8,7 +8,7 @@ import { UserOrm } from "@/infrastructure/database/orm/model/UserOrm"
 import { StatusUser } from "@/domain/model/user/StatusUser"
 import {
   FindUserAccountByIdORMRepository
-} from "@/infrastructure/database/orm/repository/FindUserAccountByIdORMRepository"
+} from "@/infrastructure/database/orm/repository/user/FindUserAccountByIdORMRepository"
 import { NotFoundError, RepositoryInternalError } from "@/data/error"
 
 const config = EnvironmentConfiguration.database()

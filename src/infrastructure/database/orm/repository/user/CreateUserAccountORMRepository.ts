@@ -1,4 +1,4 @@
-import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
+import { CreateUserAccountRepository } from '@/data/repository/user/CreateUserAccountRepository'
 import { ConnectionDatabase } from '@/infrastructure/database/protocol/ConnectionDatabase'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 import { CreateUserData } from '@/domain/model/user/UserData'

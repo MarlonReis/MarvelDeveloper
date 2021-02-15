@@ -8,8 +8,8 @@ import {
   InvalidPasswordParameterError
 } from '@/data/error'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
-import { CreateUserAccountRepository } from '@/data/repository/CreateUserAccountRepository'
-import { FindUserAccountByEmailRepository } from '@/data/repository/FindUserAccountByEmailRepository'
+import { CreateUserAccountRepository } from '@/data/repository/user/CreateUserAccountRepository'
+import { FindUserAccountByEmailRepository } from '@/data/repository/user/FindUserAccountByEmailRepository'
 import { InvalidParamError } from '@/domain/errors'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 

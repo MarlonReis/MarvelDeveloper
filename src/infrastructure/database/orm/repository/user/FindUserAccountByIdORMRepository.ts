@@ -1,9 +1,13 @@
 import { NotFoundError, RepositoryInternalError } from '@/data/error'
-import { FindUserAccountByIdRepository } from '@/data/repository/FindUserAccountByIdRepository'
+import {
+  FindUserAccountByIdRepository
+} from '@/data/repository/user/FindUserAccountByIdRepository'
 import { UserAccountResponse } from '@/domain/model/user/UserData'
 import { Either, failure, success } from '@/shared/Either'
 
-import { ConnectionDatabase } from '@/infrastructure/database/protocol/ConnectionDatabase'
+import {
+  ConnectionDatabase
+} from '@/infrastructure/database/protocol/ConnectionDatabase'
 
 import { Connection } from 'typeorm'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'

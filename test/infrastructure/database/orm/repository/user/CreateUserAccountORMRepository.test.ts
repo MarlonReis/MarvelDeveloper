@@ -1,6 +1,6 @@
 import { RepositoryInternalError } from '@/data/error'
 import { MySQLTypeOrmConnection } from '@/infrastructure/database/orm/connection/MySQLTypeOrmConnection'
-import { CreateUserAccountORMRepository } from '@/infrastructure/database/orm/repository/CreateUserAccountORMRepository'
+import { CreateUserAccountORMRepository } from '@/infrastructure/database/orm/repository/user/CreateUserAccountORMRepository'
 
 const connectionDatabase = new MySQLTypeOrmConnection({
   host: 'localhost',
