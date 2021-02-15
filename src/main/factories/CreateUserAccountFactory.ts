@@ -5,21 +5,19 @@ import {
 } from '@/infrastructure/database/orm'
 
 import { ConnectionDatabaseFactory } from './ConnectionDatabaseFactory'
-import { BCryptEncryptsPasswordAdapter, PinoLoggerAdapter } from '@/infrastructure/adapter'
+import { PinoLoggerAdapter } from '@/infrastructure/adapter'
 import { DbCreateUserAccount } from '@/data/usecase/DbCreateUserAccount'
 import { Controller } from '@/presentation/protocols'
 import {
   CreateUserAccountController
 } from '@/presentation/controller/CreateUserAccountController'
 import { LogControllerDecorator } from './LogControllerDecorator'
+import { EncryptsPasswordFactory } from './EncryptsPasswordFactory'
 
 export class CreateUserAccountFactory {
   makeCreateUserAccountFactory (): DbCreateUserAccount {
-    const salt = 12
-
-    const encryptsPassword = new BCryptEncryptsPasswordAdapter(salt)
-    const connection = new ConnectionDatabaseFactory()
-      .makeConnectionFactory()
+    const encryptsPassword = new EncryptsPasswordFactory().makeFactory()
+    const connection = new ConnectionDatabaseFactory().makeConnectionFactory()
     const createUserAccountRepo = new CreateUserAccountORMRepository(connection)
     const findUserAccountByEmailRepo = new FindUserAccountByEmailORMRepository(connection)
 
