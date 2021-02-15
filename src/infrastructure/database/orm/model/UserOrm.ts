@@ -1,7 +1,7 @@
 import { InvalidParamError } from '@/domain/errors'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { User } from '@/domain/model/user/User'
-import { CreateUserData } from '@/domain/model/user/UserData'
+import { CreateUserData, UpdateUserData, ValidateUpdateData } from '@/domain/model/user/UserData'
 import { Email, Name, Password } from '@/domain/value-object'
 import { Either, failure, success } from '@/shared/Either'
 
@@ -63,11 +63,28 @@ export class UserOrm implements User {
     }
 
     return success(UserBuilder.build()
+      .email(emailOrError.value.getValue())
+      .name(nameOrError.value.getValue())
+      .password(passwordOrError.value.getValue())
+      .status(StatusUser.CREATED)
+      .now())
+  }
+
+  public static update (data: UpdateUserData): Either<InvalidParamError, UserOrm> {
+    for (const field of Object.keys(data)) {
+      const response = ValidateUpdateData[field](data[field])
+      if (response.isFailure()) {
+        return failure(response.value)
+      }
+    }
+
+    return success(UserBuilder.build()
+      .id(data.id)
       .email(data.email)
       .name(data.name)
-      .email(data.email)
       .password(data.password)
-      .status(StatusUser.CREATED)
+      .status(data.status)
+      .profileImage(data.profileImage)
       .now())
   }
 }
@@ -81,6 +98,11 @@ class UserBuilder {
     const build = new UserBuilder()
     build.user = UserOrm.instance()
     return build
+  }
+
+  id (id: string): UserBuilder {
+    this.user.id = id
+    return this
   }
 
   name (name: string): UserBuilder {
@@ -100,6 +122,11 @@ class UserBuilder {
 
   status (status: StatusUser): UserBuilder {
     this.user.status = status
+    return this
+  }
+
+  profileImage (profileImage: string): UserBuilder {
+    this.user.profileImage = profileImage
     return this
   }
 
