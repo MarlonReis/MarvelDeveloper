@@ -1,3 +1,5 @@
 export * from './connection/MySQLTypeOrmConnection'
 export * from './repository/CreateUserAccountORMRepository'
 export * from './repository/FindUserAccountByEmailORMRepository'
+export * from './repository/UpdateUserAccountORMRepository'
+export * from './repository/FindUserAccountByIdORMRepository'
