@@ -10,6 +10,8 @@ import {
   UpdateUserAccountORMRepository
 } from "@/infrastructure/database/orm"
 import { UpdateUserData } from "@/domain/model/user/UserData"
+import { RepositoryInternalError } from "@/data/error"
+import { InvalidParamError } from "@/domain/errors"
 
 const defaultParamData = {
   name: 'Any Name',
@@ -22,13 +24,6 @@ const defaultParamData = {
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
 
-const insertUserData = async (connectionDatabase: MySQLTypeOrmConnection, data: any): Promise<any> => {
-  const result = await connectionDatabase.connection()
-    .createQueryBuilder().insert().into(UserOrm)
-    .values(data).execute()
-  const { id } = result.identifiers[0]
-  return { id, ...data, }
-}
 
 describe('UpdateUserAccountORMRepository', () => {
 
@@ -48,10 +43,14 @@ describe('UpdateUserAccountORMRepository', () => {
   })
 
   test('should update user account existing', async () => {
-    const userInserted = await insertUserData(connectionDatabase, defaultParamData)
-    const sut = new UpdateUserAccountORMRepository(connectionDatabase)
-    const { id } = userInserted
 
+    const result = await connectionDatabase.connection()
+      .createQueryBuilder().insert().into(UserOrm)
+      .values(defaultParamData).execute()
+
+    const { id } = result.identifiers[0]
+
+    const sut = new UpdateUserAccountORMRepository(connectionDatabase)
     const response = await sut.execute({ ...defaultParamData, status: StatusUser.DELETED, id })
 
     const user = await connectionDatabase.connection().getRepository(UserOrm)
@@ -64,6 +63,33 @@ describe('UpdateUserAccountORMRepository', () => {
       ...defaultParamData,
       status: StatusUser.DELETED,
       id
+    })
+  })
+
+  test('should return failure when repository throws', async () => {
+    jest.spyOn(connectionDatabase, 'connection').mockImplementationOnce(() => {
+      throw new Error('Any error')
+    })
+    const sut = new UpdateUserAccountORMRepository(connectionDatabase)
+    const response = await sut.execute({ ...defaultParamData, id: 'any-id' })
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toBeInstanceOf(RepositoryInternalError)
+    expect(response.value).toEqual(new RepositoryInternalError(new Error('Any error')))
+  })
+
+  test('should return failure when user data is invalid', async () => {
+    const sut = new UpdateUserAccountORMRepository(connectionDatabase)
+    const response = await sut.execute({
+      ...defaultParamData,
+      id: 'valid-id',
+      email:'invalid-email'
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toBeInstanceOf(InvalidParamError)
+    expect(response.value).toMatchObject({
+      message: "Attribute 'email' equals 'invalid-email' is invalid!"
     })
   })
 
