@@ -1,11 +1,12 @@
-import { Character } from '@/domain/model/character/Character'
-import { Comic } from '@/domain/model/comic/Comic'
 import {
-  Column, Entity, JoinTable,
+  Column, Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
+
 import { CharacterOrm } from './CharacterOrm'
+import { Comic } from '@/domain/model/comic/Comic'
 
 @Entity('comics')
 export class ComicOrm implements Comic {
@@ -15,16 +16,16 @@ export class ComicOrm implements Comic {
   @Column({ type: 'varchar', length: 150 })
   title: string
 
-  @Column({ type: 'date', default: new Date() })
+  @Column('date')
   published: Date
 
-  @Column('varchar2')
+  @Column('varchar')
   writer: string
 
-  @Column('varchar2')
+  @Column('varchar')
   penciler: string
 
-  @Column('varchar2')
+  @Column('varchar')
   coverArtist: string
 
   @Column('text')
@@ -36,7 +37,9 @@ export class ComicOrm implements Comic {
   @Column('text')
   coverImage: string
 
-  @JoinTable()
-  @ManyToMany(() => CharacterOrm)
-  characters: Character[]
+  @JoinTable({ name: 'comic_has_many_characters' })
+  @ManyToMany(type => CharacterOrm, characters => characters.comics, {
+    eager: true
+  })
+  characters: CharacterOrm[]
 }

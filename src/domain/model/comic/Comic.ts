@@ -10,5 +10,5 @@ export interface Comic {
   description: string
   edition: number
   coverImage: string
-  characters: Character[]
+  characters?: Character[]
 }

@@ -6,7 +6,7 @@ export interface Character {
   description: string
   topImage: string
   profileImage: string
-  comics: Comic[]
+  comics?: Comic[]
 }
 
 export class CharacterBuilder {

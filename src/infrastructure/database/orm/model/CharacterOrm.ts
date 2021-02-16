@@ -1,18 +1,17 @@
 import { InvalidParamError } from '@/domain/errors'
 import { Character, CharacterBuilder } from '@/domain/model/character/Character'
 import { CharacterValidationData, CreateCharacterData } from '@/domain/model/character/CharacterData'
-import { Comic } from '@/domain/model/comic/Comic'
 import { Either, failure, success } from '@/shared/Either'
-import { ComicOrm } from './ComicOrm'
 
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { ComicOrm } from './ComicOrm'
 
 @Entity('characters')
 export class CharacterOrm implements Character {
   @PrimaryGeneratedColumn('uuid')
   id: string
 
-  @Column({ type: 'varchar', length: 150 })
+  @Column('varchar')
   name: string
 
   @Column('text')
@@ -24,8 +23,8 @@ export class CharacterOrm implements Character {
   @Column('text')
   profileImage: string
 
-  @ManyToMany(() => ComicOrm)
-  comics: Comic[]
+  @ManyToMany(type => ComicOrm, comics => comics.characters)
+  comics: ComicOrm[]
 
   private constructor () { }
 
@@ -40,8 +39,8 @@ export class CharacterOrm implements Character {
     }
 
     return success(CharacterBuilder.build(new CharacterOrm())
-    .name(data.name).description(data.description)
-    .topImage(data.topImage).profileImage(data.profileImage)
-    .now())
+      .name(data.name).description(data.description)
+      .topImage(data.topImage).profileImage(data.profileImage)
+      .now() as CharacterOrm)
   }
 }
