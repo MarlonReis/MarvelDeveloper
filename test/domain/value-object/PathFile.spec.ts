@@ -5,6 +5,7 @@ describe('PathFile', () => {
     const path = PathFile.create('anyAttribute', "http://anyurl.com/image.png")
 
     expect(path.isSuccess()).toBe(true)
+    expect((path.value as PathFile).getValue()).toBe('http://anyurl.com/image.png')
     expect(path.value).toMatchObject({
       value: 'http://anyurl.com/image.png'
     })
