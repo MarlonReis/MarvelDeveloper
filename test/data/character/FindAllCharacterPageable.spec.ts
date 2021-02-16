@@ -24,16 +24,29 @@ const defaultResponse = {
   }]
 }
 
+const findAllPageableRepoStubFactory = (): FindAllCharacterPageableRepository => {
+  class FindAllPageableRepoStub implements FindAllCharacterPageableRepository {
+    async execute(page: number, limit: number): Promise<Either<NotFoundError, Pagination<CharacterResponse>>> {
+      return success(defaultResponse)
+    }
+  }
+  return new FindAllPageableRepoStub()
+}
+
+type TypeSut = {
+  repository: FindAllCharacterPageableRepository
+  sut: DbFindAllCharacterPageable
+}
+
+const makeSutFactory = (): TypeSut => {
+  const repository = findAllPageableRepoStubFactory()
+  const sut = new DbFindAllCharacterPageable(repository)
+  return { repository, sut }
+}
+
 describe('FindAllCharacterPageable', () => {
   test('should return success when found register', async () => {
-    class FindAllPageableRepoStub implements FindAllCharacterPageableRepository {
-      async execute(page: number, limit: number): Promise<Either<NotFoundError, Pagination<CharacterResponse>>> {
-        return success(defaultResponse)
-      }
-    }
-
-    const repository = new FindAllPageableRepoStub()
-    const sut = new DbFindAllCharacterPageable(repository)
+    const { sut } = makeSutFactory()
     const response = await sut.execute(0, 20)
     expect(response.value).toEqual(defaultResponse)
   })
