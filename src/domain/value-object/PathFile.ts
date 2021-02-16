@@ -10,7 +10,7 @@ export class PathFile {
   }
 
   static create (attribute: string, path: string): Either<InvalidParamError, PathFile> {
-    if (path && /.{8,}/.test(path)) {
+    if (/(http[s]?:[//].*.(?:png|jpg|gif|svg|jpeg))/.test(path)) {
       return success(new PathFile(path))
     }
     return failure(new InvalidParamError(attribute, path))
