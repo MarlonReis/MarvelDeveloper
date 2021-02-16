@@ -1,14 +1,14 @@
 import {
   FindUserAccountByEmailRepository
-} from "@/data/repository/FindUserAccountByEmailRepository";
+} from "@/data/repository/user/FindUserAccountByEmailRepository";
 import {
   DuplicatePropertyError,
   InvalidPasswordParameterError,
   NotFoundError,
   RepositoryInternalError
 } from "@/data/error";
-import { UpdateUserAccountRepository } from "@/data/repository/UpdateUserAccountRepository";
-import { FindUserAccountByIdRepository } from "@/data/repository/FindUserAccountByIdRepository";
+import { UpdateUserAccountRepository } from "@/data/repository/user/UpdateUserAccountRepository";
+import { FindUserAccountByIdRepository } from "@/data/repository/user/FindUserAccountByIdRepository";
 import { StatusUser } from "@/domain/model/user/StatusUser";
 import { UpdateUserData, UserAccountResponse } from "@/domain/model/user/UserData";
 import { Either, failure, success } from "@/shared/Either";
