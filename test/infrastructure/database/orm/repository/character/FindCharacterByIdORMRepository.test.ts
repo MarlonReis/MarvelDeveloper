@@ -6,6 +6,8 @@ import {
 } from "@/infrastructure/database/orm/connection/MySQLTypeOrmConnection"
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { FindCharacterByIdORMRepository } from "@/infrastructure/database/orm"
+import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { failure } from "@/shared/Either"
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
@@ -50,6 +52,34 @@ describe('FindCharacterByIdORMRepository', () => {
       ...defaultCharacterData,
       id, comic: undefined
     })
-
   })
+
+  test('should return failure when not found register by id ', async () => {
+    const sut = new FindCharacterByIdORMRepository(connectionDatabase)
+    const response = await sut.execute('valid-id')
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new NotFoundError("Cannot found character by id equals 'valid-id'!"))
+    expect(response.value).toMatchObject({
+      message: "Cannot found character by id equals 'valid-id'!"
+    })
+  })
+
+  test('should return failure when orm throws error', async () => {
+
+    jest.spyOn(connectionDatabase, 'connection').
+      mockImplementationOnce(() => { throw new Error("Any error") })
+
+    const sut = new FindCharacterByIdORMRepository(connectionDatabase)
+    const response = await sut.execute('valid-id')
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new RepositoryInternalError(new Error("Any error")))
+    expect(response.value).toMatchObject({
+      cause: new Error("Any error"),
+      message: "Any error"
+    })
+  })
+
+
 })
