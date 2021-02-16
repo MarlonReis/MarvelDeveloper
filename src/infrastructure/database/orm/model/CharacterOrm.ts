@@ -29,10 +29,6 @@ export class CharacterOrm implements Character {
 
   private constructor () { }
 
-  protected static instance (): CharacterOrm {
-    return new CharacterOrm()
-  }
-
   public static create (data: CreateCharacterData): Either<InvalidParamError, CharacterOrm> {
     const fieldsRequired = ['name', 'topImage', 'profileImage', 'description']
 
