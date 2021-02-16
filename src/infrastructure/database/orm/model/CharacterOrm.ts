@@ -39,11 +39,9 @@ export class CharacterOrm implements Character {
       }
     }
 
-    const user = CharacterBuilder.build(new CharacterOrm())
-      .name(data.name).description(data.description)
-      .topImage(data.topImage).profileImage(data.profileImage)
-      .now()
-
-    return success(user)
+    return success(CharacterBuilder.build(new CharacterOrm())
+    .name(data.name).description(data.description)
+    .topImage(data.topImage).profileImage(data.profileImage)
+    .now())
   }
 }
