@@ -1,5 +1,5 @@
 import { CharacterResponse } from '@/domain/model/character/CharacterData'
-import { Pagination } from '@/domain/healper/Pagination'
+import { Pagination } from '@/domain/helper/Pagination'
 import { NotFoundError } from '@/data/error'
 import { Either } from '@/shared/Either'
 
