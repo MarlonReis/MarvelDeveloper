@@ -10,7 +10,7 @@ export class Description {
     }
 
     static create (description: string): Either<InvalidParamError, Description> {
-        if (/.{3,}/.test(description)) {
+        if (description && /.{3,}/.test(description)) {
             return success(new Description(description))
         }
 
