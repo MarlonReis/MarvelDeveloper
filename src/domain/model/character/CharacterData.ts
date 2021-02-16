@@ -1,6 +1,7 @@
 import { InvalidParamError } from '@/domain/errors'
 import { Description, Name, PathFile } from '@/domain/value-object'
 import { Either } from '@/shared/Either'
+import { Comic } from '@/domain/model/comic/Comic'
 
 export interface CreateCharacterData {
   name: string
@@ -15,7 +16,7 @@ export interface CharacterResponse {
   description: string
   topImage: string
   profileImage: string
-  comics: any[]
+  comics: Comic[]
 }
 
 export const CharacterValidationData = {
