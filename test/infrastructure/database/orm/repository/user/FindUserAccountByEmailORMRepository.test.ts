@@ -12,18 +12,15 @@ import {
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 
 describe('FindUserAccountByEmailORMRepository', () => {
   let connectionDatabase: MySQLTypeOrmConnection
   let sut: FindUserAccountByEmailORMRepository
 
   beforeAll(async () => {
-    connectionDatabase = new MySQLTypeOrmConnection({
-      host: 'localhost',
-      port: 3306,
-      username: 'admin',
-      password: 'M4rv3lD4t4BaS3'
-    })
+    const config = EnvironmentConfiguration.database()
+    connectionDatabase = new MySQLTypeOrmConnection(config)
     await connectionDatabase.open()
   })
 

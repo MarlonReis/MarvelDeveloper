@@ -1,13 +1,10 @@
 import { RepositoryInternalError } from '@/data/error'
 import { MySQLTypeOrmConnection } from '@/infrastructure/database/orm/connection/MySQLTypeOrmConnection'
 import { CreateUserAccountORMRepository } from '@/infrastructure/database/orm/repository/user/CreateUserAccountORMRepository'
+import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 
-const connectionDatabase = new MySQLTypeOrmConnection({
-  host: 'localhost',
-  port: 3306,
-  username: 'admin',
-  password: 'M4rv3lD4t4BaS3'
-})
+const config = EnvironmentConfiguration.database()
+const connectionDatabase = new MySQLTypeOrmConnection(config)
 
 describe('CreateUserAccountORMRepository', () => {
   beforeEach(async () => {
