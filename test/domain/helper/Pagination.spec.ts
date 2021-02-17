@@ -78,31 +78,36 @@ describe('Pagination', () => {
   })
 
 
-  test('should return pagination builder', () => {
-    const data = []
-    for (let i = 0; i < 20; i++) { data.push(i) }
+  test('should return pagination builder with first', () => {
+    const items = []
+    for (let i = 0; i < 20; i++) { items.push(i) }
 
-    const paginationWithFistPage = buildPagination(1, 5, 100, false, true, data)
-    const paginationWithLastPage = buildPagination(5, 5, 100, true, false, data)
+    const paginationWithFistPage = buildPagination(1, 5, 100, false, true, items)  
     
-
     expect(paginationWithFistPage).toEqual({
       from: 1, to: 5, perPage: 20, total: 100,
       currentPage: 1, prevPage: false,
-      nextPage: true, data
+      nextPage: true,
+      data: items
     })
+  })
+
+  test('should return pagination builder with last', () => {
+    const items = []
+    for (let i = 0; i < 20; i++) { items.push(i) }
+    const paginationWithLastPage = buildPagination(5, 5, 100, true, false, items)
 
     expect(paginationWithLastPage).toEqual({
       from: 5, to: 5, perPage: 19,
       total: 100, currentPage: 5,
       prevPage: true, nextPage: false,
-      data
+      data:items
     })
   })
 
 
-  test('should return pagination builder', () => {
-    const paginationWithDataEmpty = buildPagination(5, 5, 100, true, false, [])
+  test('should return data empty when data is undefined', () => {
+    const paginationWithDataEmpty = buildPagination(5, 5, 100, true, false, undefined)
     expect(paginationWithDataEmpty).toEqual({
       from: 5, to: 5, perPage: 0,
       total: 100, currentPage: 5,
