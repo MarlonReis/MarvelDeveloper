@@ -4,6 +4,7 @@ import {
 } from "@/infrastructure/database/orm/connection/MySQLTypeOrmConnection"
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { FindAllCharacterPageableORMRepository } from "@/infrastructure/database/orm"
+import { RepositoryInternalError } from "@/data/error"
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
@@ -50,4 +51,35 @@ describe('FindAllCharacterPageableORMRepository', () => {
       ])
     })
   })
+
+  test('should return success with data pageable and data empty when not found', async () => {
+    const sut = new FindAllCharacterPageableORMRepository(connectionDatabase)
+    const response = await sut.execute(1, 10)
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toEqual({
+      from: 1,
+      to: 0,
+      perPage: 0,
+      total: 0,
+      currentPage: 1,
+      prevPage: false,
+      nextPage: false,
+      data: []
+    })
+  })
+
+  test('should return failure when repository throws error', async () => {
+    jest.spyOn(connectionDatabase, 'connection')
+      .mockImplementationOnce(() => { throw new Error("Any error") })
+
+    const sut = new FindAllCharacterPageableORMRepository(connectionDatabase)
+    const response = await sut.execute(1, 10)
+
+    expect(response.isSuccess()).toBe(false)
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new RepositoryInternalError(Error("Any error")))
+  })
+
+
 })
