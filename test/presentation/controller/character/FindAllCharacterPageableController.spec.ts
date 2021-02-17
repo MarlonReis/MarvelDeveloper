@@ -1,12 +1,15 @@
-import { NotFoundError } from "@/data/error"
-import { Pagination } from "@/domain/helper/Pagination"
-import { CharacterResponse } from "@/domain/model/character/CharacterData"
 import { FindAllCharacterPageable } from "@/domain/usecase/character/FindAllCharacterPageable"
+import { CharacterResponse } from "@/domain/model/character/CharacterData"
+import { InternalServerError } from "@/presentation/error"
 import { Either, failure, success } from "@/shared/Either"
+import { Pagination } from "@/domain/helper/Pagination"
+import { NotFoundError } from "@/data/error"
+
+
 import {
   FindAllCharacterPageableController
 } from "@/presentation/controller/character/FindAllCharacterPageableController"
-import { InternalServerError } from "@/presentation/error"
+
 
 const defaultCharacterData = {
   id: 'valid-id',
