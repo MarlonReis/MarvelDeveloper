@@ -12,22 +12,31 @@ const defaultCharacterData = {
   profileImage: 'https://anyserver.com/profileImage.png',
 }
 
+const createCharacterStubFactory = (): CreateCharacter => {
+  class CreateCharacterStub implements CreateCharacter {
+    async execute(data: CreateCharacterData): Promise<Either<InvalidParamError, void>> {
+      return success()
+    }
+  }
+  return new CreateCharacterStub()
+}
 
+type TypeSut = {
+  createCharacterStub: CreateCharacter
+  sut: CreateCharacterController
+}
+
+const makeSutFactory = (): TypeSut => {
+  const createCharacterStub = createCharacterStubFactory()
+  const sut = new CreateCharacterController(createCharacterStub);
+  return { createCharacterStub, sut }
+}
 
 describe('CreateCharacterController', () => {
 
   test('should create a new character with success', async () => {
-    class CreateCharacterStub implements CreateCharacter {
-      async execute(data: CreateCharacterData): Promise<Either<InvalidParamError, void>> {
-        return success()
-      }
-    }
-
-    const createCharacterStub = new CreateCharacterStub()
-    const sut = new CreateCharacterController(createCharacterStub);
-
-    const response = await sut.handle({ body: defaultCharacterData   })
-
+    const { sut } = makeSutFactory()
+    const response = await sut.handle({ body: defaultCharacterData })
     expect(response).toEqual({ statusCode: 201 })
 
   })
