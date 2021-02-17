@@ -1,5 +1,5 @@
 import { InvalidParamError } from "@/domain/errors";
-import { Either, success } from "@/shared/Either";
+import { Either, failure, success } from "@/shared/Either";
 
 import { CreateCharacterData } from "@/domain/model/character/CharacterData";
 import { CreateCharacter } from "@/domain/usecase/character/CreateCharacter";
@@ -38,6 +38,41 @@ describe('CreateCharacterController', () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({ body: defaultCharacterData })
     expect(response).toEqual({ statusCode: 201 })
-
   })
+
+  test('should return statusCode 422 when name is invalid', async () => {
+    const { sut } = makeSutFactory()
+    const response = await sut.handle({
+      body: {
+        ...defaultCharacterData,
+        name: undefined
+      }
+    })
+
+    expect(response).toMatchObject({
+      statusCode: 422,
+      body: {
+        message: "Attribute 'name' is invalid!"
+      }
+    })
+  })
+
+  test('should return statusCode 500 when use case return error', async () => {
+    const { sut, createCharacterStub } = makeSutFactory()
+
+    jest.spyOn(createCharacterStub, 'execute').
+      mockImplementationOnce(async () => failure(new Error('Any error')))
+
+    const response = await sut.handle({ body: defaultCharacterData })
+
+    expect(response).toMatchObject({
+      statusCode: 500,
+      body: {
+        cause: new  Error('Any error'),
+        message: 'Internal server error'
+      }
+    })    
+  })
+
+
 })
