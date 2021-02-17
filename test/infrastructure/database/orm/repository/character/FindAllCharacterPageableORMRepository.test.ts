@@ -81,5 +81,22 @@ describe('FindAllCharacterPageableORMRepository', () => {
     expect(response.value).toEqual(new RepositoryInternalError(Error("Any error")))
   })
 
+  test('should use default param value when undefined', async () => {
+    const sut = new FindAllCharacterPageableORMRepository(connectionDatabase)
+    const response = await sut.execute()
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toEqual({
+      from: 1,
+      to: 0,
+      perPage: 0,
+      total: 0,
+      currentPage: 1,
+      prevPage: false,
+      nextPage: false,
+      data: []
+    })
+  })
+
 
 })
