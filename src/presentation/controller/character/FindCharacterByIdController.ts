@@ -1,6 +1,7 @@
+import { NotFoundError } from '@/data/error'
 import { FindCharacterById } from '@/domain/usecase/character/FindCharacterById'
 import { IdEntity } from '@/domain/value-object'
-import { badRequest, internalServerError, ok } from '@/presentation/helper'
+import { badRequest, customError, internalServerError, ok } from '@/presentation/helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 const isInvalidParam = (req: HttpRequest): boolean => {
@@ -28,6 +29,11 @@ export class FindCharacterByIdController implements Controller {
     if (response.isSuccess()) {
       return ok(response.value)
     }
+
+    if (response.value instanceof NotFoundError) {
+      return customError(404, response.value)
+    }
+
     return internalServerError(response.value)
   }
 }
