@@ -9,8 +9,6 @@ import { CharacterOrm } from '@/infrastructure/database/orm/model/CharacterOrm'
 const connectionDatabase = new ConnectionDatabaseFactory()
   .makeConnectionFactory()
 
-const getRequest = request(app).get('/api/characters')
-
 const defaultCharacterData = {
   name: "Any Name",
   description: "Any description",
@@ -20,26 +18,30 @@ const defaultCharacterData = {
 
 
 describe('FindAllCharacterPageableRouter', () => {
-  beforeAll(async () => {
-    await connectionDatabase.open()
-  })
 
-  afterEach(async () => {
-    await connectionDatabase.connection().createQueryBuilder().delete()
-      .from(CharacterOrm).execute()
+  beforeEach(async () => {
+    await connectionDatabase.open()
+
+    await connectionDatabase.connection().
+    createQueryBuilder().delete().
+    from(CharacterOrm).execute()
   })
 
   afterAll(async () => {
     await connectionDatabase.close()
   })
 
-  test('should return statusCode 200 when found registers', async () => {
+
+  test('should return statusCode 200 when found registers', async (done) => {
     await connectionDatabase.connection().
       createQueryBuilder().insert().into(CharacterOrm).
       values(defaultCharacterData).execute()
 
 
-    await getRequest.query({ page: 0, perPage: 20 }).expect(200).
+    await request(app).get('/api/characters').
+      set('Accept', 'application/json').
+      expect('Content-Type', /json/).
+      query({ page: 0, perPage: 20 }).expect(200).
       then(res => {
         expect(res.body).toEqual({
           from: "0",
@@ -51,8 +53,39 @@ describe('FindAllCharacterPageableRouter', () => {
           nextPage: true,
           data: [defaultCharacterData]
         })
+        done()
       })
   })
+
+  test('should return statusCode 200 and empty data when not found', async (done) => {
+    await request(app).get('/api/characters').
+      set('Accept', 'application/json').
+      expect('Content-Type', /json/).
+      query({ page: 0, perPage: 1 }).expect(200).
+      then(res => {
+        expect(res.body).toEqual({
+          from: "0",
+          to: 0,
+          perPage: 0,
+          total: 0,
+          currentPage: "0",
+          prevPage: false,
+          nextPage: false,
+          data: []
+        })
+        done()
+      })
+  })
+
+  test('should return statusCode 500 when repository throws error', async () => {
+    await connectionDatabase.close()
+
+    await request(app).get('/api/characters').
+      set('Accept', 'application/json').
+      expect('Content-Type', /json/).
+      expect(500)
+  })
+
 
 })
 
