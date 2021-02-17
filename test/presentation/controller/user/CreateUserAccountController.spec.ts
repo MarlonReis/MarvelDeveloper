@@ -3,7 +3,7 @@ import { CreateUserData } from '@/domain/model/user/UserData'
 import { CreateUserAccount } from '@/domain/usecase/user/CreateUserAccount'
 import {
   CreateUserAccountController
-} from '@/presentation/controller/CreateUserAccountController'
+} from '@/presentation/controller/user/CreateUserAccountController'
 import { Either, failure, success } from '@/shared/Either'
 import {
   badRequest,

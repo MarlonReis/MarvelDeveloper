@@ -3,7 +3,7 @@ import { UpdateUserData } from "@/domain/model/user/UserData"
 import { UpdateUserAccount } from "@/domain/usecase/user/UpdateUserAccount"
 import {
   UpdateUserAccountController
-} from "@/presentation/controller/UpdateUserAccountController"
+} from "@/presentation/controller/user/UpdateUserAccountController"
 import { Either, failure, success } from "@/shared/Either"
 import { DuplicatePropertyError, NotFoundError } from "@/data/error"
 

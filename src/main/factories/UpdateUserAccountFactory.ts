@@ -8,7 +8,7 @@ import {
 
 import {
   UpdateUserAccountController
-} from '@/presentation/controller/UpdateUserAccountController'
+} from '@/presentation/controller/user/UpdateUserAccountController'
 import { Controller } from '@/presentation/protocols'
 import { ConnectionDatabaseFactory } from '@/main/factories/ConnectionDatabaseFactory'
 import { LogControllerDecorator } from '@/main/factories/LogControllerDecorator'

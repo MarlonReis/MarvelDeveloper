@@ -10,7 +10,7 @@ import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { Controller } from '@/presentation/protocols'
 import {
   CreateUserAccountController
-} from '@/presentation/controller/CreateUserAccountController'
+} from '@/presentation/controller/user/CreateUserAccountController'
 import { LogControllerDecorator } from './LogControllerDecorator'
 import { EncryptsPasswordFactory } from './EncryptsPasswordFactory'
 
