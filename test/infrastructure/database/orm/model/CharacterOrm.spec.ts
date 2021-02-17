@@ -30,7 +30,7 @@ describe('CharacterOrm', () => {
     })
   })
 
-  test('should return failure when path image is invalid', () => {
+  test('should return failure when path topImage is invalid', () => {
     const response = CharacterOrm.create({
       ...defaultCharacterProp,
       topImage:'invalid-path'
@@ -40,6 +40,19 @@ describe('CharacterOrm', () => {
     expect(response.value).toBeInstanceOf(InvalidParamError)
     expect(response.value).toMatchObject({
       message:"Attribute 'topImage' equals 'invalid-path' is invalid!"
+    })
+  })
+
+  test('should return failure when profileImage is invalid', () => {
+    const response = CharacterOrm.create({
+      ...defaultCharacterProp,
+      profileImage:'invalid-path'
+    })
+   
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toBeInstanceOf(InvalidParamError)
+    expect(response.value).toMatchObject({
+      message:"Attribute 'profileImage' equals 'invalid-path' is invalid!"
     })
   })
 
