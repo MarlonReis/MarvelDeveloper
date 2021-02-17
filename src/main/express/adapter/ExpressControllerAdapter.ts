@@ -6,9 +6,9 @@ import { HttpRequest, HttpResponse } from '@/presentation/protocols/Http'
 
 export const ExpressControllerAdapter = (controller: Controller) => {
   return async (req: Request, res: Response): Promise<any> => {
-    const { body, params } = req
+    const { body, params, query } = req
 
-    const request: HttpRequest = { body, params }
+    const request: HttpRequest = { body, params, query }
     const response: HttpResponse = await controller.handle(request)
 
     if (response.statusCode === 200 || response.statusCode === 201) {
