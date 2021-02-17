@@ -3,6 +3,13 @@ import { IdEntity } from '@/domain/value-object'
 import { badRequest, internalServerError, ok } from '@/presentation/helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
+const isInvalidParam = (req: HttpRequest): boolean => {
+  if ('params' in req && 'id' in req.params) {
+    return IdEntity.create(req.params.id).isFailure()
+  }
+  return true
+}
+
 export class FindCharacterByIdController implements Controller {
   private readonly findCharacterById: FindCharacterById
 
@@ -11,12 +18,11 @@ export class FindCharacterByIdController implements Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { id } = httpRequest.params
-
-    const characterId = IdEntity.create(id)
-    if (characterId.isFailure()) {
+    if (isInvalidParam(httpRequest)) {
       return badRequest("Attribute 'id' is invalid!")
     }
+
+    const { id } = httpRequest.params
 
     const response = await this.findCharacterById.execute(id)
     if (response.isSuccess()) {
