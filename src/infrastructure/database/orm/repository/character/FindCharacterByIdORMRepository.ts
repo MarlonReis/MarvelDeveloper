@@ -20,8 +20,8 @@ export class FindCharacterByIdORMRepository implements FindCharacterByIdReposito
   async execute (id: string): Promise<Either<NotFoundError | RepositoryInternalError, CharacterResponse>> {
     try {
       const character = await this.connectionDatabase.connection().getRepository(CharacterOrm)
-        .createQueryBuilder()
-        .where('id = :id', { id })
+        .createQueryBuilder('character')
+        .where('character.id = :id', { id })
         .getOne()
 
       if (character) {
