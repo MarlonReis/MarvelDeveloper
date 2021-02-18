@@ -18,4 +18,8 @@ export class Published {
 
     return failure(new InvalidParamError('published', published))
   }
+
+  public getValue (): Date {
+    return this.value
+  }
 }
