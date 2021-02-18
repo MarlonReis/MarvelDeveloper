@@ -23,7 +23,21 @@ describe('ComicOrm', () => {
       ...defaultComicData,
       edition: 4,
       published: new Date('2021-01-10')
-    })     
+    })
+  })
+
+  test('should return success when undefined characters', () => {
+    const response = ComicOrm.create({
+      ...defaultComicData,
+      characters: undefined
+    })
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toMatchObject({
+      ...defaultComicData,
+      edition: 4,
+      published: new Date('2021-01-10')
+    })
   })
 
   test('should return failure when title is invalid', () => {
@@ -36,5 +50,17 @@ describe('ComicOrm', () => {
     })
   })
 
-  
+  test('should return failure when coverImage is invalid', () => {
+    const response = ComicOrm.create({
+      ...defaultComicData,
+      coverImage: 'invalid path'
+    })
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new InvalidParamError('coverImage', 'invalid path'))
+    expect(response.value).toMatchObject({
+      message: "Attribute 'coverImage' equals 'invalid path' is invalid!"
+    })
+  })
+
 })
