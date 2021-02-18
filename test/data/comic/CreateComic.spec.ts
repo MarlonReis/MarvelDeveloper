@@ -22,30 +22,36 @@ const defaultComicParam = {
   characters: [{ id: 'valid-id-one' }, { id: 'valid-id-two' }, { id: 'valid-id-three' }]
 }
 
+const createComicRepoStubFactory = (): CreateComicRepository => {
+  class CreateComicRepositoryStub implements CreateComicRepository {
+    async execute(data: CreateComicData): Promise<Either<InvalidParamError | RepositoryInternalError, void>> {
+      return success()
+    }
+  }
+  return new CreateComicRepositoryStub()
+}
+
+const findCharacterByIdRepoStubFactory = (): FindCharacterByIdRepository => {
+  class FindCharacterByIdRepoStub implements FindCharacterByIdRepository {
+    async execute(id: string): Promise<Either<NotFoundError | RepositoryInternalError, CharacterResponse>> {
+      return success({
+        id: 'valid-id',
+        name: 'Any Name',
+        description: 'Any Description',
+        topImage: 'http://any-host.com/img.png',
+        profileImage: 'http://any-host.com/img.png',
+        comics: []
+      })
+    }
+  }
+
+  return new FindCharacterByIdRepoStub()
+}
+
 describe('DbCreateComic', () => {
   test('should return success when create with success', async () => {
-
-    class CreateComicRepositoryStub implements CreateComicRepository {
-      async execute(data: CreateComicData): Promise<Either<InvalidParamError | RepositoryInternalError, void>> {
-        return success()
-      }
-    }
-
-    class FindCharacterByIdRepoStub implements FindCharacterByIdRepository {
-      async execute(id: string): Promise<Either<NotFoundError | RepositoryInternalError, CharacterResponse>> {
-        return success({
-          id: 'valid-id',
-          name: 'Any Name',
-          description: 'Any Description',
-          topImage: 'http://any-host.com/img.png',
-          profileImage: 'http://any-host.com/img.png',
-          comics: []
-        })
-      }
-    }
-
-    const findCharacterByIdRepoStub = new FindCharacterByIdRepoStub()
-    const createRepoStub = new CreateComicRepositoryStub()
+    const findCharacterByIdRepoStub = findCharacterByIdRepoStubFactory()
+    const createRepoStub = createComicRepoStubFactory()
     const sut = new DbCreateComic(createRepoStub, findCharacterByIdRepoStub)
     const response = await sut.execute(defaultComicParam)
     expect(response.isSuccess()).toBe(true)
