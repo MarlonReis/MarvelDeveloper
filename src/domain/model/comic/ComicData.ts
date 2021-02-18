@@ -2,8 +2,10 @@ import { CharacterResponse } from '@/domain/model/character/CharacterData'
 import { Character } from '@/domain/model/character/Character'
 import { Comic } from './Comic'
 import { InvalidParamError } from '@/domain/errors'
-import { Either, failure, success } from '@/shared/Either'
-import { Description, Name, PathFile, Published, Title } from '@/domain/value-object'
+import { Either, success } from '@/shared/Either'
+import {
+  Description, Edition, Name, PathFile, Published, Title
+} from '@/domain/value-object'
 
 export interface CharacterOnlyId {
   id: string
@@ -53,11 +55,8 @@ export const ComicValidationData = {
   description (description: string): Either<InvalidParamError, Description> {
     return Description.create(description)
   },
-  edition (edition: string): Either<InvalidParamError, number> {
-    if (/[0-9]{1,4}/.test(edition)) {
-      return success(parseInt(edition))
-    }
-    return failure(new InvalidParamError('edition', edition))
+  edition (edition: string): Either<InvalidParamError, Edition> {
+    return Edition.create(edition)
   },
   coverImage (coverImage: string): Either<InvalidParamError, PathFile> {
     return PathFile.create('coverImage', coverImage)
