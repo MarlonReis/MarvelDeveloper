@@ -70,6 +70,6 @@ export class ComicOrm implements Comic {
       .penciler(data.penciler).coverArtist(data.coverArtist)
       .description(data.description).coverImage(data.coverImage)
       .published(published.value).edition(parseInt(data.edition))
-      .characters(data.characters as any[]).now() as ComicOrm)
+      .characters(data.characters as CharacterOrm[]).now() as ComicOrm)
   }
 }
