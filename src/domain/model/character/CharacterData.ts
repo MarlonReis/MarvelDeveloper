@@ -21,7 +21,7 @@ export interface CharacterResponse {
 
 export const CharacterValidationData = {
   name (value: string): Either<InvalidParamError, Name> {
-    return Name.create(value)
+    return Name.create('name', value)
   },
   description (value: string): Either<InvalidParamError, Description> {
     return Description.create(value)

@@ -42,19 +42,13 @@ export const ComicValidationData = {
     return Published.create(published)
   },
   writer (writer: string): Either<InvalidParamError, Name> {
-    return Name.create(writer)
+    return Name.create('writer', writer)
   },
-  penciler (penciler: string): Either<InvalidParamError, string> {
-    if (/.{3,}/.test(penciler)) {
-      return success(penciler)
-    }
-    return failure(new InvalidParamError('penciler', penciler))
+  penciler (penciler: string): Either<InvalidParamError, Name> {
+    return Name.create('penciler', penciler)
   },
-  coverArtist (coverArtist: string): Either<InvalidParamError, string> {
-    if (/.{3,}/.test(coverArtist)) {
-      return success(coverArtist)
-    }
-    return failure(new InvalidParamError('coverArtist', coverArtist))
+  coverArtist (coverArtist: string): Either<InvalidParamError, Name> {
+    return Name.create('coverArtist', coverArtist)
   },
   description (description: string): Either<InvalidParamError, Description> {
     return Description.create(description)

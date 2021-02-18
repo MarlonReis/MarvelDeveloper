@@ -46,7 +46,7 @@ export class UserOrm implements User {
   }
 
   public static create (data: CreateUserData): Either<InvalidParamError, UserOrm> {
-    const nameOrError: Either<InvalidParamError, Name> = Name.create(data.name)
+    const nameOrError: Either<InvalidParamError, Name> = Name.create('name', data.name)
     const emailOrError: Either<InvalidParamError, Email> = Email.create(data.email)
     const passwordOrError: Either<InvalidParamError, Password> = Password.create(data.password)
 

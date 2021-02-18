@@ -31,7 +31,7 @@ export const ValidateUpdateData = {
     return IdEntity.create(value)
   },
   name (value: string): Either<InvalidParamError, Name> {
-    return Name.create(value)
+    return Name.create('name', value)
   },
   email (value: string): Either<InvalidParamError, Email> {
     return Email.create(value)

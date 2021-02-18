@@ -9,11 +9,11 @@ export class Name {
         Object.freeze(this)
     }
 
-    static create (name: string): Either<InvalidParamError, Name> {
+    static create (attributeName: string, name: string): Either<InvalidParamError, Name> {
         if (name && /.{3,}/.test(name)) {
             return success(new Name(name))
         }
-        return failure(new InvalidParamError('name', name))
+        return failure(new InvalidParamError(attributeName, name))
     }
 
     getValue (): string {
