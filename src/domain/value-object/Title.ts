@@ -10,7 +10,7 @@ export class Title {
   }
 
   static create (title: string): Either<InvalidParamError, Title> {
-      if (title && /.{3,}$/.test(title)) {
+      if (title && /^(([A-Za-z]+[/\-']?)*([A-Za-z]+)?\s)+([A-Za-z]+[/\-']?)*([A-Za-z]+)?$/.test(title)) {
           return success(new Title(title))
       }
       return failure(new InvalidParamError('title', title))
