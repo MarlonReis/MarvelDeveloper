@@ -1,4 +1,8 @@
-import { Character } from '@/domain/model/character/Character'
+import { CharacterResponse } from '@/domain/model/character/CharacterData'
+
+export interface CharacterOnlyId {
+  id: string
+}
 
 export interface CreateComicData {
   title: string
@@ -9,7 +13,7 @@ export interface CreateComicData {
   description: string
   edition: string
   coverImage: string
-  characters: Character[]
+  characters: CharacterOnlyId[]
 }
 
 export interface ComicResponse {
@@ -22,5 +26,5 @@ export interface ComicResponse {
   description: string
   edition: string
   coverImage: string
-  characters?: Character[]
+  characters?: CharacterResponse[]
 }
