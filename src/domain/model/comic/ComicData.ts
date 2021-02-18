@@ -1,6 +1,9 @@
 import { CharacterResponse } from '@/domain/model/character/CharacterData'
 import { Character } from '@/domain/model/character/Character'
 import { Comic } from './Comic'
+import { InvalidParamError } from '@/domain/errors'
+import { Either, failure, success } from '@/shared/Either'
+import { Description, Name, PathFile, Published, Title } from '@/domain/value-object'
 
 export interface CharacterOnlyId {
   id: string
@@ -29,6 +32,45 @@ export interface ComicResponse {
   edition: string
   coverImage: string
   characters?: CharacterResponse[]
+}
+
+export const ComicValidationData = {
+  title (title: string): Either<InvalidParamError, Title> {
+    return Title.create(title)
+  },
+  published (published: string): Either<InvalidParamError, Published> {
+    return Published.create(published)
+  },
+  writer (writer: string): Either<InvalidParamError, Name> {
+    return Name.create(writer)
+  },
+  penciler (penciler: string): Either<InvalidParamError, string> {
+    if (/.{3,}/.test(penciler)) {
+      return success(penciler)
+    }
+    return failure(new InvalidParamError('penciler', penciler))
+  },
+  coverArtist (coverArtist: string): Either<InvalidParamError, string> {
+    if (/.{3,}/.test(coverArtist)) {
+      return success(coverArtist)
+    }
+    return failure(new InvalidParamError('coverArtist', coverArtist))
+  },
+  description (description: string): Either<InvalidParamError, Description> {
+    return Description.create(description)
+  },
+  edition (edition: string): Either<InvalidParamError, number> {
+    if (/[0-9]{1,4}/.test(edition)) {
+      return success(parseInt(edition))
+    }
+    return failure(new InvalidParamError('edition', edition))
+  },
+  coverImage (coverImage: string): Either<InvalidParamError, PathFile> {
+    return PathFile.create('coverImage', coverImage)
+  },
+  characters (characters: Character[] = []): Either<InvalidParamError, Character[]> {
+    return success(characters)
+  }
 }
 
 export class ComicBuilder {
