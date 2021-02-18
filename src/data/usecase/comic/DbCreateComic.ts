@@ -16,15 +16,17 @@ export class DbCreateComic implements CreateComic {
   }
 
   async execute (data: CreateComicData): Promise<Either<InvalidParamError | NotFoundError | RepositoryInternalError, void>> {
-    const charactersResponse = await Promise.all(data.characters
-      .map(async characterData => await this.findCharacterByIdRepo
-        .execute(characterData.id)))
+    if (data.characters) {
+      const charactersResponse = await Promise.all(data.characters
+        .map(async characterData => await this.findCharacterByIdRepo
+          .execute(characterData.id)))
 
-    const onlyCharacterWithNotFound: Either<Error, any> = charactersResponse
-      .filter(character => character.isFailure()).pop()
+      const onlyCharacterWithNotFound: Either<Error, any> = charactersResponse
+        .filter(character => character.isFailure()).pop()
 
-    if (onlyCharacterWithNotFound) {
-      return failure(onlyCharacterWithNotFound.value)
+      if (onlyCharacterWithNotFound) {
+        return failure(onlyCharacterWithNotFound.value)
+      }
     }
 
     return await this.createComicRepository.execute(data)
