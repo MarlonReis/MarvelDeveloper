@@ -26,6 +26,17 @@ export interface UserAccountResponse {
   profileImage?: string
 }
 
+export interface AuthResponse {
+  id: string
+  email: string
+  status: StatusUser
+}
+
+export enum Role {
+  ADMIN,
+  USER
+}
+
 export const ValidateUpdateData = {
   id (value: string): Either<InvalidParamError, IdEntity> {
     return IdEntity.create(value)
