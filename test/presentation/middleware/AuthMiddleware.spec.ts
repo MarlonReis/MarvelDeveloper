@@ -1,4 +1,4 @@
-import { FindUserAccountByTokenData } from "@/domain/usecase/user/FindUserAccountByTokenData"
+import { FindUserAccountByTokenData } from "@/domain/usecase/authentication/FindUserAccountByTokenData"
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
 import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
 import { forbidden, internalServerError, ok } from "@/presentation/helper"
