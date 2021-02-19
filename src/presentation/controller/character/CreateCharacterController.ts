@@ -23,7 +23,7 @@ export class CreateCharacterController implements Controller {
 
     const response = await this.createCharacter.execute(request.body)
     if (response.isSuccess()) {
-      return await Promise.resolve(createSuccess())
+      return createSuccess()
     }
 
     return internalServerError(response.value)
