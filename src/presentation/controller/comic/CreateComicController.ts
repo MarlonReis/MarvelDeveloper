@@ -1,6 +1,7 @@
+import { NotFoundError } from '@/data/error'
 import { CreateComic } from '@/domain/usecase/comic/CreateComic'
 import { ComicOrm } from '@/infrastructure/database/orm/model/ComicOrm'
-import { createSuccess, internalServerError, unProcessableEntity } from '@/presentation/helper'
+import { createSuccess, customError, internalServerError, unProcessableEntity } from '@/presentation/helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 
 export class CreateComicController implements Controller {
@@ -19,6 +20,10 @@ export class CreateComicController implements Controller {
     const response = await this.createComic.execute(req.body)
     if (response.isSuccess()) {
       return createSuccess()
+    }
+
+    if (response.value instanceof NotFoundError) {
+      return customError(404, response.value)
     }
 
     return internalServerError(response.value)
