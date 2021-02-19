@@ -24,9 +24,9 @@ type TypeSut = {
   sut: AuthMiddleware
 }
 
-const makeSutFactory = (): TypeSut => {
+const makeSutFactory = (role?: Role): TypeSut => {
   const findByTokenDataStub = findByTokenDataStubFactory()
-  const sut = new AuthMiddleware(findByTokenDataStub)
+  const sut = new AuthMiddleware(findByTokenDataStub, role)
   return { findByTokenDataStub, sut }
 }
 
@@ -40,12 +40,23 @@ describe('AuthMiddleware', () => {
   })
 
   test('should call find user account by token with correct access token', async () => {
+    const role = undefined
     const { sut, findByTokenDataStub } = makeSutFactory()
 
     const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
     await sut.handle(fakeRequest())
-    expect(executeSpy).toHaveBeenCalledWith('valid-token')
+    expect(executeSpy).toHaveBeenCalledWith('valid-token', Role.USER)
   })
+
+
+  test('should call find user account by token with correct access token and role', async () => {
+    const { sut, findByTokenDataStub } = makeSutFactory(Role.ADMIN)
+
+    const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
+    await sut.handle(fakeRequest())
+    expect(executeSpy).toHaveBeenCalledWith('valid-token', Role.ADMIN)
+  })
+
 
   test('should return forbidden when not found user account ', async () => {
     const { sut, findByTokenDataStub } = makeSutFactory()
