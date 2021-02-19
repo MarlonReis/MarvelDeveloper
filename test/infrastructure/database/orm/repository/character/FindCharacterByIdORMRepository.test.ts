@@ -7,7 +7,6 @@ import {
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { FindCharacterByIdORMRepository } from "@/infrastructure/database/orm"
 import { NotFoundError, RepositoryInternalError } from "@/data/error"
-import { failure } from "@/shared/Either"
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
