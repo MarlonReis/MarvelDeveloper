@@ -5,6 +5,7 @@ import { StatusUser } from "@/domain/model/user/StatusUser"
 import { forbidden } from "@/presentation/helper"
 import { Either, success } from "@/shared/Either"
 import { NotFoundError } from "@/data/error"
+import { HttpRequest } from "@/presentation/protocols"
 
 
 const findByTokenDataStubFactory = (): FindUserAccountByTokenData => {
@@ -31,6 +32,8 @@ const makeSutFactory = (): TypeSut => {
   return { findByTokenDataStub, sut }
 }
 
+const fakeRequest = (): HttpRequest => ({ headers: { 'Authentication': 'valid-token' } })
+
 describe('AuthMiddleware', () => {
   test('should return 403 when x-access-token not exist in headers', async () => {
     const { sut } = makeSutFactory()
@@ -40,10 +43,9 @@ describe('AuthMiddleware', () => {
 
   test('should call find user account by token with correct access token', async () => {
     const { sut, findByTokenDataStub } = makeSutFactory()
-    
-    const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
 
-    await sut.handle({ headers: { 'Authentication': 'valid-token' }})
+    const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
+    await sut.handle(fakeRequest())
     expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
 })
