@@ -7,6 +7,8 @@ import {
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { ComicOrm } from "@/infrastructure/database/orm/model/ComicOrm"
 import { FindComicByIdORMRepository } from "@/infrastructure/database/orm"
+import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { failure } from "@/shared/Either"
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
@@ -80,6 +82,22 @@ describe('FindComicByIdORMRepository', () => {
     }))
   })
 
+  test('should return failure when not find by id', async () => {
+    const sut = new FindComicByIdORMRepository(connectionDatabase)
+    const response = await sut.execute('not-exist-id')
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new NotFoundError("Cannot found comic by id equals 'not-exist-id'!"));
+  })
+
+  test('should return failure when orm throws error', async () => {
+    jest.spyOn(connectionDatabase, 'connection').mockImplementationOnce(() =>{ throw new Error("Any error")})
+    const sut = new FindComicByIdORMRepository(connectionDatabase)
+    const response = await sut.execute('not-exist-id')
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new RepositoryInternalError(Error("Any error")));
+  })
 
 
 })
