@@ -95,11 +95,6 @@ export class ComicBuilder {
     return builder
   }
 
-  id (id: string): this {
-    this.comic.id = id
-    return this
-  }
-
   title (title: string): this {
     this.comic.title = title
     return this
