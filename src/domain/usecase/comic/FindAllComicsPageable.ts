@@ -3,6 +3,6 @@ import { Pagination } from '@/domain/helper/Pagination'
 import { NotFoundError } from '@/data/error'
 import { Either } from '@/shared/Either'
 
-export interface FindAllComicsPageable{
+export interface FindAllComicsPageable {
   execute: (page: number, limit: number) => Promise<Either<NotFoundError, Pagination<ComicResponse>>>
 }

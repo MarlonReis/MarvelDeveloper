@@ -28,8 +28,6 @@ export interface UserAccountResponse {
 
 export interface AuthResponse {
   id: string
-  email: string
-  status: StatusUser
 }
 
 export enum Role {

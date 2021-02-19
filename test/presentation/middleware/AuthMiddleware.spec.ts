@@ -2,7 +2,7 @@ import { FindUserAccountByTokenData } from "@/domain/usecase/user/FindUserAccoun
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
 import { AuthResponse, Role } from "@/domain/model/user/UserData"
 import { StatusUser } from "@/domain/model/user/StatusUser"
-import { forbidden, ok } from "@/presentation/helper"
+import { forbidden, internalServerError, ok } from "@/presentation/helper"
 import { Either, failure, success } from "@/shared/Either"
 import { NotFoundError } from "@/data/error"
 import { HttpRequest } from "@/presentation/protocols"
@@ -12,9 +12,7 @@ const findByTokenDataStubFactory = (): FindUserAccountByTokenData => {
   class FindUserAccountByTokenDataStub implements FindUserAccountByTokenData {
     async execute(token: string, role: Role): Promise<Either<NotFoundError, AuthResponse>> {
       return success({
-        id: 'id-valid',
-        email: 'email-valid',
-        status: StatusUser.CREATED
+        id: 'id-valid'
       })
     }
   }
@@ -61,11 +59,17 @@ describe('AuthMiddleware', () => {
 
   test('should return ok when found user account ', async () => {
     const { sut } = makeSutFactory()
-
     const response = await sut.handle(fakeRequest())
-    expect(response).toEqual(ok())
+    expect(response).toEqual(ok({ id: 'id-valid' }))
   })
 
+  test('should return 500 when repository return error ', async () => {
+    const { sut, findByTokenDataStub } = makeSutFactory()
 
+    jest.spyOn(findByTokenDataStub, 'execute').
+      mockImplementationOnce(async () => failure(new Error('Any error')))
 
+    const response = await sut.handle(fakeRequest())
+    expect(response).toEqual(internalServerError(new Error('Any error')))
+  })
 })
