@@ -16,7 +16,7 @@ export interface CharacterResponse {
   description: string
   topImage: string
   profileImage: string
-  comics: Comic[]
+  comics?: Comic[]
 }
 
 export const CharacterValidationData = {
