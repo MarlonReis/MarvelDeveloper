@@ -15,22 +15,32 @@ const defaultComicData = {
   coverImage: "http://server.com/images.png",
 }
 
+const findComicByIdStubFactory = (): FindComicById => {
+  class FindComicByIdStub implements FindComicById {
+    async execute(id: string): Promise<Either<NotFoundError, ComicResponse>> {
+      return success(defaultComicData as any)
+    }
+  }
+  return new FindComicByIdStub()
+}
+
+type TypeSut = {
+  findComicByIdStub: FindComicById
+  sut: FindComicByIdController
+}
+
+const makeSutFactory = (): TypeSut => {
+  const findComicByIdStub = findComicByIdStubFactory()
+  const sut = new FindComicByIdController(findComicByIdStub)
+  return { findComicByIdStub, sut }
+}
 
 describe('FindComicByIdController', () => {
   test('should return statusCode 200 when found register by id', async () => {
-
-    class FindComicByIdStub implements FindComicById {
-      async execute(id: string): Promise<Either<NotFoundError, ComicResponse>> {
-        return success(defaultComicData as any)
-      }
-
-    }
-    const findComicByIdStub = new FindComicByIdStub()
-    const sut = new FindComicByIdController(findComicByIdStub)
+    const { sut } = makeSutFactory()
     const response = await sut.handle({ params: { id: 'id-valid' } })
 
     expect(response.statusCode).toBe(200)
-    expect(response.body).toMatchObject(defaultComicData)
-
+    expect(response.body).toEqual(defaultComicData)
   })
 })
