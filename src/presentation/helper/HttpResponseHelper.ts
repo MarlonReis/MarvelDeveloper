@@ -1,4 +1,4 @@
-import { BadRequestError, InternalServerError } from '@/presentation/error'
+import { AccessDeniedError, BadRequestError, InternalServerError } from '@/presentation/error'
 import { HttpResponse } from '@/presentation/protocols/Http'
 
 export const createSuccess = (): HttpResponse => ({
@@ -28,4 +28,9 @@ export const unProcessableEntity = (error: Error): HttpResponse => ({
 export const internalServerError = (causeError: Error): HttpResponse => ({
     statusCode: 500,
     body: new InternalServerError(causeError)
+})
+
+export const forbidden = (): HttpResponse => ({
+    statusCode: 403,
+    body: new AccessDeniedError()
 })
