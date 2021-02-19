@@ -1,8 +1,8 @@
 import { FindUserAccountByTokenData } from '@/domain/usecase/user/FindUserAccountByTokenData'
 import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
 import { forbidden, internalServerError, ok } from '@/presentation/helper'
+import { Role } from '@/domain/model/user/AuthenticationData'
 import { NotFoundError } from '@/data/error'
-import { Role } from '@/domain/model/user/UserData'
 
 export class AuthMiddleware implements Middleware {
   private readonly findUserAccountByTokenData: FindUserAccountByTokenData

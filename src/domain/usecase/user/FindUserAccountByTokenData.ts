@@ -1,4 +1,4 @@
-import { AuthResponse, Role } from '@/domain/model/user/UserData'
+import { AuthResponse, Role } from '@/domain/model/user/AuthenticationData'
 import { NotFoundError } from '@/data/error'
 import { Either } from '@/shared/Either'
 

@@ -1,7 +1,6 @@
 import { FindUserAccountByTokenData } from "@/domain/usecase/user/FindUserAccountByTokenData"
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
-import { AuthResponse, Role } from "@/domain/model/user/UserData"
-import { StatusUser } from "@/domain/model/user/StatusUser"
+import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
 import { forbidden, internalServerError, ok } from "@/presentation/helper"
 import { Either, failure, success } from "@/shared/Either"
 import { NotFoundError } from "@/data/error"
