@@ -1,6 +1,6 @@
 import { FindUserAccountByTokenData } from '@/domain/usecase/user/FindUserAccountByTokenData'
 import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
-import { forbidden } from '@/presentation/helper'
+import { forbidden, ok } from '@/presentation/helper'
 
 export class AuthMiddleware implements Middleware {
   private readonly findUserAccountByTokenData: FindUserAccountByTokenData
@@ -14,7 +14,7 @@ export class AuthMiddleware implements Middleware {
     if (token) {
       const response = await this.findUserAccountByTokenData.execute(token)
       if (response.isSuccess()) {
-        console.log(response)
+        return ok()
       }
     }
     return forbidden()

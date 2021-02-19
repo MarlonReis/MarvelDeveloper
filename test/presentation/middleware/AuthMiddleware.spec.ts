@@ -2,8 +2,8 @@ import { FindUserAccountByTokenData } from "@/domain/usecase/user/FindUserAccoun
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
 import { AuthResponse, Role } from "@/domain/model/user/UserData"
 import { StatusUser } from "@/domain/model/user/StatusUser"
-import { forbidden } from "@/presentation/helper"
-import { Either, success } from "@/shared/Either"
+import { forbidden, ok } from "@/presentation/helper"
+import { Either, failure, success } from "@/shared/Either"
 import { NotFoundError } from "@/data/error"
 import { HttpRequest } from "@/presentation/protocols"
 
@@ -48,4 +48,24 @@ describe('AuthMiddleware', () => {
     await sut.handle(fakeRequest())
     expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
+
+  test('should return forbidden when not found user account ', async () => {
+    const { sut, findByTokenDataStub } = makeSutFactory()
+
+    jest.spyOn(findByTokenDataStub, 'execute').
+      mockImplementationOnce(async () => failure(new NotFoundError('Any error')))
+
+    const response = await sut.handle(fakeRequest())
+    expect(response).toEqual(forbidden())
+  })
+
+  test('should return ok when found user account ', async () => {
+    const { sut } = makeSutFactory()
+
+    const response = await sut.handle(fakeRequest())
+    expect(response).toEqual(ok())
+  })
+
+
+
 })
