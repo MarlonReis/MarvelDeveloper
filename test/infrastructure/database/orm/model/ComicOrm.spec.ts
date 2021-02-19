@@ -1,4 +1,5 @@
 import { InvalidParamError } from "@/domain/errors"
+import { Published } from "@/domain/value-object"
 import { ComicOrm } from "@/infrastructure/database/orm/model/ComicOrm"
 
 const defaultComicData = {
@@ -22,7 +23,7 @@ describe('ComicOrm', () => {
     expect(response.value).toMatchObject({
       ...defaultComicData,
       edition: 4,
-      published: new Date('2021-01-10')
+      published: (Published.create('2021-01-10').value as Published).getValue()
     })
   })
 
@@ -36,7 +37,7 @@ describe('ComicOrm', () => {
     expect(response.value).toMatchObject({
       ...defaultComicData,
       edition: 4,
-      published: new Date('2021-01-10')
+      published: (Published.create('2021-01-10').value as Published).getValue()
     })
   })
 
