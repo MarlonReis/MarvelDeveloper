@@ -3,6 +3,7 @@ import { MySQLTypeOrmConnection } from "@/infrastructure/database/orm/connection
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { CreateComicORMRepository } from "@/infrastructure/database/orm"
 import { ComicOrm } from "@/infrastructure/database/orm/model/ComicOrm"
+import { RepositoryInternalError } from "@/data/error"
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
@@ -63,4 +64,32 @@ describe('CreateComicORMRepository', () => {
 
     expect(response.isSuccess()).toBe(true)
   })
+
+  test('should return failure when receive invalid param', async () => {
+    const sut = new CreateComicORMRepository(connectionDatabase)
+    const response = await sut.execute({ ...defaultComicData, title: undefined } as any)
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toMatchObject({
+      message: "Attribute 'title' equals 'undefined' is invalid!"
+    })
+  })
+
+  test('should return failure when orm throws error', async () => {
+    
+    jest.spyOn(connectionDatabase, 'connection').
+      mockImplementationOnce(() => { throw new Error("Any error") })
+    
+    const sut = new CreateComicORMRepository(connectionDatabase)
+    const response = await sut.execute(defaultComicData as any)
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new RepositoryInternalError(new Error("Any error")))
+    expect(response.value).toMatchObject({
+      cause: new Error("Any error"),
+      message: "Any error"
+    })
+  })
+
+
 })

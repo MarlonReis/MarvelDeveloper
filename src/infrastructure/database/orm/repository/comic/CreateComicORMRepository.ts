@@ -23,7 +23,8 @@ export class CreateComicORMRepository implements CreateComicRepository {
       const comic = ComicOrm.create(data)
 
       if (comic.isSuccess()) {
-          const comicRepository = this.connectionDatabase.connection().getRepository(ComicOrm)
+        const comicRepository = this.connectionDatabase
+          .connection().getRepository(ComicOrm)
           await comicRepository.save(comic.value)
         return success()
       }
