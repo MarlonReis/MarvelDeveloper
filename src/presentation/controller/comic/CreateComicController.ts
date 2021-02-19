@@ -16,6 +16,7 @@ export class CreateComicController implements Controller {
 
   async handle (req: HttpRequest): Promise<HttpResponse> {
     const comicResponse = ComicOrm.create(req.body)
+
     if (comicResponse.isFailure()) {
       return unProcessableEntity(comicResponse.value)
     }
