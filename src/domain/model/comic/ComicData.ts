@@ -36,6 +36,25 @@ export interface ComicResponse {
   characters?: CharacterResponse[]
 }
 
+export const buildComicResponse = (comic: Comic): ComicResponse => ({
+  id: comic.id,
+  title: comic.title,
+  published: comic.published.toString(),
+  writer: comic.writer,
+  penciler: comic.penciler,
+  coverArtist: comic.coverArtist,
+  description: comic.description,
+  edition: comic.edition.toString(),
+  coverImage: comic.coverImage,
+  characters: comic.characters.map(character => ({
+    id: character.id,
+    name: character.name,
+    description: character.description,
+    topImage: character.topImage,
+    profileImage: character.profileImage
+  }))
+})
+
 export const ComicValidationData = {
   title (title: string): Either<InvalidParamError, Title> {
     return Title.create(title)
@@ -74,6 +93,11 @@ export class ComicBuilder {
     const builder = new ComicBuilder()
     builder.comic = comic
     return builder
+  }
+
+  id (id: string): this {
+    this.comic.id = id
+    return this
   }
 
   title (title: string): this {
