@@ -44,7 +44,7 @@ describe('DbFindCharacterById', () => {
     expect(response.value).toEqual(defaultCharacterData)
   })
 
-  test('should return success when found by id', async () => {
+  test('should return failure when not found by id', async () => {
     const { sut, findByIdRepoStub } = makeSutFactory()
     
     jest.spyOn(findByIdRepoStub, 'execute').
