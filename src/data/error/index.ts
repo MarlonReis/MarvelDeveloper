@@ -1,5 +1,6 @@
 export * from './InvalidPasswordParameterError'
 export * from './RepositoryInternalError'
 export * from './DuplicatePropertyError'
+export * from './DifferentPasswordError'
 export * from './NotFoundError'
 export * from './DecryptError'
