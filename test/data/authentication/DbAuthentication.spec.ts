@@ -5,6 +5,8 @@ import { Either, failure, success } from "@/shared/Either"
 import { DifferentPasswordError, InvalidPasswordParameterError, NotFoundError } from "@/data/error"
 import { DbAuthentication } from "@/data/usecase/authentication/DbAuthentication"
 import { ComparePassword } from "@/data/protocol/ComparePassword"
+import { TokenGenerator } from "@/data/protocol/TokenGenerator"
+import { TokenGeneratorError } from "@/data/error/TokenGeneratorError"
 
 const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {
   class FindUserAccountByEmailRepoStub implements FindUserAccountByEmailRepository {
@@ -30,18 +32,29 @@ const comparePasswordStubFactory = (): ComparePassword => {
   return new ComparePasswordStub()
 }
 
+const tokenGeneratorStubFactory = (): TokenGenerator => {
+  class TokenGeneratorStub implements TokenGenerator {
+    async execute(data: string): Promise<Either<TokenGeneratorError, string>> {
+      return success("token_valid")
+    }
+  }
+  return new TokenGeneratorStub()
+}
+
 
 type TypeSut = {
+  tokenGeneratorStub: TokenGenerator
   findByEmailRepoStub: FindUserAccountByEmailRepository
   comparePasswordStub: ComparePassword
   sut: DbAuthentication
 }
 
 const makeSutFactory = (): TypeSut => {
+  const tokenGeneratorStub = tokenGeneratorStubFactory()
   const findByEmailRepoStub = findByEmailRepoStubFactory()
   const comparePasswordStub = comparePasswordStubFactory()
-  const sut = new DbAuthentication(findByEmailRepoStub, comparePasswordStub)
-  return { sut, findByEmailRepoStub, comparePasswordStub }
+  const sut = new DbAuthentication(findByEmailRepoStub, comparePasswordStub, tokenGeneratorStub)
+  return { sut, findByEmailRepoStub, comparePasswordStub, tokenGeneratorStub }
 }
 
 const fakeUserCredentialArgument = (): any => ({
@@ -71,7 +84,6 @@ describe('DbAuthentication', () => {
     expect(response.value).toEqual(new Error('Any Message'))
   })
 
-
   test('should call ComparePassword with correct password', async () => {
     const { sut, comparePasswordStub } = makeSutFactory()
     const executeSpy = jest.spyOn(comparePasswordStub, 'execute')
@@ -79,7 +91,6 @@ describe('DbAuthentication', () => {
 
     expect(executeSpy).toHaveBeenCalledWith('ValidPassword', 'PasswordEncrypted')
   })
-
 
   test('should return error when password are different', async () => {
     const { sut, comparePasswordStub } = makeSutFactory()
@@ -90,6 +101,34 @@ describe('DbAuthentication', () => {
 
     expect(response.isFailure()).toBe(true)
     expect(response.value).toEqual(new DifferentPasswordError())
+  })
+
+  test('should call TokenGenerate with correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSutFactory()
+    const executeSpy = jest.spyOn(tokenGeneratorStub, 'execute')
+    await sut.execute(fakeUserCredentialArgument())
+
+    expect(executeSpy).toHaveBeenCalledWith('valid-id')
+  })
+
+  test('should generate correct token', async () => {
+    const { sut } = makeSutFactory()
+    const response = await sut.execute(fakeUserCredentialArgument())
+
+    expect(response.isSuccess()).toBe(true)
+    expect(response.value).toEqual('token_valid')
+  })
+
+  test('should failure when not generate token', async () => {
+    const { sut, tokenGeneratorStub } = makeSutFactory()
+
+    jest.spyOn(tokenGeneratorStub, 'execute').
+      mockImplementationOnce(async () => failure(new TokenGeneratorError()))
+
+    const response = await sut.execute(fakeUserCredentialArgument())
+
+    expect(response.isFailure()).toBe(true)
+    expect(response.value).toEqual(new TokenGeneratorError())
   })
 
 })
