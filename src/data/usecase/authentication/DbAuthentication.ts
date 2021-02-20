@@ -1,4 +1,5 @@
 import { NotFoundError } from '@/data/error'
+import { ComparePassword } from '@/data/protocol/ComparePassword'
 import { FindUserAccountByEmailRepository } from '@/data/repository/user/FindUserAccountByEmailRepository'
 import { AuthData } from '@/domain/model/user/AuthenticationData'
 import { Authentication } from '@/domain/usecase/authentication/Authentication'
@@ -6,15 +7,21 @@ import { Either, failure, success } from '@/shared/Either'
 
 export class DbAuthentication implements Authentication {
   private readonly findByEmailRepo: FindUserAccountByEmailRepository
+  private readonly comparePassword: ComparePassword
 
-  constructor (findByEmailRepo: FindUserAccountByEmailRepository) {
+  constructor (findByEmailRepo: FindUserAccountByEmailRepository, comparePassword: ComparePassword) {
     this.findByEmailRepo = findByEmailRepo
+    this.comparePassword = comparePassword
   }
 
   async execute (auth: AuthData): Promise<Either<NotFoundError, string>> {
     const response = await this.findByEmailRepo.execute(auth.email)
     if (response.isSuccess()) {
-      return success('ok')
+      const comparePwd = await this.comparePassword.execute(auth.password, response.value.password)
+      if (comparePwd.isSuccess()) {
+        return success('ok')
+      }
+      return failure(comparePwd.value)
     }
     return failure(response.value)
   }

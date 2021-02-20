@@ -23,6 +23,7 @@ export interface UserAccountResponse {
   name: string
   email: string
   status: StatusUser
+  password?: string
   profileImage?: string
 }
 
