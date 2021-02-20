@@ -26,7 +26,12 @@ export class FindUserAccountByEmailORMRepository
         .getOne()
 
       if (user) {
-        return success({ name: user.name, email: user.email, status: user.status })
+        return success({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          status: user.status
+        })
       }
       return failure(new NotFoundError(`Cannot found account by email equals '${email}'!`))
     } catch (err) {
