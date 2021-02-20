@@ -1,11 +1,11 @@
-import { NotFoundError } from "@/data/error"
+import { DifferentPasswordError, NotFoundError } from "@/data/error"
 import { AuthData } from "@/domain/model/user/AuthenticationData"
 import { Authentication } from "@/domain/usecase/authentication/Authentication"
-import { Either, success } from "@/shared/Either"
+import { Either, failure, success } from "@/shared/Either"
 import {
   AuthenticationController
 } from "@/presentation/controller/authentication/AuthenticationController"
-import { badRequest, ok, unProcessableEntity } from "@/presentation/helper"
+import { badRequest, internalServerError, ok, unauthorized, unProcessableEntity } from "@/presentation/helper"
 import { InvalidParamError } from "@/domain/errors"
 
 const authenticationStubFactory = (): Authentication => {
@@ -90,6 +90,42 @@ describe('AuthenticationController', () => {
     expect(response).toEqual(ok({ token: `Bearer token-valid` }))
   })
 
+  test('should return 401 when not found', async () => {
+    const { sut, authenticationStub } = makeSutFactory()
+    jest.spyOn(authenticationStub, 'execute').
+      mockImplementationOnce(async () => failure(new NotFoundError('Any message')))
+    const response = await sut.handle({
+      body: { email: 'invalid@email.com.br', password: 'AnyPassword' }
+    })
 
+    expect(response.statusCode).toBe(401)
+    expect(response).toEqual(unauthorized())
+  })
+
+  test('should return 401 when return DifferentPasswordError', async () => {
+    const { sut, authenticationStub } = makeSutFactory()
+    jest.spyOn(authenticationStub, 'execute').
+      mockImplementationOnce(async () => failure(new DifferentPasswordError()))
+    const response = await sut.handle({
+      body: { email: 'invalid@email.com.br', password: 'AnyPassword' }
+    })
+
+    expect(response.statusCode).toBe(401)
+    expect(response).toEqual(unauthorized())
+  })
+
+
+  test('should return 500 when return generic error', async () => {
+    const { sut, authenticationStub } = makeSutFactory()
+    jest.spyOn(authenticationStub, 'execute').
+      mockImplementationOnce(async () => failure(new Error("Any message")))
+   
+    const response = await sut.handle({
+      body: { email: 'invalid@email.com.br', password: 'AnyPassword' }
+    })
+
+    expect(response.statusCode).toBe(500)
+    expect(response).toEqual(internalServerError(new Error("Any message")))
+  })
 
 })
