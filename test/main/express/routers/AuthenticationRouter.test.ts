@@ -5,6 +5,7 @@ import {
   ConnectionDatabaseFactory
 } from '@/main/factories/ConnectionDatabaseFactory'
 import { CreateUserAccountFactory } from '@/main/factories/user/CreateUserAccountFactory'
+import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 
 
 const connectionDatabase = new ConnectionDatabaseFactory()
@@ -14,9 +15,23 @@ const connectionDatabase = new ConnectionDatabaseFactory()
 describe('AuthenticationRouter', () => {
   beforeEach(async () => {
     await connectionDatabase.open()
+
+    const factory = new CreateUserAccountFactory().makeCreateUserAccountFactory()
+    await factory.execute({
+      name: 'Any Name',
+      email: 'any@email.com.br',
+      password: 'Any@Password'
+    })
+
   })
 
+
+
   afterAll(async () => {
+    await connectionDatabase.connection()
+      .createQueryBuilder().delete()
+      .from(UserOrm).execute()
+
     await connectionDatabase.close()
   })
 
@@ -46,6 +61,24 @@ describe('AuthenticationRouter', () => {
     })
   })
 
+  test('should return statusCode 200 and token then authenticate user', async () => {
+    await request(app).post('/api/auth').send({
+      email: 'any@email.com.br',
+      password: 'Any@Password'
+    }).expect(200).then(res => {
+      expect(res.body).toHaveProperty('token')
+      expect(res.body).toMatchObject({
+        token: expect.stringMatching(/^Bearer\s.{24,}$/)
+      })
+    })
+  })
 
+
+  test('should return statusCode 401 and set incorrect password', async () => {
+    await request(app).post('/api/auth').send({
+      email: 'any@email.com.br',
+      password: 'IncorrectPassword'
+    }).expect(401)
+  })
 
 })
