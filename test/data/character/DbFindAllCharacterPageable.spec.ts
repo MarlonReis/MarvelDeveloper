@@ -44,7 +44,7 @@ const makeSutFactory = (): TypeSut => {
   return { repository, sut }
 }
 
-describe('FindAllCharacterPageable', () => {
+describe('DbFindAllCharacterPageable', () => {
   test('should return success when found register', async () => {
     const { sut } = makeSutFactory()
     const response = await sut.execute(0, 20)
