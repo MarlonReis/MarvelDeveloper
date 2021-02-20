@@ -4,7 +4,7 @@ import { TokenGeneratorError } from '@/data/error/TokenGeneratorError'
 import { TokenGenerator } from '@/data/protocol/TokenGenerator'
 import { Either, failure, success } from '@/shared/Either'
 
-export class JwtAdapter implements TokenGenerator {
+export class JwtTokenGeneratorAdapter implements TokenGenerator {
   private readonly secretKey: string
 
   constructor (secretKey: string) {

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { JwtAdapter } from '@/infrastructure/adapter'
+import { JwtTokenGeneratorAdapter } from '@/infrastructure/adapter'
 import { TokenGeneratorError } from '@/data/error/TokenGeneratorError'
 
 jest.mock('jsonwebtoken', () => ({
@@ -9,10 +9,10 @@ jest.mock('jsonwebtoken', () => ({
   }
 }))
 
-const makeSutFactory = (): JwtAdapter => new JwtAdapter('secret_key')
+const makeSutFactory = (): JwtTokenGeneratorAdapter => new JwtTokenGeneratorAdapter('secret_key')
 
 
-describe('JwtAdapter', () => {
+describe('JwtTokenGeneratorAdapter', () => {
   test('should call sign with correct values ', async () => {
     const signSpy = jest.spyOn(jwt, 'sign')
 

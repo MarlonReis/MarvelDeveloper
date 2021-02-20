@@ -1,6 +1,6 @@
 import { DbAuthentication } from '@/data/usecase/authentication/DbAuthentication'
 import {
-  BCryptComparePasswordAdapter, JwtAdapter, PinoLoggerAdapter
+  BCryptComparePasswordAdapter, JwtTokenGeneratorAdapter, PinoLoggerAdapter
 } from '@/infrastructure/adapter'
 import { FindUserAccountByEmailORMRepository } from '@/infrastructure/database/orm'
 import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
@@ -17,7 +17,7 @@ export class AuthenticationFactory {
     const secretKey = EnvironmentConfiguration.authenticationSecretKey()
     const findUserAccountByEmailRepo = new FindUserAccountByEmailORMRepository(connection)
     const comparePassword = new BCryptComparePasswordAdapter()
-    const tokenGenerator = new JwtAdapter(secretKey)
+    const tokenGenerator = new JwtTokenGeneratorAdapter(secretKey)
 
     return new DbAuthentication(findUserAccountByEmailRepo, comparePassword, tokenGenerator)
   }
