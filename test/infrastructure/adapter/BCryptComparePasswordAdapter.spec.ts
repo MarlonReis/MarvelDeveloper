@@ -3,9 +3,6 @@ import { BCryptComparePasswordAdapter } from '@/infrastructure/adapter/BCryptCom
 import { DifferentPasswordError, InvalidPasswordParameterError } from '@/data/error'
 
 jest.mock('bcrypt', () => ({
-  async hash(): Promise<string> {
-    return 'hash'
-  },
   async compare(): Promise<boolean> {
     return true
   }
