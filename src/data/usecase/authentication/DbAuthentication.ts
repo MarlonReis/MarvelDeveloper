@@ -24,7 +24,9 @@ export class DbAuthentication implements Authentication {
   async execute (auth: AuthData): Promise<Either<NotFoundError, string>> {
     const response = await this.findByEmailRepo.execute(auth.email)
     if (response.isSuccess()) {
-      const comparePwd = await this.comparePassword.execute(auth.password, response.value.password)
+      const comparePwd = await this.comparePassword.execute(
+        auth.password,
+        response.value.password)
       if (comparePwd.isSuccess()) {
         return await this.tokenGenerator.execute(response.value.id)
       }
