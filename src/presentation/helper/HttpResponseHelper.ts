@@ -1,4 +1,4 @@
-import { AccessDeniedError, BadRequestError, InternalServerError } from '@/presentation/error'
+import { AccessDeniedError, BadRequestError, InternalServerError, UnauthorizedError } from '@/presentation/error'
 import { HttpResponse } from '@/presentation/protocols/Http'
 
 export const createSuccess = (): HttpResponse => ({
@@ -33,4 +33,9 @@ export const internalServerError = (causeError: Error): HttpResponse => ({
 export const forbidden = (): HttpResponse => ({
     statusCode: 403,
     body: new AccessDeniedError()
+})
+
+export const unauthorized = (): HttpResponse => ({
+    statusCode: 401,
+    body: new UnauthorizedError()
 })

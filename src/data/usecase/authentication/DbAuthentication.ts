@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/data/error'
+import { DifferentPasswordError, NotFoundError } from '@/data/error'
 import { ComparePassword } from '@/data/protocol/ComparePassword'
 import { TokenGenerator } from '@/data/protocol/TokenGenerator'
 import { FindUserAccountByEmailRepository } from '@/data/repository/user/FindUserAccountByEmailRepository'
@@ -21,7 +21,7 @@ export class DbAuthentication implements Authentication {
     this.tokenGenerator = tokenGenerator
   }
 
-  async execute (auth: AuthData): Promise<Either<NotFoundError, string>> {
+  async execute (auth: AuthData): Promise<Either<NotFoundError | DifferentPasswordError, string>> {
     const response = await this.findByEmailRepo.execute(auth.email)
     if (response.isSuccess()) {
       const comparePwd = await this.comparePassword.execute(
