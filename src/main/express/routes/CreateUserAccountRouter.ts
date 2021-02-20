@@ -1,4 +1,4 @@
-import { CreateUserAccountFactory } from '@/main/factories/CreateUserAccountFactory'
+import { CreateUserAccountFactory } from '@/main/factories/user/CreateUserAccountFactory'
 import { ExpressControllerAdapter } from '@/main/express/adapter/ExpressControllerAdapter'
 
 import { Router } from 'express'

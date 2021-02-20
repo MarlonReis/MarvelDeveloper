@@ -4,15 +4,15 @@ import {
   FindUserAccountByEmailORMRepository
 } from '@/infrastructure/database/orm'
 
-import { ConnectionDatabaseFactory } from './ConnectionDatabaseFactory'
+import { ConnectionDatabaseFactory } from '@/main/factories/ConnectionDatabaseFactory'
 import { PinoLoggerAdapter } from '@/infrastructure/adapter'
 import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { Controller } from '@/presentation/protocols'
 import {
   CreateUserAccountController
 } from '@/presentation/controller/user/CreateUserAccountController'
-import { LogControllerDecorator } from './LogControllerDecorator'
-import { EncryptsPasswordFactory } from './EncryptsPasswordFactory'
+import { LogControllerDecorator } from '@/main/factories/LogControllerDecorator'
+import { EncryptsPasswordFactory } from '@/main/factories/EncryptsPasswordFactory'
 
 export class CreateUserAccountFactory {
   makeCreateUserAccountFactory (): DbCreateUserAccount {
