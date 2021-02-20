@@ -19,10 +19,8 @@ export class JwtDecryptAuthTokenAdapter implements DecryptAuthToken {
   }
 
   private static getTokenPayload (decoded: any): string {
-    if (decoded) {
-      if ('payload' in decoded) {
-        return decoded.payload.id
-      }
+    if ('payload' in decoded) {
+      return decoded.payload.id
     }
     return null
   }

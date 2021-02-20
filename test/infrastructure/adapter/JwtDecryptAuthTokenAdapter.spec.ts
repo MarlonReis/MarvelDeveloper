@@ -41,6 +41,26 @@ describe('JwtDecryptAuthTokenAdapter', () => {
     expect(response.value).toEqual(new DecryptError('Unable to decrypt token'))
   })
 
+  test('should return failure when data return undefined', async () => {
+    jest.spyOn(jwt, 'decode').mockImplementationOnce(() => ({}))
+
+    const sut = new JwtDecryptAuthTokenAdapter()
+    const response = await sut.execute("valid_token")
+
+    expect(response.value).toEqual(new DecryptError('Unable to decrypt token'))
+  })
+
+
+  test('should return failure when payload return empty', async () => {
+    jest.spyOn(jwt, 'decode').mockImplementationOnce(() => ({ payload: {} }))
+
+    const sut = new JwtDecryptAuthTokenAdapter()
+    const response = await sut.execute("valid_token")
+
+    expect(response.value).toEqual(new DecryptError('Unable to decrypt token'))
+  })
+
+
   test('should return failure when decode throws error', async () => {
     jest.spyOn(jwt, 'decode').mockImplementationOnce(() => {
       throw new Error('Error message')
