@@ -1,5 +1,5 @@
 import { DecryptAuthToken } from "@/data/protocol/DecryptAuthToken"
-import { Either, success } from "@/shared/Either"
+import { Either, failure, success } from "@/shared/Either"
 import { DecryptError } from "../error"
 import {
   DbFindUserAccountByTokenData
@@ -35,4 +35,16 @@ describe('DbFindUserAccountByTokenData', () => {
 
     expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
+
+  test('should return failure when decrypt return error', async () => {
+    const { sut, decryptAuthTokenStub } = makeSutFactory()
+   
+    jest.spyOn(decryptAuthTokenStub, 'execute')
+      .mockImplementationOnce(async () => failure(new Error('Any error')))
+
+    const response =  await sut.execute('valid-token', Role.USER)
+
+    expect(response.value).toEqual(new Error('Any error'))
+  })
+
 })
