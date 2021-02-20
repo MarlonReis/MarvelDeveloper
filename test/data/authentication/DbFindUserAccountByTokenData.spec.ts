@@ -3,7 +3,7 @@ import { Either, failure, success } from "@/shared/Either"
 import { DecryptError, NotFoundError, RepositoryInternalError } from "@/data/error"
 import {
   DbFindUserAccountByTokenData
-} from "@/data/usecase/authentiction/DbFindUserAccountByTokenData"
+} from "@/data/usecase/authentication/DbFindUserAccountByTokenData"
 import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
 import {
   FindUserAccountByTokenDataRepository
