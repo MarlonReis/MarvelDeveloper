@@ -11,6 +11,11 @@ export const EnvironmentConfiguration = {
       username: DB_USERNAME,
       password: DB_PASSWORD
     })
+  },
+
+  authenticationSecretKey (): string {
+    const { AUTHENTICATION_SECRET_KEY } = dotenv.config().parsed
+    return AUTHENTICATION_SECRET_KEY
   }
 
 }
