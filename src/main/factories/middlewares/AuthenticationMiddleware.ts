@@ -5,10 +5,10 @@ import { FindUserAccountByIdORMRepository } from '@/infrastructure/database/orm'
 import { AuthMiddleware } from '@/presentation/middleware/AuthMiddleware'
 import { JwtDecryptAuthTokenAdapter } from '@/infrastructure/adapter'
 import { Role } from '@/domain/model/user/AuthenticationData'
-import { Middleware } from '@/presentation/protocols'
+import { ExpressMiddlewareAdapter } from '@/main/express/adapter/ExpressMiddlewareAdapter'
 
 export class AuthenticationMiddleware {
-  makeMiddlewareFactory (role: Role): Middleware {
+  makeMiddlewareFactory (role: Role): any {
     const secretKey = EnvironmentConfiguration.authenticationSecretKey()
     const connection = new ConnectionDatabaseFactory().makeConnectionFactory()
 
@@ -19,6 +19,6 @@ export class AuthenticationMiddleware {
       jwtDecryptAuthToken, findByIdORMRepo, role
     )
 
-    return new AuthMiddleware(findUByTokenData)
+    return ExpressMiddlewareAdapter(new AuthMiddleware(findUByTokenData))
   }
 }
