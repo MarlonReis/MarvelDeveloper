@@ -1,7 +1,7 @@
 import { FindUserAccountByTokenData } from "@/domain/usecase/authentication/FindUserAccountByTokenData"
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
 import { AuthResponse } from "@/domain/model/user/AuthenticationData"
-import { forbidden, internalServerError, ok } from "@/presentation/helper"
+import { forbidden, internalServerError, ok, unauthorized } from "@/presentation/helper"
 import { Either, failure, success } from "@/shared/Either"
 import { NotFoundError } from '@/domain/errors'
 import { HttpRequest } from "@/presentation/protocols"
@@ -32,10 +32,10 @@ const makeSutFactory = (): TypeSut => {
 const fakeRequest = (): HttpRequest => ({ headers: { 'authentication': 'valid-token' } })
 
 describe('AuthMiddleware', () => {
-  test('should return 403 when x-access-token not exist in headers', async () => {
+  test('should return 401 when authentication not exist in headers', async () => {
     const { sut } = makeSutFactory()
     const response = await sut.handle({ headers: {} })
-    expect(response).toEqual(forbidden())
+    expect(response).toEqual(unauthorized())
   })
 
   test('should call find user account by token with correct access token', async () => {
