@@ -8,6 +8,13 @@ import {
 } from '@/domain/usecase/authentication/FindUserAccountByTokenData'
 import { Either, failure, success } from '@/shared/Either'
 
+const hasPermission = (basicRole: Role, userPermissions: Role) => {
+  if (userPermissions === Role.ADMIN) {
+    return true
+  }
+  return basicRole === userPermissions
+}
+
 export class DbFindUserAccountByTokenData implements FindUserAccountByTokenData {
   private readonly findUserAccountByIdRepo: FindUserAccountByIdRepository
   private readonly decryptAuthToken: DecryptAuthToken
@@ -26,7 +33,7 @@ export class DbFindUserAccountByTokenData implements FindUserAccountByTokenData 
     if (responseToken.isSuccess()) {
       const response = await this.findUserAccountByIdRepo.execute(responseToken.value)
       if (response.isSuccess()) {
-        if (response.value.role === this.role) {
+        if (hasPermission(this.role, response.value.role)) {
           return success({
             id: response.value.id,
             role: response.value.role
