@@ -1,3 +1,4 @@
+import { Role } from '@/domain/model/user/AuthenticationData'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 import { ComicOrm } from './ComicOrm'
@@ -15,7 +16,27 @@ describe('UserOrm', () => {
       email: 'valid@example.com',
       password: 'Valid@Password',
       status: StatusUser.CREATED,
-      createAt: expect.any(Date)
+      createAt: expect.any(Date),
+      role: Role.USER
+    })
+  })
+
+
+  test('should create admin user instance with success', () => {
+    const response = UserOrm.create({
+      name: 'Valid Name',
+      email: 'valid@example.com',
+      password: 'Valid@Password',
+      role: Role.ADMIN
+    })
+
+    expect(response.value as UserOrm).toMatchObject({
+      name: 'Valid Name',
+      email: 'valid@example.com',
+      password: 'Valid@Password',
+      status: StatusUser.CREATED,
+      createAt: expect.any(Date),
+      role: Role.ADMIN
     })
   })
 
@@ -60,6 +81,8 @@ describe('UserOrm', () => {
       message: "Attribute 'password' equals 'Err' is invalid!"
     })
   })
+
+
 
   test('should validate only the information defined', () => {
     const response = UserOrm.update({
@@ -127,7 +150,7 @@ describe('UserOrm', () => {
       { id: 'valid_id_b', title: 'valid_title' }
     ] as ComicOrm[]
 
-    const newComics =  { id: 'valid_id_duplicate', title: 'valid_title' } as ComicOrm
+    const newComics = { id: 'valid_id_duplicate', title: 'valid_title' } as ComicOrm
 
     const response = UserOrm.doFavoriteComic(myFavorites, newComics)
     expect(response).toContainEqual(newComics);

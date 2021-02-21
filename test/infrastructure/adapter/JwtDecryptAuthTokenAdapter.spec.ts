@@ -14,12 +14,20 @@ jest.mock('jsonwebtoken', () => ({
 const makeSutFactory = (): JwtDecryptAuthTokenAdapter => new JwtDecryptAuthTokenAdapter("SecretKey")
 
 describe('JwtDecryptAuthTokenAdapter', () => {
-  test('should call jwt decode with correct values', async () => {
+  test('should call jwt verify with correct values', async () => {
     const decodeSpy = jest.spyOn(jwt, 'verify')
 
     const sut = makeSutFactory()
     await sut.execute("valid_token")
     expect(decodeSpy).toHaveBeenCalledWith("valid_token", "SecretKey")
+  })
+
+  test('should call jwt verify with empty value when receive undefined', async () => {
+    const decodeSpy = jest.spyOn(jwt, 'verify')
+
+    const sut = makeSutFactory()
+    await sut.execute(undefined)
+    expect(decodeSpy).toHaveBeenCalledWith('', "SecretKey")
   })
 
   test('should failure when not have id in payload', async () => {
@@ -30,7 +38,7 @@ describe('JwtDecryptAuthTokenAdapter', () => {
   })
 
 
-  test('should return failure when decode throws error', async () => {
+  test('should return failure when verify throws error', async () => {
     jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
       throw new Error('Error message')
     })
@@ -40,5 +48,7 @@ describe('JwtDecryptAuthTokenAdapter', () => {
 
     expect(response.value).toEqual(new DecryptError('Error message'))
   })
+
+
 
 })
