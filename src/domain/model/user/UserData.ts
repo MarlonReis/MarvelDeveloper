@@ -12,6 +12,11 @@ export interface CreateUserData {
   role?: Role
 }
 
+export interface FavoriteComicData {
+  comicId: string
+  userId: string
+}
+
 export interface UpdateUserData {
   id: string
   name?: string
