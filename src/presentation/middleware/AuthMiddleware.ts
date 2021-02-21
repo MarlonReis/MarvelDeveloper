@@ -1,6 +1,6 @@
 import { FindUserAccountByTokenData } from '@/domain/usecase/authentication/FindUserAccountByTokenData'
 import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
-import { forbidden, internalServerError, ok } from '@/presentation/helper'
+import { forbidden, internalServerError, ok, unauthorized } from '@/presentation/helper'
 import { DecryptError } from '@/data/error'
 import { NotFoundError, UnauthorizedAccessError } from '@/domain/errors'
 
@@ -37,6 +37,7 @@ export class AuthMiddleware implements Middleware {
 
       return internalServerError(response.value)
     }
-    return forbidden()
+
+    return unauthorized()
   }
 }
