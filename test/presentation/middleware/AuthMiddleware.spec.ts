@@ -29,7 +29,7 @@ const makeSutFactory = (role?: Role): TypeSut => {
   return { findByTokenDataStub, sut }
 }
 
-const fakeRequest = (): HttpRequest => ({ headers: { 'Authentication': 'valid-token' } })
+const fakeRequest = (): HttpRequest => ({ headers: { 'authentication': 'valid-token' } })
 
 describe('AuthMiddleware', () => {
   test('should return 403 when x-access-token not exist in headers', async () => {
@@ -39,12 +39,12 @@ describe('AuthMiddleware', () => {
   })
 
   test('should call find user account by token with correct access token', async () => {
-    const role = undefined
+    
     const { sut, findByTokenDataStub } = makeSutFactory()
 
     const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
     await sut.handle(fakeRequest())
-    expect(executeSpy).toHaveBeenCalledWith('valid-token', Role.USER)
+    expect(executeSpy).toHaveBeenCalledWith('valid-token',Role.USER)
   })
 
 
