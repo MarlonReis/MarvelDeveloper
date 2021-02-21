@@ -5,23 +5,19 @@ import { DecryptAuthToken } from '@/data/protocol/DecryptAuthToken'
 import { Either, failure, success } from '@/shared/Either'
 
 export class JwtDecryptAuthTokenAdapter implements DecryptAuthToken {
+  private readonly secretKey: string
+
+  constructor (secretKey: string) {
+    this.secretKey = secretKey
+  }
+
   async execute (token: string): Promise<Either<DecryptError, string>> {
     try {
-      const decoded = await jwt.decode(token, { complete: true })
-      if (decoded) {
-        const data = JwtDecryptAuthTokenAdapter.getTokenPayload(decoded)
-        if (data) { return success(data) }
-      }
-      return failure(new DecryptError('Unable to decrypt token'))
+      const data: any = await jwt.verify(token, this.secretKey)
+      const { id } = data
+      return success(id)
     } catch (e) {
       return failure(new DecryptError(e.message))
     }
-  }
-
-  private static getTokenPayload (decoded: any): string {
-    if ('payload' in decoded) {
-      return decoded.payload.id
-    }
-    return null
   }
 }

@@ -19,7 +19,7 @@ describe('JwtTokenGeneratorAdapter', () => {
     const sut = makeSutFactory()
     await sut.execute("any_value")
 
-    expect(signSpy).toHaveBeenCalledWith({ id: 'any_value' }, 'secret_key')
+    expect(signSpy).toHaveBeenCalledWith({ id: 'any_value' }, 'secret_key',expect.anything())
   })
 
   test('should return toke with success', async () => {

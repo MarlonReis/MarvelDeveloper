@@ -13,7 +13,8 @@ export class JwtTokenGeneratorAdapter implements TokenGenerator {
 
   async execute (data: string): Promise<Either<TokenGeneratorError, string>> {
     try {
-      const response = await jwt.sign({ id: data }, this.secretKey)
+      const response = await jwt.sign({ id: data }, this.secretKey, { expiresIn: '24h' })
+
       return success(response)
     } catch (err) {
       return failure(new TokenGeneratorError())
