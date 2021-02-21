@@ -1,4 +1,5 @@
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { AuthResponse, Role } from '@/domain/model/user/AuthenticationData'
 import { Either } from '@/shared/Either'
 

@@ -2,13 +2,16 @@ import { FindUserAccountByTokenData } from '@/domain/usecase/authentication/Find
 import { HttpRequest, HttpResponse, Middleware } from '@/presentation/protocols'
 import { forbidden, internalServerError, ok } from '@/presentation/helper'
 import { Role } from '@/domain/model/user/AuthenticationData'
-import { DecryptError, NotFoundError } from '@/data/error'
+import { DecryptError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 
 export class AuthMiddleware implements Middleware {
   private readonly findUserAccountByTokenData: FindUserAccountByTokenData
   private readonly role: Role
 
-  constructor (findByToken: FindUserAccountByTokenData, role: Role = Role.USER) {
+  constructor (
+    findByToken: FindUserAccountByTokenData,
+    role: Role = Role.USER) {
     this.findUserAccountByTokenData = findByToken
     this.role = role
   }

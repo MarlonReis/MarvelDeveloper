@@ -2,9 +2,9 @@ import { FindCharacterByIdRepository } from '@/data/repository/character/FindCha
 import { CreateComicRepository } from '@/data/repository/comic/CreateComicRepository'
 import { CreateComicData } from '@/domain/model/comic/ComicData'
 import { CreateComic } from '@/domain/usecase/comic/CreateComic'
-import { InvalidParamError } from '@/domain/errors'
+import { InvalidParamError, NotFoundError } from '@/domain/errors'
 import { Either, failure } from '@/shared/Either'
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
 
 export class DbCreateComic implements CreateComic {
   private readonly createComicRepository: CreateComicRepository

@@ -5,7 +5,7 @@ import { Either, failure, success } from "@/shared/Either"
 import {
   CreateComicController
 } from "@/presentation/controller/comic/CreateComicController"
-import { NotFoundError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 const defaultComicData = {
   title: "Any Title",

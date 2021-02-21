@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { CreateComic } from '@/domain/usecase/comic/CreateComic'
 import { ComicOrm } from '@/infrastructure/database/orm/model/ComicOrm'
 import {

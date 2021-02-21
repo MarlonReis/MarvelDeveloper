@@ -1,4 +1,5 @@
-import { DifferentPasswordError, NotFoundError } from '@/data/error'
+import { DifferentPasswordError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { AuthDataValidation } from '@/domain/model/user/AuthenticationData'
 import { Authentication } from '@/domain/usecase/authentication/Authentication'
 import {

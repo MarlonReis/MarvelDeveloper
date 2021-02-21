@@ -1,4 +1,5 @@
-import { DifferentPasswordError, NotFoundError } from "@/data/error"
+import { DifferentPasswordError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import { AuthData } from "@/domain/model/user/AuthenticationData"
 import { Authentication } from "@/domain/usecase/authentication/Authentication"
 import { Either, failure, success } from "@/shared/Either"

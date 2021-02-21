@@ -13,10 +13,8 @@ import {
   unProcessableEntity,
   ok, customError, badRequest
 } from '@/presentation/helper'
-import {
-  DuplicatePropertyError,
-  NotFoundError
-} from '@/data/error'
+import { DuplicatePropertyError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 
 export class UpdateUserAccountController implements Controller {
   private readonly updateUserAccount: UpdateUserAccount

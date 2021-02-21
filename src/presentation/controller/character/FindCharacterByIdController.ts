@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { FindCharacterById } from '@/domain/usecase/character/FindCharacterById'
 import { IdEntity } from '@/domain/value-object'
 import { badRequest, customError, internalServerError, ok } from '@/presentation/helper'

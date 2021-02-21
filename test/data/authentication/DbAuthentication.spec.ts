@@ -2,11 +2,13 @@ import { FindUserAccountByEmailRepository } from "@/data/repository/user/FindUse
 import { StatusUser } from "@/domain/model/user/StatusUser"
 import { UserAccountResponse } from "@/domain/model/user/UserData"
 import { Either, failure, success } from "@/shared/Either"
-import { DifferentPasswordError, InvalidPasswordParameterError, NotFoundError } from "@/data/error"
+import { DifferentPasswordError, InvalidPasswordParameterError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import { DbAuthentication } from "@/data/usecase/authentication/DbAuthentication"
 import { ComparePassword } from "@/data/protocol/ComparePassword"
 import { TokenGenerator } from "@/data/protocol/TokenGenerator"
 import { TokenGeneratorError } from "@/data/error/TokenGeneratorError"
+import { Role } from "@/domain/model/user/AuthenticationData"
 
 const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {
   class FindUserAccountByEmailRepoStub implements FindUserAccountByEmailRepository {
@@ -16,7 +18,8 @@ const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {
         name: 'Any Name',
         email: 'any@valid.com.br',
         status: StatusUser.CREATED,
-        password: 'PasswordEncrypted'
+        password: 'PasswordEncrypted',
+        role: Role.USER
       })
     }
   }

@@ -1,4 +1,4 @@
-import { NotFoundError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import { CharacterResponse } from "@/domain/model/character/CharacterData"
 import { FindCharacterById } from "@/domain/usecase/character/FindCharacterById"
 import { Either, failure, success } from "@/shared/Either"

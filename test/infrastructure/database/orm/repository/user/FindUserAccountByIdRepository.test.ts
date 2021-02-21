@@ -9,7 +9,8 @@ import { StatusUser } from "@/domain/model/user/StatusUser"
 import {
   FindUserAccountByIdORMRepository
 } from "@/infrastructure/database/orm/repository/user/FindUserAccountByIdORMRepository"
-import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { RepositoryInternalError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)

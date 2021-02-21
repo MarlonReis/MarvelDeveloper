@@ -1,4 +1,5 @@
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import {
   FindCharacterByIdRepository
 } from '@/data/repository/character/FindCharacterByIdRepository'

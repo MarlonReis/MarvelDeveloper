@@ -1,13 +1,15 @@
 import { InvalidParamError } from "@/domain/errors"
 import { CreateComicData } from "@/domain/model/comic/ComicData"
 import { Either, failure, success } from "@/shared/Either"
-import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { RepositoryInternalError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import {
   CreateComicRepository
 } from "@/data/repository/comic/CreateComicRepository"
 import { DbCreateComic } from "@/data/usecase/comic/DbCreateComic"
-import { FindCharacterByIdRepository } from "../repository/character/FindCharacterByIdRepository"
+
 import { CharacterResponse } from "@/domain/model/character/CharacterData"
+import { FindCharacterByIdRepository } from "../repository/character/FindCharacterByIdRepository"
 
 const defaultComicParam = {
   title: 'Any title',

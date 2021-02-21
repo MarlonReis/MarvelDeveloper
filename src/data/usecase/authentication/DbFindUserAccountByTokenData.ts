@@ -1,4 +1,5 @@
-import { DecryptError, NotFoundError } from '@/data/error'
+import { DecryptError } from '@/data/error'
+import { NotFoundError, UnauthorizedAccessError } from '@/domain/errors'
 import { DecryptAuthToken } from '@/data/protocol/DecryptAuthToken'
 import { FindUserAccountByIdRepository } from '@/data/repository/user/FindUserAccountByIdRepository'
 import { Role, AuthResponse } from '@/domain/model/user/AuthenticationData'
@@ -16,12 +17,19 @@ export class DbFindUserAccountByTokenData implements FindUserAccountByTokenData 
     this.findUserAccountByIdRepo = findUserAccountByIdRepo
   }
 
-  async execute (token: string, role: Role): Promise<Either<NotFoundError | DecryptError, AuthResponse>> {
-    const responseToken = await this.decryptAuthToken.execute(token)
+  async execute (id: string, role: Role): Promise<Either<NotFoundError | UnauthorizedAccessError | DecryptError, AuthResponse>> {
+    const responseToken = await this.decryptAuthToken.execute(id)
     if (responseToken.isSuccess()) {
       const response = await this.findUserAccountByIdRepo.execute(responseToken.value)
       if (response.isSuccess()) {
-        return success({ id: response.value.id })
+        if (response.value.role === role) {
+          return success({
+            id: response.value.id,
+            role: response.value.role
+          })
+        } else {
+          return failure(new UnauthorizedAccessError(role))
+        }
       }
       return failure(response.value)
     }

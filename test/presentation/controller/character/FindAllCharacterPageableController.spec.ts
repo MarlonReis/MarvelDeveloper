@@ -3,7 +3,7 @@ import { CharacterResponse } from "@/domain/model/character/CharacterData"
 import { InternalServerError } from "@/presentation/error"
 import { Either, failure, success } from "@/shared/Either"
 import { Pagination } from "@/domain/helper/Pagination"
-import { NotFoundError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 
 import {

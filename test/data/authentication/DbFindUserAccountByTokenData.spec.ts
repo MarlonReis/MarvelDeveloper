@@ -1,6 +1,7 @@
 import { DecryptAuthToken } from "@/data/protocol/DecryptAuthToken"
 import { Either, failure, success } from "@/shared/Either"
-import { DecryptError, NotFoundError, RepositoryInternalError } from "@/data/error"
+import { DecryptError, RepositoryInternalError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import {
   DbFindUserAccountByTokenData
 } from "@/data/usecase/authentication/DbFindUserAccountByTokenData"
@@ -24,7 +25,8 @@ const findByTokenDataRepoFactory = (): FindUserAccountByIdRepository => {
       return success({
         name: "Any Name",
         email: "email@valid.com",
-        status: StatusUser.CREATED
+        status: StatusUser.CREATED,
+        role: Role.USER
       })
     }
 

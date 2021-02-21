@@ -3,7 +3,8 @@ import { CharacterOrm } from '@/infrastructure/database/orm/model/CharacterOrm'
 import { CharacterResponse } from '@/domain/model/character/CharacterData'
 import { Pagination, paginationParams, buildPagination } from '@/domain/helper/Pagination'
 import { Either, failure, success } from '@/shared/Either'
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import {
   FindAllCharacterPageableRepository
 } from '@/data/repository/character/FindAllCharacterPageableRepository'

@@ -4,9 +4,9 @@ import {
 import {
   DuplicatePropertyError,
   InvalidPasswordParameterError,
-  NotFoundError,
   RepositoryInternalError
 } from "@/data/error";
+import { NotFoundError } from '@/domain/errors'
 import { UpdateUserAccountRepository } from "@/data/repository/user/UpdateUserAccountRepository";
 import { FindUserAccountByIdRepository } from "@/data/repository/user/FindUserAccountByIdRepository";
 import { StatusUser } from "@/domain/model/user/StatusUser";

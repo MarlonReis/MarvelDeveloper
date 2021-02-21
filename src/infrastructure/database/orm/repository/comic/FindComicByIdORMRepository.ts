@@ -1,4 +1,5 @@
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { FindComicByIdRepository } from '@/data/repository/comic/FindComicByIdRepository'
 import { buildComicResponse, ComicResponse } from '@/domain/model/comic/ComicData'
 import { ConnectionDatabase } from '@/infrastructure/database/protocol/ConnectionDatabase'

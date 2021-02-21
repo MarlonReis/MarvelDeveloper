@@ -11,7 +11,8 @@ import {
 } from '@/infrastructure/database/orm/repository/user/CreateUserAccountORMRepository'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
 import { StatusUser } from '@/domain/model/user/StatusUser'
-import { NotFoundError, RepositoryInternalError } from '@/data/error'
+import { RepositoryInternalError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 
 describe('FindUserAccountByEmailORMRepository', () => {

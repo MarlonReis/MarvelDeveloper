@@ -3,7 +3,7 @@ import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
 import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
 import { forbidden, internalServerError, ok } from "@/presentation/helper"
 import { Either, failure, success } from "@/shared/Either"
-import { NotFoundError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import { HttpRequest } from "@/presentation/protocols"
 
 

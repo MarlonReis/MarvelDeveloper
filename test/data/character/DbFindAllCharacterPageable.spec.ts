@@ -3,7 +3,7 @@ import { DbFindAllCharacterPageable } from "@/data/usecase/character/DbFindAllCh
 import { CharacterResponse } from "@/domain/model/character/CharacterData"
 import { Pagination } from "@/domain/helper/Pagination"
 import { Either, failure, success } from "@/shared/Either"
-import { NotFoundError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 
 const defaultResponse = {

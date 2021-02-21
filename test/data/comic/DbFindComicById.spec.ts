@@ -1,6 +1,7 @@
 import { FindComicByIdRepository } from "@/data/repository/comic/FindComicByIdRepository"
 import { DbFindComicById } from "@/data/usecase/comic/DbFindComicById"
-import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { RepositoryInternalError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 import { ComicResponse } from "@/domain/model/comic/ComicData"
 import { Either, failure, success } from "@/shared/Either"
 

@@ -1,4 +1,4 @@
-import { NotFoundError } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { FindAllCharacterPageableRepository } from '@/data/repository/character/FindAllCharacterPageableRepository'
 import { Pagination } from '@/domain/helper/Pagination'
 import { CharacterResponse } from '@/domain/model/character/CharacterData'

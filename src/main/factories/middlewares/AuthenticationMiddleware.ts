@@ -8,7 +8,6 @@ import { Role } from '@/domain/model/user/AuthenticationData'
 import { Middleware } from '@/presentation/protocols'
 
 export class AuthenticationMiddleware {
- // TODO:: add role in use case
   makeMiddlewareFactory (role: Role): Middleware {
     const secretKey = EnvironmentConfiguration.authenticationSecretKey()
     const connection = new ConnectionDatabaseFactory().makeConnectionFactory()

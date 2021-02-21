@@ -5,7 +5,8 @@ import {
   UpdateUserAccountController
 } from "@/presentation/controller/user/UpdateUserAccountController"
 import { Either, failure, success } from "@/shared/Either"
-import { DuplicatePropertyError, NotFoundError } from "@/data/error"
+import { DuplicatePropertyError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 const updateUserAccountStubFactory = (): UpdateUserAccount => {
   class UpdateUserAccountStub implements UpdateUserAccount {

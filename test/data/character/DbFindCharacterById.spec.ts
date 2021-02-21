@@ -3,7 +3,8 @@ import {
 } from "@/data/repository/character/FindCharacterByIdRepository";
 import { DbFindCharacterById } from "@/data/usecase/character/DbFindCharacterById";
 import { CharacterResponse } from "@/domain/model/character/CharacterData";
-import { NotFoundError, RepositoryInternalError } from "@/data/error";
+import { RepositoryInternalError } from "@/data/error";
+import { NotFoundError } from '@/domain/errors'
 import { Either, failure, success } from "@/shared/Either";
 
 const defaultCharacterData = {

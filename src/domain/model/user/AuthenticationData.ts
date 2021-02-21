@@ -9,6 +9,7 @@ export interface AuthData {
 
 export interface AuthResponse {
   id: string
+  role?: Role
 }
 
 export enum Role {

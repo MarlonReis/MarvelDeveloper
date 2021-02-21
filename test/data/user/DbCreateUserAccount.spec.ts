@@ -2,11 +2,11 @@ import { DbCreateUserAccount } from '@/data/usecase/user/DbCreateUserAccount'
 import { CreateUserData } from '@/domain/model/user/UserData'
 import { Either, failure, success } from '@/shared/Either'
 import {
-  NotFoundError,
   DuplicatePropertyError,
   RepositoryInternalError,
   InvalidPasswordParameterError
 } from '@/data/error'
+import { NotFoundError } from '@/domain/errors'
 import { EncryptsPassword } from '@/data/protocol/EncryptsPassword'
 import { CreateUserAccountRepository } from '@/data/repository/user/CreateUserAccountRepository'
 import { FindUserAccountByEmailRepository } from '@/data/repository/user/FindUserAccountByEmailRepository'

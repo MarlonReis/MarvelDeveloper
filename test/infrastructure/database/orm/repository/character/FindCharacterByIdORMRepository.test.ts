@@ -6,7 +6,8 @@ import {
 } from "@/infrastructure/database/orm/connection/MySQLTypeOrmConnection"
 import { CharacterOrm } from "@/infrastructure/database/orm/model/CharacterOrm"
 import { FindCharacterByIdORMRepository } from "@/infrastructure/database/orm"
-import { NotFoundError, RepositoryInternalError } from "@/data/error"
+import { RepositoryInternalError } from "@/data/error"
+import { NotFoundError } from '@/domain/errors'
 
 const config = EnvironmentConfiguration.database()
 const connectionDatabase = new MySQLTypeOrmConnection(config)
