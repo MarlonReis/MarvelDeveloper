@@ -40,10 +40,10 @@ type TypeSut = {
   sut: DbFindUserAccountByTokenData
 }
 
-const makeSutFactory = (): TypeSut => {
+const makeSutFactory = (role: Role = Role.USER): TypeSut => {
   const findByTokenDataRepo = findByTokenDataRepoFactory()
   const decryptAuthTokenStub = decryptAuthTokenStubFactory()
-  const sut = new DbFindUserAccountByTokenData(decryptAuthTokenStub, findByTokenDataRepo)
+  const sut = new DbFindUserAccountByTokenData(decryptAuthTokenStub, findByTokenDataRepo, role)
   return { decryptAuthTokenStub, sut, findByTokenDataRepo }
 }
 
@@ -52,7 +52,7 @@ describe('DbFindUserAccountByTokenData', () => {
     const { sut, decryptAuthTokenStub } = makeSutFactory()
     const executeSpy = jest.spyOn(decryptAuthTokenStub, 'execute')
 
-    await sut.execute('valid-token', Role.USER)
+    await sut.execute('valid-token')
 
     expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
@@ -63,7 +63,7 @@ describe('DbFindUserAccountByTokenData', () => {
     jest.spyOn(decryptAuthTokenStub, 'execute')
       .mockImplementationOnce(async () => failure(new Error('Any error')))
 
-    const response = await sut.execute('valid-token', Role.USER)
+    const response = await sut.execute('valid-token')
 
     expect(response.value).toEqual(new Error('Any error'))
   })
@@ -73,7 +73,7 @@ describe('DbFindUserAccountByTokenData', () => {
 
     const executeSpy = jest.spyOn(findByTokenDataRepo, 'execute')
 
-    await sut.execute('valid-token', Role.ADMIN)
+    await sut.execute('valid-token')
 
     expect(executeSpy).toHaveBeenCalledWith('token_decrypted')
 
@@ -86,7 +86,7 @@ describe('DbFindUserAccountByTokenData', () => {
     jest.spyOn(decryptAuthTokenStub, 'execute').
       mockImplementationOnce(async () => failure(new DecryptError("Any error")))
 
-    const response = await sut.execute('valid-token', Role.ADMIN)
+    const response = await sut.execute('valid-token')
 
     expect(response.isFailure()).toBe(true)
     expect(response.value).toEqual(new DecryptError("Any error"))
@@ -99,7 +99,7 @@ describe('DbFindUserAccountByTokenData', () => {
     jest.spyOn(findByTokenDataRepo, 'execute')
       .mockImplementationOnce(async () => failure(new RepositoryInternalError(new Error('Any error'))))
 
-    const response = await sut.execute('valid-token', Role.ADMIN)
+    const response = await sut.execute('valid-token')
 
     expect(response.value).toEqual(new RepositoryInternalError(new Error('Any error')))
   })

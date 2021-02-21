@@ -15,7 +15,9 @@ export class AuthenticationMiddleware {
     const findByIdORMRepo = new FindUserAccountByIdORMRepository(connection)
     const jwtDecryptAuthToken = new JwtDecryptAuthTokenAdapter(secretKey)
 
-    const findUByTokenData = new DbFindUserAccountByTokenData(jwtDecryptAuthToken, findByIdORMRepo)
+    const findUByTokenData = new DbFindUserAccountByTokenData(
+      jwtDecryptAuthToken, findByIdORMRepo, role
+    )
 
     return new AuthMiddleware(findUByTokenData)
   }

@@ -11,24 +11,28 @@ import { Either, failure, success } from '@/shared/Either'
 export class DbFindUserAccountByTokenData implements FindUserAccountByTokenData {
   private readonly findUserAccountByIdRepo: FindUserAccountByIdRepository
   private readonly decryptAuthToken: DecryptAuthToken
+  private readonly role: Role
 
-  constructor (decryptAuthToken: DecryptAuthToken, findUserAccountByIdRepo: FindUserAccountByIdRepository) {
+  constructor (decryptAuthToken: DecryptAuthToken,
+    findUserAccountByIdRepo: FindUserAccountByIdRepository,
+    role: Role) {
     this.decryptAuthToken = decryptAuthToken
     this.findUserAccountByIdRepo = findUserAccountByIdRepo
+    this.role = role
   }
 
-  async execute (id: string, role: Role): Promise<Either<NotFoundError | UnauthorizedAccessError | DecryptError, AuthResponse>> {
+  async execute (id: string): Promise<Either<NotFoundError | UnauthorizedAccessError | DecryptError, AuthResponse>> {
     const responseToken = await this.decryptAuthToken.execute(id)
     if (responseToken.isSuccess()) {
       const response = await this.findUserAccountByIdRepo.execute(responseToken.value)
       if (response.isSuccess()) {
-        if (response.value.role === role) {
+        if (response.value.role === this.role) {
           return success({
             id: response.value.id,
             role: response.value.role
           })
         } else {
-          return failure(new UnauthorizedAccessError(role))
+          return failure(new UnauthorizedAccessError(this.role))
         }
       }
       return failure(response.value)

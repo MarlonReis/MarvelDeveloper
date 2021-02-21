@@ -1,6 +1,6 @@
 import { FindUserAccountByTokenData } from "@/domain/usecase/authentication/FindUserAccountByTokenData"
 import { AuthMiddleware } from "@/presentation/middleware/AuthMiddleware"
-import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
+import { AuthResponse } from "@/domain/model/user/AuthenticationData"
 import { forbidden, internalServerError, ok } from "@/presentation/helper"
 import { Either, failure, success } from "@/shared/Either"
 import { NotFoundError } from '@/domain/errors'
@@ -9,7 +9,7 @@ import { HttpRequest } from "@/presentation/protocols"
 
 const findByTokenDataStubFactory = (): FindUserAccountByTokenData => {
   class FindUserAccountByTokenDataStub implements FindUserAccountByTokenData {
-    async execute(token: string, role: Role): Promise<Either<NotFoundError, AuthResponse>> {
+    async execute(token: string): Promise<Either<NotFoundError, AuthResponse>> {
       return success({
         id: 'id-valid'
       })
@@ -23,9 +23,9 @@ type TypeSut = {
   sut: AuthMiddleware
 }
 
-const makeSutFactory = (role?: Role): TypeSut => {
+const makeSutFactory = (): TypeSut => {
   const findByTokenDataStub = findByTokenDataStubFactory()
-  const sut = new AuthMiddleware(findByTokenDataStub, role)
+  const sut = new AuthMiddleware(findByTokenDataStub)
   return { findByTokenDataStub, sut }
 }
 
@@ -44,16 +44,16 @@ describe('AuthMiddleware', () => {
 
     const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
     await sut.handle(fakeRequest())
-    expect(executeSpy).toHaveBeenCalledWith('valid-token',Role.USER)
+    expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
 
 
   test('should call find user account by token with correct access token and role', async () => {
-    const { sut, findByTokenDataStub } = makeSutFactory(Role.ADMIN)
+    const { sut, findByTokenDataStub } = makeSutFactory()
 
     const executeSpy = jest.spyOn(findByTokenDataStub, 'execute')
     await sut.handle(fakeRequest())
-    expect(executeSpy).toHaveBeenCalledWith('valid-token', Role.ADMIN)
+    expect(executeSpy).toHaveBeenCalledWith('valid-token')
   })
 
 
