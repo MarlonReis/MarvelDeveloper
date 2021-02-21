@@ -5,6 +5,8 @@ import {
   ConnectionDatabaseFactory
 } from '@/main/factories/ConnectionDatabaseFactory'
 import { UserOrm } from '@/infrastructure/database/orm/model/UserOrm'
+import { EncryptsPasswordFactory } from '@/main/factories/EncryptsPasswordFactory'
+import { TokenGeneratorFactory } from '@/main/factories/authentication/TokenGeneratorFactory'
 
 const connectionDatabase = new ConnectionDatabaseFactory().makeConnectionFactory()
 
@@ -15,7 +17,6 @@ const defaultUserData = {
   profileImage: 'path-image'
 }
 
-const requestPut = request(app).put('/api/account')
 
 const insertUser = async (connectionDatabase: any, userData: any): Promise<string> => {
   const result = await connectionDatabase.connection()
@@ -41,42 +42,44 @@ describe('UpdateUserAccountRouter', () => {
     await connectionDatabase.close()
   })
 
-  test('should return statusCode 422 when id is undefined', async () => {
-    await requestPut.send(defaultUserData).expect(422, {
-      error: 'MissingParamError',
-      message: "Attribute 'id' is invalid!"
-    })
-  })
+  // test('should return statusCode 422 when id is undefined', async () => {
+  //   await request(app).put('/api/account').send(defaultUserData).expect(422, {
+  //     error: 'MissingParamError',
+  //     message: "Attribute 'id' is invalid!"
+  //   })
+  // })
 
-  test('should return statusCode 422 when email is invalid', async () => {
-    await requestPut.send({
-      ...defaultUserData,
-      id: 'valid-id',
-      email: 'invalid-email'
-    }).expect(422, {
-      error: 'InvalidParamError',
-      message: "Attribute 'email' equals 'invalid-email' is invalid!"
-    })
-  })
+  // test('should return statusCode 422 when email is invalid', async () => {
+  //   await request(app).put('/api/account').send({
+  //     ...defaultUserData,
+  //     id: 'valid-id',
+  //     email: 'invalid-email'
+  //   }).expect(422, {
+  //     error: 'InvalidParamError',
+  //     message: "Attribute 'email' equals 'invalid-email' is invalid!"
+  //   })
+  // })
+
+
 
 
   test('should return statusCode 200 when do update with success', async () => {
-    const id = await insertUser(connectionDatabase, defaultUserData)
+    const encryptsPassword = new EncryptsPasswordFactory().makeFactory()
+    const passwordEncrypted = await encryptsPassword.execute(defaultUserData.password)
 
-    await requestPut.send({
-      ...defaultUserData, id
-    }).expect(200)
+    const id = await insertUser(connectionDatabase, Object.assign(defaultUserData, {
+      password: passwordEncrypted.value
+    }))
+
+    const token = await new TokenGeneratorFactory().
+      makeTokenGenerator().execute(id)
+
+    await request(app).put('/api/account')
+      .set({ 'Authentication': `Bearer ${token.value}` })
+      .send({
+        ...defaultUserData, id
+      }).expect(200)
   })
-
-  test('should return statusCode 404 when repository throw error', async () => {
-    await requestPut.send({
-      ...defaultUserData, id: 'id-not-exist'
-    }).expect(404, {
-      error: 'NotFoundError',
-      message: "Cannot found account by id equals 'id-not-exist'!"
-    })
-  })
-
 
   test('should return statusCode 400 when try to use an email that is already in use', async () => {
     await insertUser(connectionDatabase, {
@@ -89,14 +92,26 @@ describe('UpdateUserAccountRouter', () => {
       ...defaultUserData, id: undefined
     })
 
-    await requestPut.send({
-      ...defaultUserData,
-      email: 'any-other@in-use.com',
-      id
-    }).expect(400, {
+    const token = await new TokenGeneratorFactory().
+    makeTokenGenerator().execute(id)
+
+    await request(app).put('/api/account').send({
+      ...defaultUserData, email: 'any-other@in-use.com', id
+    }).set({ 'Authentication': `Bearer ${token.value}` })
+      .expect(400, {
       error: 'BadRequestError',
       message: "Email 'any-other@in-use.com' is already being used by another account!"
     })
+  })
+
+
+  test('should return statusCode 403 when try without access token', async () => {
+    await request(app).put('/api/account').
+      send(defaultUserData).
+      expect(403, {
+        error: 'AccessDeniedError',
+        message: 'Access denied'
+      })
   })
 
 
