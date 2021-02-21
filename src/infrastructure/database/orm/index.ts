@@ -8,3 +8,5 @@ export * from './repository/character/FindCharacterByIdORMRepository'
 export * from './repository/character/FindAllCharacterPageableORMRepository'
 export * from './repository/comic/CreateComicORMRepository'
 export * from './repository/comic/FindComicByIdORMRepository'
+
+export * from './repository/user/UserFavoriteComicORMRepository'

@@ -1,4 +1,3 @@
-import { FindCharacterByIdRepository } from "@/data/repository/character/FindCharacterByIdRepository"
 import { UserFavoriteComicRepository } from "@/data/repository/user/UserFavoriteComicRepository"
 import { DbUserFavoriteComic } from "@/data/usecase/user/DbUserFavoriteComic"
 import { InvalidParamError, NotFoundError } from "@/domain/errors"
