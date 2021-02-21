@@ -11,7 +11,7 @@ export const ExpressMiddlewareAdapter = (middleware: Middleware) => {
     const response: HttpResponse = await middleware.handle(request)
 
     if (response.statusCode === 200 || response.statusCode === 201) {
-      Object.assign(req, { authentication: response.body })
+      Object.assign(req, { authenticatedUserData: response.body })
       next()
     } else {
       res.status(response.statusCode).json({
