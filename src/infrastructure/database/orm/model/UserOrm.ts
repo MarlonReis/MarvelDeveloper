@@ -6,7 +6,9 @@ import { CreateUserData, UpdateUserData, UserBuilder, ValidateUpdateData } from 
 import { Email, Name, Password } from '@/domain/value-object'
 import { Either, failure, success } from '@/shared/Either'
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { CharacterOrm } from './CharacterOrm'
+import { ComicOrm } from './ComicOrm'
 
 @Entity('users')
 export class UserOrm implements User {
@@ -22,11 +24,14 @@ export class UserOrm implements User {
   @Column('text')
   public password: string
 
-  // @Column()
-  public comicsReactions: any[]
+  @ManyToMany(() => ComicOrm)
+  @JoinTable()
+  public favoriteComics: ComicOrm[]
 
-  // @Column()
-  public charactersReactions: any[]
+  @ManyToMany(() => CharacterOrm)
+  @JoinTable()
+  public charactersReactions: CharacterOrm[]
+
   @Column({ type: 'text', nullable: true })
   public profileImage: string
 
@@ -48,6 +53,17 @@ export class UserOrm implements User {
   public createAt: Date = new Date()
 
   protected constructor () { }
+
+  public static doFavoriteComics (
+    myFavorites: ComicOrm[] = [],
+    newFavorites: ComicOrm[] = []): ComicOrm[] {
+    for (const favorite of newFavorites) {
+      if (!myFavorites.find(my => my.id === favorite.id)) {
+        myFavorites.push(favorite)
+      }
+    }
+    return myFavorites
+  }
 
   public static create (data: CreateUserData): Either<InvalidParamError, UserOrm> {
     const nameOrError: Either<InvalidParamError, Name> = Name.create('name', data.name)
