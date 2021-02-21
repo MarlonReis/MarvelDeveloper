@@ -11,9 +11,10 @@ export class JwtDecryptAuthTokenAdapter implements DecryptAuthToken {
     this.secretKey = secretKey
   }
 
-  async execute (token: string): Promise<Either<DecryptError, string>> {
+  async execute (token: string = ''): Promise<Either<DecryptError, string>> {
     try {
-      const data: any = await jwt.verify(token, this.secretKey)
+      const tokenClean = token.replace('Bearer ', '').trim()
+      const data: any = await jwt.verify(tokenClean, this.secretKey)
       const { id } = data
       return success(id)
     } catch (e) {
