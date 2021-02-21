@@ -71,7 +71,7 @@ export class UserOrm implements User {
       .name(nameOrError.value.getValue())
       .password(passwordOrError.value.getValue())
       .status(StatusUser.CREATED)
-      .role(Role.USER)
+      .role(data.role ?? Role.USER)
       .now() as UserOrm)
   }
 
