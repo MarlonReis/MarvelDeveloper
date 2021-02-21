@@ -1,11 +1,11 @@
 import { DbFindUserAccountByTokenData } from '@/data/usecase/authentication/DbFindUserAccountByTokenData'
+import { ExpressMiddlewareAdapter } from '@/main/express/adapter/ExpressMiddlewareAdapter'
 import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 import { ConnectionDatabaseFactory } from '@/main/factories/ConnectionDatabaseFactory'
 import { FindUserAccountByIdORMRepository } from '@/infrastructure/database/orm'
 import { AuthMiddleware } from '@/presentation/middleware/AuthMiddleware'
 import { JwtDecryptAuthTokenAdapter } from '@/infrastructure/adapter'
 import { Role } from '@/domain/model/user/AuthenticationData'
-import { ExpressMiddlewareAdapter } from '@/main/express/adapter/ExpressMiddlewareAdapter'
 
 export class AuthenticationMiddleware {
   makeMiddlewareFactory (role: Role): any {

@@ -1,3 +1,5 @@
+import { Comic } from '@/domain/model/comic/Comic'
+import { Character } from '@/domain/model/character/Character'
 import { Role } from './AuthenticationData'
 import { StatusUser } from './StatusUser'
 
@@ -8,8 +10,8 @@ export interface User {
   role: Role
   password: string
   status: StatusUser
-  comicsReactions?: any[]
-  charactersReactions?: any[]
+  favoriteComics?: Comic[]
+  favoriteCharacters?: Character[]
   profileImage?: string
   createAt?: Date
 }
