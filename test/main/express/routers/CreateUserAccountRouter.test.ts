@@ -9,7 +9,7 @@ import { CreateUserAccountORMRepository } from '@/infrastructure/database/orm'
 const connectionDatabase = new ConnectionDatabaseFactory()
   .makeConnectionFactory()
 
-const postRequest = request(app).post('/api/account/create-users-accounts')
+
 
 const defaultRequestBody = {
   name: 'Any Name',
@@ -33,7 +33,7 @@ describe('CreateUserAccountRouter', () => {
   })
 
   test('should create user account with success and return statusCode 200', async () => {
-    await postRequest.send(defaultRequestBody).expect(201)
+    await request(app).post('/api/account/create-users-accounts').send(defaultRequestBody).expect(201)
   })
 
   test('should return statusCode 400 when email is duplicate', async () => {
@@ -42,7 +42,7 @@ describe('CreateUserAccountRouter', () => {
       ...defaultRequestBody, email: 'duplicate-email@email.com.br'
     })
 
-    await postRequest.send({
+    await request(app).post('/api/account/create-users-accounts').send({
       ...defaultRequestBody,
       email: 'duplicate-email@email.com.br'
     }).expect(400, {
@@ -52,7 +52,7 @@ describe('CreateUserAccountRouter', () => {
   })
 
   test('should return statusCode 422 when name is invalid', async () => {
-    await postRequest.send({
+    await request(app).post('/api/account/create-users-accounts').send({
       ...defaultRequestBody, name: 'An'
     }).expect(422, {
       message: "Attribute 'name' is invalid!",
