@@ -1,7 +1,9 @@
 import { InvalidParamError } from '@/domain/errors'
 import { Email, IdEntity, Name, Password } from '@/domain/value-object'
 import { Either, success } from '@/shared/Either'
+import { Role } from './AuthenticationData'
 import { StatusUser } from './StatusUser'
+import { User } from './User'
 
 export interface CreateUserData {
   name: string
@@ -23,6 +25,7 @@ export interface UserAccountResponse {
   name: string
   email: string
   status: StatusUser
+  role: Role
   password?: string
   profileImage?: string
 }
@@ -45,5 +48,59 @@ export const ValidateUpdateData = {
   },
   profileImage (value: string): Either<InvalidParamError, string> {
     return success(value)
+  },
+  role (value: Role): Either<InvalidParamError, Role> {
+    return success(value)
+  }
+}
+
+export class UserBuilder {
+  private user: User
+
+  private constructor () { }
+
+  static build (user: User): UserBuilder {
+    const build = new UserBuilder()
+    build.user = user
+    return build
+  }
+
+  id (id: string): UserBuilder {
+    this.user.id = id
+    return this
+  }
+
+  name (name: string): UserBuilder {
+    this.user.name = name
+    return this
+  }
+
+  email (email: string): UserBuilder {
+    this.user.email = email
+    return this
+  }
+
+  password (password: string): UserBuilder {
+    this.user.password = password
+    return this
+  }
+
+  status (status: StatusUser): UserBuilder {
+    this.user.status = status
+    return this
+  }
+
+  role (role: Role): UserBuilder {
+    this.user.role = role
+    return this
+  }
+
+  profileImage (profileImage: string): UserBuilder {
+    this.user.profileImage = profileImage
+    return this
+  }
+
+  now (): User {
+    return this.user
   }
 }

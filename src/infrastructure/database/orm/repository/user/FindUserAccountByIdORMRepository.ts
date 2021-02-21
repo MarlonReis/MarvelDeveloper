@@ -32,6 +32,7 @@ export class FindUserAccountByIdORMRepository implements FindUserAccountByIdRepo
           name: user.name,
           email: user.email,
           status: user.status,
+          role: user.role,
           profileImage: user.profileImage
         })
       }

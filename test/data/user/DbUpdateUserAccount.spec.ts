@@ -14,6 +14,7 @@ import { UpdateUserData, UserAccountResponse } from "@/domain/model/user/UserDat
 import { Either, failure, success } from "@/shared/Either";
 import { EncryptsPassword } from "@/data/protocol/EncryptsPassword";
 import { DbUpdateUserAccount } from "@/data/usecase/user/DbUpdateUserAccount";
+import { Role } from "@/domain/model/user/AuthenticationData";
 
 
 const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {
@@ -22,7 +23,8 @@ const findByEmailRepoStubFactory = (): FindUserAccountByEmailRepository => {
       return success({
         name: 'Any Name',
         email: 'any@valid.com.br',
-        status: StatusUser.CREATED
+        status: StatusUser.CREATED,
+        role: Role.USER
       })
     }
   }
@@ -56,7 +58,8 @@ const findByIdRepoStubFactory = (): FindUserAccountByIdRepository => {
         email: 'any@valid.com.br',
         password: 'OldPasswordEncrypted',
         profileImage: 'OldImagePath',
-        status: StatusUser.CREATED
+        status: StatusUser.CREATED,
+        role: Role.USER
       })
     }
   }
@@ -77,8 +80,18 @@ const makeSutFactory = (): TypeSut => {
   const findByEmailRepoStub = findByEmailRepoStubFactory()
   const encryptsPasswordStub = encryptsStubFactory();
 
-  const sut = new DbUpdateUserAccount(updateRepoStub, findByEmailRepoStub, findByIdRepoStub, encryptsPasswordStub);
-  return { findByIdRepoStub, updateRepoStub, findByEmailRepoStub, encryptsPasswordStub, sut }
+  const sut = new DbUpdateUserAccount(
+    updateRepoStub,
+    findByEmailRepoStub,
+    findByIdRepoStub,
+    encryptsPasswordStub);
+  return {
+    findByIdRepoStub,
+    updateRepoStub,
+    findByEmailRepoStub,
+    encryptsPasswordStub,
+    sut
+  }
 }
 
 const defaultUpdateParam = {

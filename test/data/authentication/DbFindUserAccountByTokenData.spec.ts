@@ -4,10 +4,10 @@ import { DecryptError, NotFoundError, RepositoryInternalError } from "@/data/err
 import {
   DbFindUserAccountByTokenData
 } from "@/data/usecase/authentication/DbFindUserAccountByTokenData"
-import { AuthResponse, Role } from "@/domain/model/user/AuthenticationData"
-import {
-  FindUserAccountByTokenDataRepository
-} from "@/data/repository/authentication/FindUserAccountByTokenDataRepository"
+import { Role } from "@/domain/model/user/AuthenticationData"
+import { FindUserAccountByIdRepository } from "@/data/repository/user/FindUserAccountByIdRepository"
+import { UserAccountResponse } from "@/domain/model/user/UserData"
+import { StatusUser } from "@/domain/model/user/StatusUser"
 
 const decryptAuthTokenStubFactory = (): DecryptAuthToken => {
   class DecryptAuthTokenStub implements DecryptAuthToken {
@@ -18,17 +18,22 @@ const decryptAuthTokenStubFactory = (): DecryptAuthToken => {
   return new DecryptAuthTokenStub()
 }
 
-const findByTokenDataRepoFactory = (): FindUserAccountByTokenDataRepository => {
-  class FindUserAccountByTokenDataRepoStub implements FindUserAccountByTokenDataRepository {
-    async execute(token: string, role: Role): Promise<Either<NotFoundError | RepositoryInternalError, AuthResponse>> {
-      return success({ id: 'valid-id' })
+const findByTokenDataRepoFactory = (): FindUserAccountByIdRepository => {
+  class FindUserAccountByTokenDataRepoStub implements FindUserAccountByIdRepository {
+    async execute(id: string): Promise<Either<NotFoundError, UserAccountResponse>> {
+      return success({
+        name: "Any Name",
+        email: "email@valid.com",
+        status: StatusUser.CREATED
+      })
     }
+
   }
   return new FindUserAccountByTokenDataRepoStub()
 }
 
 type TypeSut = {
-  findByTokenDataRepo: FindUserAccountByTokenDataRepository
+  findByTokenDataRepo: FindUserAccountByIdRepository
   decryptAuthTokenStub: DecryptAuthToken
   sut: DbFindUserAccountByTokenData
 }
@@ -68,7 +73,7 @@ describe('DbFindUserAccountByTokenData', () => {
 
     await sut.execute('valid-token', Role.ADMIN)
 
-    expect(executeSpy).toHaveBeenCalledWith('token_decrypted', Role.ADMIN)
+    expect(executeSpy).toHaveBeenCalledWith('token_decrypted')
 
   })
 

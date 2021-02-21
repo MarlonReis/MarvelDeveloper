@@ -9,7 +9,7 @@ import { StatusUser } from "@/domain/model/user/StatusUser"
 import {
   UpdateUserAccountORMRepository
 } from "@/infrastructure/database/orm"
-import { UpdateUserData } from "@/domain/model/user/UserData"
+
 import { RepositoryInternalError } from "@/data/error"
 import { InvalidParamError } from "@/domain/errors"
 

@@ -1,7 +1,8 @@
 import { InvalidParamError } from '@/domain/errors'
+import { Role } from '@/domain/model/user/AuthenticationData'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { User } from '@/domain/model/user/User'
-import { CreateUserData, UpdateUserData, ValidateUpdateData } from '@/domain/model/user/UserData'
+import { CreateUserData, UpdateUserData, UserBuilder, ValidateUpdateData } from '@/domain/model/user/UserData'
 import { Email, Name, Password } from '@/domain/value-object'
 import { Either, failure, success } from '@/shared/Either'
 
@@ -36,14 +37,17 @@ export class UserOrm implements User {
   })
   public status: StatusUser
 
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER
+  })
+  public role: Role
+
   @Column({ type: 'timestamp', update: false })
   public createAt: Date = new Date()
 
   protected constructor () { }
-
-  public static instance () {
-    return new UserOrm()
-  }
 
   public static create (data: CreateUserData): Either<InvalidParamError, UserOrm> {
     const nameOrError: Either<InvalidParamError, Name> = Name.create('name', data.name)
@@ -62,12 +66,13 @@ export class UserOrm implements User {
       return failure(passwordOrError.value)
     }
 
-    return success(UserBuilder.build()
+    return success(UserBuilder.build(new UserOrm())
       .email(emailOrError.value.getValue())
       .name(nameOrError.value.getValue())
       .password(passwordOrError.value.getValue())
       .status(StatusUser.CREATED)
-      .now())
+      .role(Role.USER)
+      .now() as UserOrm)
   }
 
   public static update (data: UpdateUserData): Either<InvalidParamError, UserOrm> {
@@ -78,59 +83,14 @@ export class UserOrm implements User {
       }
     }
 
-    return success(UserBuilder.build()
+    return success(UserBuilder.build(new UserOrm())
       .id(data.id)
       .email(data.email)
       .name(data.name)
       .password(data.password)
       .status(data.status)
+      .role(Role.USER)
       .profileImage(data.profileImage)
-      .now())
-  }
-}
-
-class UserBuilder {
-  private user: UserOrm
-
-  private constructor () { }
-
-  static build (): UserBuilder {
-    const build = new UserBuilder()
-    build.user = UserOrm.instance()
-    return build
-  }
-
-  id (id: string): UserBuilder {
-    this.user.id = id
-    return this
-  }
-
-  name (name: string): UserBuilder {
-    this.user.name = name
-    return this
-  }
-
-  email (email: string): UserBuilder {
-    this.user.email = email
-    return this
-  }
-
-  password (password: string): UserBuilder {
-    this.user.password = password
-    return this
-  }
-
-  status (status: StatusUser): UserBuilder {
-    this.user.status = status
-    return this
-  }
-
-  profileImage (profileImage: string): UserBuilder {
-    this.user.profileImage = profileImage
-    return this
-  }
-
-  now (): UserOrm {
-    return this.user
+      .now() as UserOrm)
   }
 }

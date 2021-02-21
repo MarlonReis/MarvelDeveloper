@@ -31,7 +31,8 @@ export class FindUserAccountByEmailORMRepository
           name: user.name,
           email: user.email,
           password: user.password,
-          status: user.status
+          status: user.status,
+          role: user.role
         })
       }
       return failure(new NotFoundError(`Cannot found account by email equals '${email}'!`))

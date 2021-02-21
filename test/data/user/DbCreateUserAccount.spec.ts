@@ -12,6 +12,7 @@ import { CreateUserAccountRepository } from '@/data/repository/user/CreateUserAc
 import { FindUserAccountByEmailRepository } from '@/data/repository/user/FindUserAccountByEmailRepository'
 import { InvalidParamError } from '@/domain/errors'
 import { StatusUser } from '@/domain/model/user/StatusUser'
+import { Role } from '@/domain/model/user/AuthenticationData'
 
 const createUserAccountRepositoryStubFactory = (): CreateUserAccountRepository => {
   class CreateUserAccountRepositoryStub implements CreateUserAccountRepository {
@@ -82,7 +83,8 @@ describe('DbCreateUserAccount', () => {
       .mockReturnValueOnce(Promise.resolve(success({
         name: 'Any Name',
         email: 'any@example.com',
-        status: StatusUser.CREATED
+        status: StatusUser.CREATED,
+        role: Role.USER
     })))
 
     const response = await sut.execute(dataUserParams)
