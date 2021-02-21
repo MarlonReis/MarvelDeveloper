@@ -7,6 +7,7 @@ import {
 import { Either, failure, success } from "@/shared/Either"
 import { DuplicatePropertyError } from "@/data/error"
 import { NotFoundError } from '@/domain/errors'
+import { Role } from "@/domain/model/user/AuthenticationData"
 
 const updateUserAccountStubFactory = (): UpdateUserAccount => {
   class UpdateUserAccountStub implements UpdateUserAccount {
@@ -29,17 +30,27 @@ const makeSutFactory = (): TypeSut => {
 }
 
 const defaultUserDataParam = {
-  id: 'valid-id',
   name: 'Any Name',
   email: 'valid@email.com',
   password: 'EncryptedPassword',
   profileImage: 'path-image'
 }
 
+const authenticatedUserData = {
+  authenticatedUserData: {
+    id: 'user-valid-id',
+    role: Role.USER
+  }
+}
+
+
 describe('UpdateUserAccountController', () => {
   test('should return statusCode 200 when update with success', async () => {
     const { sut } = makeSutFactory()
-    const response = await sut.handle({ body: defaultUserDataParam })
+    const response = await sut.handle({
+      ...authenticatedUserData,
+      body: defaultUserDataParam
+    })
     expect(response).toEqual({ statusCode: 200 })
   })
 
@@ -47,18 +58,19 @@ describe('UpdateUserAccountController', () => {
     const { sut, updateUserAccountStub } = makeSutFactory()
     const executeSpy = jest.spyOn(updateUserAccountStub, 'execute')
 
-    const response = await sut.handle({ body: defaultUserDataParam })
+    const response = await sut.handle({
+      ...authenticatedUserData,
+      body: defaultUserDataParam
+    })
     expect(response).toEqual({ statusCode: 200 })
 
-    expect(executeSpy).toBeCalledWith(defaultUserDataParam)
+    expect(executeSpy).toBeCalledWith(Object.assign(defaultUserDataParam, { id: 'user-valid-id' }))
   })
 
   test('should return statusCode 422 and body error when id is undefined', async () => {
     const { sut } = makeSutFactory()
-    const body = Object.assign({}, defaultUserDataParam)
-    delete body['id']
 
-    const response = await sut.handle({ body })
+    const response = await sut.handle({ body: defaultUserDataParam })
 
     expect(response).toMatchObject({
       statusCode: 422,
@@ -70,7 +82,10 @@ describe('UpdateUserAccountController', () => {
   test('should return statusCode 422 and body error when email is invalid', async () => {
     const { sut } = makeSutFactory()
 
-    const response = await sut.handle({ body: { ...defaultUserDataParam, email: 'invalid-email' } })
+    const response = await sut.handle({
+      ...authenticatedUserData,
+      body: { ...defaultUserDataParam, email: 'invalid-email' }
+    })
 
     expect(response).toMatchObject({
       statusCode: 422,
@@ -84,7 +99,7 @@ describe('UpdateUserAccountController', () => {
     jest.spyOn(updateUserAccountStub, 'execute').
       mockImplementationOnce(() => Promise.resolve(failure(new Error('Any Error'))))
 
-    const response = await sut.handle({ body: defaultUserDataParam })
+    const response = await sut.handle({ ...authenticatedUserData, body: defaultUserDataParam })
 
     expect(response).toMatchObject({
       statusCode: 500,
@@ -99,7 +114,7 @@ describe('UpdateUserAccountController', () => {
       mockImplementationOnce(() => Promise.
         resolve(failure(new NotFoundError('Any Error'))))
 
-    const response = await sut.handle({ body: defaultUserDataParam })
+    const response = await sut.handle({ ...authenticatedUserData, body: defaultUserDataParam })
 
     expect(response).toMatchObject({
       statusCode: 404,
@@ -114,7 +129,7 @@ describe('UpdateUserAccountController', () => {
       mockImplementationOnce(() => Promise.
         resolve(failure(new DuplicatePropertyError('Any Error'))))
 
-    const response = await sut.handle({ body: defaultUserDataParam })
+    const response = await sut.handle({ ...authenticatedUserData, body: defaultUserDataParam })
 
     expect(response).toMatchObject({
       statusCode: 400,

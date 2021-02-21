@@ -80,8 +80,7 @@ describe('UserFavoriteComicRouter', () => {
   test('should return 400 when comic id undefined', async () => {
     await request(app).post('/api/account/comics').
       set({ 'Authentication': `Bearer ${tokenAdmin}` }).
-      send().
-      expect(400)
+      send().expect(400)
   })
 
 

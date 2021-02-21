@@ -24,7 +24,9 @@ export class UpdateUserAccountController implements Controller {
   }
 
   async handle (req: HttpRequest): Promise<HttpResponse> {
-    if (!('id' in req.body)) {
+    const { id } = req.authenticatedUserData ?? {}
+
+    if (!id) {
       return unProcessableEntity(new MissingParamError('id'))
     }
 
@@ -34,7 +36,9 @@ export class UpdateUserAccountController implements Controller {
         return unProcessableEntity(response.value)
       }
     }
-    const response = await this.updateUserAccount.execute(req.body)
+    const response = await this.updateUserAccount.execute({
+      ...req.body, id
+    })
 
     if (response.isSuccess()) {
       return ok()
