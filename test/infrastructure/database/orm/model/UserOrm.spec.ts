@@ -113,11 +113,11 @@ describe('UserOrm', () => {
       { id: 'valid_id_b', title: 'valid_title' }
     ] as ComicOrm[]
 
-    const newComics = [{ id: 'valid_id_c', title: 'valid_title' }] as ComicOrm[]
+    const newComics = { id: 'valid_id_c', title: 'valid_title' } as ComicOrm
 
-    const response = UserOrm.doFavoriteComics(myFavorites, newComics)
+    const response = UserOrm.doFavoriteComic(myFavorites, newComics)
 
-    expect(response).toEqual(expect.arrayContaining(newComics))
+    expect(response).toContainEqual(newComics);
     expect(response).toHaveLength(3)
   })
 
@@ -127,29 +127,23 @@ describe('UserOrm', () => {
       { id: 'valid_id_b', title: 'valid_title' }
     ] as ComicOrm[]
 
-    const newComics = [
-      { id: 'valid_id_duplicate', title: 'valid_title' },
-      { id: 'valid_id_c', title: 'valid_title' }
-    ] as ComicOrm[]
+    const newComics =  { id: 'valid_id_duplicate', title: 'valid_title' } as ComicOrm
 
-    const response = UserOrm.doFavoriteComics(myFavorites, newComics)
-    expect(response).toEqual(expect.arrayContaining(newComics))
-    expect(response).toHaveLength(3)
+    const response = UserOrm.doFavoriteComic(myFavorites, newComics)
+    expect(response).toContainEqual(newComics);
+    expect(response).toHaveLength(2)
   })
 
 
   test('should add my first favorite', () => {
     const myFavorites = undefined
 
-    const newComics = [
-      { id: 'valid_id_duplicate', title: 'valid_title' },
-      { id: 'valid_id_c', title: 'valid_title' }
-    ] as ComicOrm[]
+    const newComics = { id: 'valid_id_c', title: 'valid_title' } as ComicOrm
 
-    const response = UserOrm.doFavoriteComics(myFavorites, newComics)
+    const response = UserOrm.doFavoriteComic(myFavorites, newComics)
 
-    expect(response).toEqual(expect.arrayContaining(newComics))
-    expect(response).toHaveLength(2)
+    expect(response).toContainEqual(newComics);
+    expect(response).toHaveLength(1)
   })
 
   test('should return same list when try add undefined', () => {
@@ -158,7 +152,7 @@ describe('UserOrm', () => {
       { id: 'valid_id_c', title: 'valid_title' }
     ] as ComicOrm[]
 
-    const response = UserOrm.doFavoriteComics(myFavorites, undefined)
+    const response = UserOrm.doFavoriteComic(myFavorites, undefined)
 
     expect(response).toEqual(expect.arrayContaining(myFavorites))
     expect(response).toHaveLength(2)

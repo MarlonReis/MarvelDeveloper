@@ -2,11 +2,19 @@ import { InvalidParamError } from '@/domain/errors'
 import { Role } from '@/domain/model/user/AuthenticationData'
 import { StatusUser } from '@/domain/model/user/StatusUser'
 import { User } from '@/domain/model/user/User'
-import { CreateUserData, UpdateUserData, UserBuilder, ValidateUpdateData } from '@/domain/model/user/UserData'
+import {
+  CreateUserData,
+  UpdateUserData,
+  UserBuilder,
+  ValidateUpdateData
+} from '@/domain/model/user/UserData'
 import { Email, Name, Password } from '@/domain/value-object'
 import { Either, failure, success } from '@/shared/Either'
 
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column, Entity, JoinTable,
+  ManyToMany, PrimaryGeneratedColumn
+} from 'typeorm'
 import { CharacterOrm } from './CharacterOrm'
 import { ComicOrm } from './ComicOrm'
 
@@ -25,11 +33,11 @@ export class UserOrm implements User {
   public password: string
 
   @ManyToMany(() => ComicOrm)
-  @JoinTable()
+  @JoinTable({ name: 'users_favorite_comic' })
   public favoriteComics: ComicOrm[]
 
   @ManyToMany(() => CharacterOrm)
-  @JoinTable()
+  @JoinTable({ name: 'users_favorite_characters' })
   public charactersReactions: CharacterOrm[]
 
   @Column({ type: 'text', nullable: true })
@@ -54,15 +62,13 @@ export class UserOrm implements User {
 
   protected constructor () { }
 
-  public static doFavoriteComics (
-    myFavorites: ComicOrm[] = [],
-    newFavorites: ComicOrm[] = []): ComicOrm[] {
-    for (const favorite of newFavorites) {
-      if (!myFavorites.find(my => my.id === favorite.id)) {
-        myFavorites.push(favorite)
+  public static doFavoriteComic (oldFavoritesList: ComicOrm[] = [], newFavorite?: ComicOrm): ComicOrm[] {
+    if (newFavorite) {
+      if (!oldFavoritesList.find(my => my.id === newFavorite.id)) {
+        oldFavoritesList.push(newFavorite)
       }
     }
-    return myFavorites
+    return oldFavoritesList
   }
 
   public static create (data: CreateUserData): Either<InvalidParamError, UserOrm> {
