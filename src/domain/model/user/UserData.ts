@@ -9,6 +9,7 @@ export interface CreateUserData {
   name: string
   email: string
   password: string
+  role?: Role
 }
 
 export interface UpdateUserData {
