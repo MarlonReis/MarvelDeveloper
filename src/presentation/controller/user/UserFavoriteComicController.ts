@@ -13,7 +13,11 @@ export class UserFavoriteComicController implements Controller {
     const { id } = httpRequest.authenticatedUserData
     const { comicId } = httpRequest.body
 
-    this.userFavoriteComic.execute({ userId: id, comicId })
+    await this.userFavoriteComic.execute({
+      userId: id,
+      comicId
+    })
+
     return ok()
   }
 }
