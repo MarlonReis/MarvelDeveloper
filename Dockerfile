@@ -7,7 +7,7 @@ COPY package-lock.json .
 COPY .env .
 
 RUN ls
-RUN npm install --only=prod
+RUN npm ci
 COPY ./dist ./dist
 
 RUN ls -a

@@ -1,10 +1,34 @@
 version: '3.1'
 services:
-  database_dev:
+  marvel_stone_api: 
+    container_name: marvel_stone_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: stone-marvel-api
+    env_file: .env
+    depends_on: 
+      - database
+    networks:
+      - stone-network
+    ports:
+      - 3000:3000
+    restart: on-failure
+    environment: 
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_USERNAME=admin
+      - DB_PASSWORD=M4rv3lD4t4BaS3
+      - AUTHENTICATION_SECRET_KEY=8no3TY;c2&Wz&xn0\gj)(iWLiMN?8V]&
+      - APP_PORT=3000
+
+  database:
     image: mysql:5.7
     container_name: database_marvel_dev
     volumes:
       - ./docker-database/dev:/var/lib/mysql
+    networks:
+      - stone-network
     ports:
       - 3306:3306
     restart: on-failure
@@ -13,6 +37,10 @@ services:
       - MYSQL_PASSWORD=M4rv3lD4t4BaS3
       - MYSQL_ROOT_PASSWORD=M4rv3lD4t4BaS3R00t
       - MYSQL_DATABASE=marvel_database
+
+networks:
+  stone-network:
+    driver: bridge
 
 volumes:
   dev:
