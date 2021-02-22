@@ -16,6 +16,11 @@ export const EnvironmentConfiguration = {
   authenticationSecretKey (): string {
     const { AUTHENTICATION_SECRET_KEY } = dotenv.config().parsed
     return AUTHENTICATION_SECRET_KEY
+  },
+
+  appPort (): number {
+    const { APP_PORT } = dotenv.config().parsed
+    return parseInt(APP_PORT)
   }
 
 }

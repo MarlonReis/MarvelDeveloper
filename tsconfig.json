@@ -1,4 +1,11 @@
 {
+    "ts-node": {
+        "files": true
+    },
+    "files": [
+        "src/main/express/adapter/CustomNamespaces.d.ts",
+        "src/main/server.ts"
+    ],
     "compilerOptions": {
         "outDir": "./dist",
         "module": "commonjs",
