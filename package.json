@@ -66,5 +66,8 @@
     "pino-pretty": "^4.5.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.31"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
