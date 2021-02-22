@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 services:
   marvel_stone_api: 
     container_name: marvel_stone_api
@@ -14,17 +14,10 @@ services:
     ports:
       - 3000:3000
     restart: on-failure
-    environment: 
-      - DB_HOST=database
-      - DB_PORT=3306
-      - DB_USERNAME=admin
-      - DB_PASSWORD=M4rv3lD4t4BaS3
-      - AUTHENTICATION_SECRET_KEY=8no3TY;c2&Wz&xn0\gj)(iWLiMN?8V]&
-      - APP_PORT=3000
 
   database:
     image: mysql:5.7
-    container_name: database_marvel_dev
+    container_name: database
     volumes:
       - ./docker-database/dev:/var/lib/mysql
     networks:
