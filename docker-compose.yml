@@ -31,6 +31,24 @@ services:
       - MYSQL_ROOT_PASSWORD=M4rv3lD4t4BaS3R00t
       - MYSQL_DATABASE=marvel_database
 
+  database_test:
+    image: mysql:5.7
+    container_name: database_test
+    volumes:
+      - ./docker-database/test:/var/lib/mysql
+    networks:
+      - stone-network
+    ports:
+      - 3307:3306
+    restart: on-failure
+    environment:
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=TestM4rv3lD4t4BaS3
+      - MYSQL_ROOT_PASSWORD=TestM4rv3lD4t4BaS3R00t
+      - MYSQL_DATABASE=marvel_database
+
+
+
 networks:
   stone-network:
     driver: bridge

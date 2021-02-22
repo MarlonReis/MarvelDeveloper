@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint 'src/**' --fix",
+    "prestart": "NODE_ENV=local",
     "start": "node dist/main/server.js",
     "start:dev": "nodemon --exec ts-node  src/main/server.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "pretest": "NODE_ENV=test",
     "test:mutation": "stryker run",
     "test:report": "npm run test:ci && npm run test:mutation",
     "test": "jest --passWithNoTests --runInBand --detectOpenHandles",
