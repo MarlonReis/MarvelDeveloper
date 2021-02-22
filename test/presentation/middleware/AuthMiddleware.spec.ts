@@ -29,7 +29,7 @@ const makeSutFactory = (): TypeSut => {
   return { findByTokenDataStub, sut }
 }
 
-const fakeRequest = (): HttpRequest => ({ headers: { 'authentication': 'valid-token' } })
+const fakeRequest = (): HttpRequest => ({ headers: { 'authorization': 'valid-token' } })
 
 describe('AuthMiddleware', () => {
   test('should return 401 when authentication not exist in headers', async () => {

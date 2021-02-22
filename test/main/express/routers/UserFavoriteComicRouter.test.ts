@@ -65,21 +65,21 @@ describe('UserFavoriteComicRouter', () => {
     const { id } = comicInserted.identifiers[0]
 
     await request(app).post('/api/account/comics').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       send({ comicId: id }).
       expect(200)
   })
 
   test('should return 404 when not found comic by id', async () => {
     await request(app).post('/api/account/comics').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       send({ comicId: 'id_not_exist' }).
       expect(404)
   })
 
   test('should return 400 when comic id undefined', async () => {
     await request(app).post('/api/account/comics').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       send().expect(400)
   })
 

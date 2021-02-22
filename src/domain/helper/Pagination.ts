@@ -9,9 +9,11 @@ interface PaginationParamQuery {
 
 export const paginationParams = (page: number, limitPerPage: number, count: number): PaginationParamQuery => {
   const maxPages = Math.ceil(count / (limitPerPage <= 0 ? 10 : limitPerPage))
+
   const limit = limitPerPage * (page < 1 ? 1 : page)
+
   const skip = (limit - limitPerPage) - (page <= 1 ? 0 : 1)
-  const take = limitPerPage + (page < 2 ? 0 : 1)
+  const take = Math.floor(limitPerPage)
 
   const prevPage = page > 1 && page <= maxPages
   const nextPage = page < maxPages
@@ -23,11 +25,7 @@ export const buildPagination = (page: number, maxPages: number, count: number,
   prevPage: boolean, nextPage: boolean,
   data: any[] = []
 ): Pagination<any> => {
-  let perPage = data.length
-  if (page > 1 && data.length > 0) {
-    perPage = data.length - 1
-  }
-
+  const perPage = data.length
   return ({
     from: page,
     to: maxPages,

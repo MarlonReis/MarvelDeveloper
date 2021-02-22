@@ -22,8 +22,11 @@ export class FindAllCharacterPageableORMRepository implements FindAllCharacterPa
     try {
       const repository = this.connectionDatabase.connection().getRepository(CharacterOrm)
       const count = await repository.count()
+
       const { skip, take, maxPages, prevPage, nextPage } = paginationParams(page, limit, count)
+
       const data = await repository.find({ skip, take })
+
       return success(buildPagination(page, maxPages, count, prevPage, nextPage, data))
     } catch (error) {
       return failure(new RepositoryInternalError(error))

@@ -13,10 +13,10 @@ describe('Pagination', () => {
     expect(nextPage).toBe(true)
   })
 
-  test('should return skip = 19 and take = 21 when page = 2', () => {
+  test('should return skip = 19 and take = 20 when page = 2', () => {
     const { skip, take, maxPages, prevPage, nextPage } = paginationParams(2, 20, 100)
     expect(skip).toEqual(19)
-    expect(take).toEqual(21)
+    expect(take).toEqual(20)
     expect(maxPages).toBe(5)
 
     expect(prevPage).toBe(true)
@@ -26,7 +26,7 @@ describe('Pagination', () => {
   test('should return skip = 39 and take = 21 when page = 3', () => {
     const { skip, take, maxPages, prevPage, nextPage } = paginationParams(3, 20, 100)
     expect(skip).toEqual(39)
-    expect(take).toEqual(21)
+    expect(take).toEqual(20)
     expect(maxPages).toBe(5)
 
     expect(prevPage).toBe(true)
@@ -37,7 +37,7 @@ describe('Pagination', () => {
   test('should return skip = 59 and take = 21 when page = 4', () => {
     const { skip, take, maxPages, prevPage, nextPage } = paginationParams(4, 20, 100)
     expect(skip).toEqual(59)
-    expect(take).toEqual(21)
+    expect(take).toEqual(20)
     expect(maxPages).toBe(5)
 
     expect(prevPage).toBe(true)
@@ -48,7 +48,7 @@ describe('Pagination', () => {
   test('should return skip = 79 and take = 21 when page = 5', () => {
     const { skip, take, maxPages, prevPage, nextPage } = paginationParams(5, 20, 100)
     expect(skip).toEqual(79)
-    expect(take).toEqual(21)
+    expect(take).toEqual(20)
     expect(maxPages).toBe(5)
 
     expect(prevPage).toBe(true)
@@ -59,7 +59,7 @@ describe('Pagination', () => {
     const { skip, take, maxPages, prevPage, nextPage } = paginationParams(6, 20, 100)
 
     expect(skip).toEqual(99)
-    expect(take).toEqual(21)
+    expect(take).toEqual(20)
     expect(maxPages).toBe(5)
 
     expect(prevPage).toBe(false)
@@ -98,7 +98,7 @@ describe('Pagination', () => {
     const paginationWithLastPage = buildPagination(5, 5, 100, true, false, items)
 
     expect(paginationWithLastPage).toEqual({
-      from: 5, to: 5, perPage: 19,
+      from: 5, to: 5, perPage: 20,
       total: 100, currentPage: 5,
       prevPage: true, nextPage: false,
       data:items

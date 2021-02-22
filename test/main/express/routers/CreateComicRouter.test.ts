@@ -30,9 +30,6 @@ const defaultComicData = {
   coverImage: "http://server.com/images.png",
 }
 
-
-
-
 describe('CreateComicRouter', () => {
   let tokenAdmin: string
 
@@ -79,7 +76,7 @@ describe('CreateComicRouter', () => {
     })
 
     await request(app).post('/api/comics').send(defaultComicData).
-      set({ 'Authentication': `Bearer ${token.value}` }).
+      set({ 'Authorization': `Bearer ${token.value}` }).
       expect(403)
   })
 
@@ -94,7 +91,7 @@ describe('CreateComicRouter', () => {
 
     await request(app).post('/api/comics').
       send(Object.assign(defaultComicData, { characters: [{ id }] })).
-      set({ 'Authentication': `Bearer ${tokenAdmin}` })
+      set({ 'Authorization': `Bearer ${tokenAdmin}` })
       .expect(201)
 
   })
@@ -102,14 +99,14 @@ describe('CreateComicRouter', () => {
   test('should return statusCode 201 when not have characters', async () => {
     await request(app).post('/api/comics').
       send(defaultComicData).
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       expect(201)
   })
 
   test('should return statusCode 404 when not found characters', async () => {
     await request(app).post('/api/comics').send(Object.assign(defaultComicData, {
       characters: [{ id: 'id-not-exist' }]
-    })).set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+    })).set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       expect(404, {
       error: 'NotFoundError',
       message: "Cannot found character by id equals 'id-not-exist'!"
@@ -119,7 +116,7 @@ describe('CreateComicRouter', () => {
   test('should return statusCode 422 when attribute has invalid value', async () => {
     await request(app).post('/api/comics').send({
       ...defaultComicData, title:'In'
-    }).set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+    }).set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       expect(422, {
       error: 'InvalidParamError',
       message: "Attribute 'title' equals 'In' is invalid!"
@@ -131,7 +128,7 @@ describe('CreateComicRouter', () => {
     await request(app).
       post('/api/comics').
       send(defaultComicData).
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       expect(500, {
       error: 'InternalServerError',
       message: "Internal server error"

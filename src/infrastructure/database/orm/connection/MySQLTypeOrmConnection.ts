@@ -1,7 +1,10 @@
 import 'reflect-metadata'
 import { createConnection, Connection } from 'typeorm'
+import path from 'path'
 
-import { ConfigConnection, ConnectionDatabase } from '@/infrastructure/database/protocol/ConnectionDatabase'
+import {
+  ConfigConnection, ConnectionDatabase
+} from '@/infrastructure/database/protocol/ConnectionDatabase'
 import { Either, failure, success } from '@/shared/Either'
 import { DatabaseConnectionError } from '@/infrastructure/error/DatabaseConnectionError'
 
@@ -24,7 +27,7 @@ export class MySQLTypeOrmConnection implements ConnectionDatabase<Connection> {
         port: this.config.port,
         username: this.config.username,
         password: this.config.password,
-        entities: ['src/infrastructure/database/orm/model/*.ts']
+        entities: [path.join(__dirname, '../model/*{.ts,.js}')]
       })
 
       MySQLTypeOrmConnection._connection = connection

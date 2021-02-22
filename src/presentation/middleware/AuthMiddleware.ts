@@ -22,7 +22,7 @@ export class AuthMiddleware implements Middleware {
   }
 
   async handle (request: HttpRequest): Promise<HttpResponse> {
-    const token = request.headers.authentication
+    const token = request.headers.authorization
 
     if (token) {
       const response = await this.findUserAccountByTokenData.execute(token)

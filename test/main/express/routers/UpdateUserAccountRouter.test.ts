@@ -36,7 +36,7 @@ describe('UpdateUserAccountRouter', () => {
     const { token } = await insertUserMock(connectionDatabase, defaultUserData)
 
     await request(app).put('/api/account')
-      .set({ 'Authentication': `Bearer ${token.value}` })
+      .set({ 'Authorization': `Bearer ${token.value}` })
       .send({ ...defaultUserData, email: 'invalid-email' }).
       expect(422, {
         error: 'InvalidParamError',
@@ -48,7 +48,7 @@ describe('UpdateUserAccountRouter', () => {
     const { token } = await insertUserMock(connectionDatabase, defaultUserData)
 
     await request(app).put('/api/account')
-      .set({ 'Authentication': `Bearer ${token.value}` })
+      .set({ 'Authorization': `Bearer ${token.value}` })
       .send(defaultUserData).expect(200)
   })
 
@@ -64,7 +64,7 @@ describe('UpdateUserAccountRouter', () => {
 
     await request(app).put('/api/account').send({
       ...defaultUserData, email: 'any-other@in-use.com', id
-    }).set({ 'Authentication': `Bearer ${token.value}` })
+    }).set({ 'Authorization': `Bearer ${token.value}` })
       .expect(400, {
         error: 'BadRequestError',
         message: "Email 'any-other@in-use.com' is already being used by another account!"

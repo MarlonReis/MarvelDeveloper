@@ -64,7 +64,7 @@ describe('CreateCharacterRouter', () => {
 
     await request(app).
       post('/api/characters').
-      set({ 'Authentication': `Bearer ${token.value}` }).
+      set({ 'Authorization': `Bearer ${token.value}` }).
       send(defaultRequestBody).
       expect(403)
   })
@@ -72,13 +72,13 @@ describe('CreateCharacterRouter', () => {
 
   test('should return statusCode 200 when it`s has success', async () => {
     await request(app).post('/api/characters').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       send(defaultRequestBody).expect(201)
   })
 
   test('should return statusCode 422 when name is invalid', async () => {
     await request(app).post('/api/characters').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` }).
+      set({ 'Authorization': `Bearer ${tokenAdmin}` }).
       send({
         ...defaultRequestBody,
         name: 'in'
@@ -91,7 +91,7 @@ describe('CreateCharacterRouter', () => {
   test('should return statusCode 500 when internal error', async () => {
     await connectionDatabase.close()
     await request(app).post('/api/characters').
-      set({ 'Authentication': `Bearer ${tokenAdmin}` })
+      set({ 'Authorization': `Bearer ${tokenAdmin}` })
       .send(defaultRequestBody).expect(500, {
         error: 'InternalServerError',
         message: 'Internal server error'
