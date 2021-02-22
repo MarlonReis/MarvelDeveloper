@@ -181,4 +181,51 @@ describe('UserOrm', () => {
     expect(response).toHaveLength(2)
   })
 
+  test('should return remove only one item of list', () => {
+    const myFavorites = [
+      { id: 'valid_id_a', title: 'valid_title' },
+      { id: 'valid_id_c', title: 'valid_title' }
+    ] as ComicOrm[]
+
+    const element =   { id: 'valid_id_a', title: 'valid_title' } as ComicOrm
+
+    const response = UserOrm.doDisfavorComic(myFavorites, element)
+
+    expect(response).toEqual(expect.arrayContaining([{ id: 'valid_id_c', title: 'valid_title' }]))
+    expect(response).toHaveLength(1)
+  })
+
+
+  test('should return same list when comic is undefined', () => {
+    const myFavorites = [
+      { id: 'valid_id_a', title: 'valid_title' },
+      { id: 'valid_id_c', title: 'valid_title' }
+    ] as ComicOrm[]
+
+    const response = UserOrm.doDisfavorComic(myFavorites, undefined)
+
+    expect(response).toEqual(myFavorites)
+    expect(response).toHaveLength(2)
+  })
+
+  test('should return empty list when user not have elements', () => {
+    const response = UserOrm.doDisfavorComic(undefined, undefined)
+    expect(response).toEqual([])
+    expect(response).toHaveLength(0)
+  })
+
+  test('should return same list when not contains element in list', () => {
+    const myFavorites = [
+      { id: 'valid_id_a', title: 'valid_title' },
+      { id: 'valid_id_c', title: 'valid_title' }
+    ] as ComicOrm[]
+
+    const element =   { id: 'valid_id_d', title: 'valid_title' } as ComicOrm
+
+    const response = UserOrm.doDisfavorComic(myFavorites, element)
+
+    expect(response).toEqual(expect.arrayContaining(myFavorites))
+    expect(response).toHaveLength(2)
+  })
+
 })

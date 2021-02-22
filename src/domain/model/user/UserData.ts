@@ -17,6 +17,11 @@ export interface FavoriteComicData {
   userId: string
 }
 
+export interface FavoriteCharacterData {
+  characterId: string
+  userId: string
+}
+
 export interface UpdateUserData {
   id: string
   name?: string
