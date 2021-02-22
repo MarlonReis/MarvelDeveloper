@@ -1,6 +1,6 @@
 version: '3'
 services:
-  marvel_stone_api: 
+  marvel_stone_api:
     container_name: marvel_stone_api
     build:
       context: .
