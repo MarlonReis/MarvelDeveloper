@@ -9,6 +9,7 @@ export * from './repository/character/FindAllCharacterPageableORMRepository'
 export * from './repository/comic/CreateComicORMRepository'
 export * from './repository/comic/FindComicByIdORMRepository'
 export * from './repository/comic/FindAllComicsORMPageableRepository'
+export * from './repository/user/FindAllUserFavoriteComicsPageableORMRepository'
 
 export * from './repository/user/UserFavoriteComicORMRepository'
 export * from './repository/user/UserDisfavorComicORMRepository'
