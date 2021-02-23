@@ -15,7 +15,7 @@ export class FindAllUserFavoriteComicsPageableORMRepository implements FindAllUs
     this.connectionDatabase = connection
   }
 
-  async execute (userId: string, page: number, limit: number): Promise<Either<RepositoryInternalError, Pagination<ComicResponse>>> {
+  async execute (userId: string, page: number = 0, limit: number = 10): Promise<Either<RepositoryInternalError, Pagination<ComicResponse>>> {
     try {
       const query = await this.connectionDatabase.connection()
         .getRepository(UserOrm)
