@@ -30,7 +30,7 @@ describe('FindAllComicsORMPageableRepository', () => {
     await connectionDatabase.open()
   })
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await connectionDatabase.connection()
       .createQueryBuilder()
       .delete().from(ComicOrm)
