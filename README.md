@@ -155,6 +155,6 @@ Para saber mais, [Teste de Mutantes | Mauricio Aniche | Papo Reto](https://youtu
     DELETE: http://localhost:3000/api/account/comics
     header:{ "Authorization":"Bearer eyJhbGciOiJIUzI1NiI..."}
     {
-    		"comicId":"7bdbbc0e-c659-41b7-a709-0b855de0d8ca"
+    	"comicId":"7bdbbc0e-c659-41b7-a709-0b855de0d8ca"
     }
 
