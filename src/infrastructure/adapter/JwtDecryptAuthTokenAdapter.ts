@@ -13,7 +13,7 @@ export class JwtDecryptAuthTokenAdapter implements DecryptAuthToken {
 
   async execute (token: string = ''): Promise<Either<DecryptError, string>> {
     try {
-      const tokenClean = token.replace('Bearer ', '').trim()
+      const tokenClean = token.replace('Bearer ', '').replace(' ', '')
       const data: any = await jwt.verify(tokenClean, this.secretKey)
       const { id } = data
       return success(id)
