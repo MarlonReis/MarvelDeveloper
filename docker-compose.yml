@@ -6,47 +6,53 @@ services:
       context: .
       dockerfile: Dockerfile
     image: stone-marvel-api
-    env_file: .env
     depends_on: 
       - database
     networks:
       - stone-network
     ports:
-      - 3000:3000
+      - ${APP_PORT}:3000
     restart: on-failure
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE_NAME=${DB_DATABASE_NAME}
+      - AUTHENTICATION_SECRET_KEY=${AUTHENTICATION_SECRET_KEY}
+      - APP_PORT=${APP_PORT}
 
   database:
     image: mysql:5.7
     container_name: database
     volumes:
-      - ./docker-database/dev:/var/lib/mysql
+      - ${DOCKER_CONTAINER_PATH}:/var/lib/mysql
     networks:
       - stone-network
     ports:
-      - 3306:3306
+      - ${DB_PORT}:3306
     restart: on-failure
     environment:
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=M4rv3lD4t4BaS3
-      - MYSQL_ROOT_PASSWORD=M4rv3lD4t4BaS3R00t
-      - MYSQL_DATABASE=marvel_database
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE_NAME}
 
   database_test:
     image: mysql:5.7
     container_name: database_test
     volumes:
-      - ./docker-database/test:/var/lib/mysql
+      - ${DOCKER_CONTAINER_PATH}:/var/lib/mysql
     networks:
       - stone-network
     ports:
-      - 3307:3306
+      - ${DB_PORT}:3306
     restart: on-failure
     environment:
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=TestM4rv3lD4t4BaS3
-      - MYSQL_ROOT_PASSWORD=TestM4rv3lD4t4BaS3R00t
-      - MYSQL_DATABASE=marvel_database
-
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE_NAME}
 
 
 networks:
