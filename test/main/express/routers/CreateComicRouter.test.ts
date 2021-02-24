@@ -76,7 +76,7 @@ describe('CreateComicRouter', () => {
     })
 
     await request(app).post('/api/comics').send(defaultComicData).
-      set({ 'Authorization': `Bearer ${token.value}invalid` }).
+      set({ 'Authorization': `Bearer ${token.value}` }).
       expect(403)
   })
 

@@ -54,6 +54,19 @@ describe('CreateCharacterRouter', () => {
       expect(401)
   })
 
+  test('should return statusCode 403 when user not have permission', async () => {
+    const { token } = await insertUserMock(connectionDatabase, {
+      name: 'Any Name',
+      email: 'any@valid.com',
+      password: 'Password@Valid',
+      role: Role.USER
+    })
+
+    await request(app).post('/api/characters').
+      set({ 'Authorization': `Bearer ${token.value}` }).
+      send(defaultRequestBody).expect(403)
+  })
+
   test('should return statusCode 200 when it`s has success', async () => {
     await request(app).post('/api/characters').
       set({ 'Authorization': `Bearer ${tokenAdmin}` }).
