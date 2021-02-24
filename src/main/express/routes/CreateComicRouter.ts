@@ -6,7 +6,7 @@ import { AuthenticationMiddleware } from '@/main/factories/middlewares/Authentic
 import { Router } from 'express'
 
 export default (router: Router): void => {
-  const authMiddleware = new AuthenticationMiddleware().makeMiddlewareFactory(Role.ADMIN)
+  const authMiddleware = new AuthenticationMiddleware().makeMiddlewareFactory(Role.USER)
 
   const factory = new CreateComicFactory().makeControllerFactory()
   const request = ExpressControllerAdapter(factory)

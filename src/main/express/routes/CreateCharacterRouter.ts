@@ -6,7 +6,7 @@ import { AuthenticationMiddleware } from '@/main/factories/middlewares/Authentic
 import { Role } from '@/domain/model/user/AuthenticationData'
 
 export default (router: Router): void => {
-  const authMiddleware = new AuthenticationMiddleware().makeMiddlewareFactory(Role.ADMIN)
+  const authMiddleware = new AuthenticationMiddleware().makeMiddlewareFactory(Role.USER)
 
   const factory = new CreateCharacterFactory().makeControllerFactory()
   const request = ExpressControllerAdapter(factory)
