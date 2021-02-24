@@ -1,15 +1,12 @@
 import { MySQLTypeOrmConnection } from '@/infrastructure/database/orm/connection/MySQLTypeOrmConnection'
 import { DatabaseConnectionError } from '@/infrastructure/error/DatabaseConnectionError'
+import { EnvironmentConfiguration } from '@/infrastructure/util/EnvironmentConfiguration'
 import { Either } from '@/shared/Either'
 
 import * as typeorm from 'typeorm'
 
-const connectionDatabase = new MySQLTypeOrmConnection({
-  host: 'localhost',
-  port: 3306,
-  username: 'admin',
-  password: 'M4rv3lD4t4BaS3'
-})
+const config = EnvironmentConfiguration.database()
+const connectionDatabase = new MySQLTypeOrmConnection(config)
 
 describe('MySQLTypeOrmConnection', () => {
   let responseOpenConnection: Either<DatabaseConnectionError, void>
@@ -81,10 +78,10 @@ describe('MySQLTypeOrmConnection', () => {
     expect(createConnectionSpy).toBeCalledWith({
       type: 'mysql',
       database: 'marvel_database',
-      synchronize: true,
-      logging: false,
+      synchronize: expect.any(Boolean),
+      logging: expect.any(Boolean),
       host: 'any-host',
-      port: 3306,
+      port: expect.any(Number),
       username: 'AnyValidUser',
       password: 'AnyValid',
       entities: expect.any(Array)
